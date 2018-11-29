@@ -1,6 +1,7 @@
 
 
 
+
 <!doctype html>
 <html>
   <head>
@@ -625,6 +626,37 @@
                     </li>
                 </ul>
           </li>
+          <li>
+              <p class="toc-section">Custom Dynamic Content</p>
+          </li>
+          <li>
+              <a href="#background" class="toc-h1 toc-link" data-title="Background">Background</a>
+                <ul class="toc-list-h2">
+                    <li>
+                      <a href="#how-it-works" class="toc-h2 toc-link" data-title="How it works">How it works</a>
+                    </li>
+                </ul>
+          </li>
+          <li>
+              <a href="#api-requirements" class="toc-h1 toc-link" data-title="API Requirements">API Requirements</a>
+                <ul class="toc-list-h2">
+                    <li>
+                      <a href="#endpoint" class="toc-h2 toc-link" data-title="Endpoint">Endpoint</a>
+                    </li>
+                    <li>
+                      <a href="#parameters" class="toc-h2 toc-link" data-title="Parameters">Parameters</a>
+                    </li>
+                    <li>
+                      <a href="#response" class="toc-h2 toc-link" data-title="Response">Response</a>
+                    </li>
+                    <li>
+                      <a href="#general" class="toc-h2 toc-link" data-title="General">General</a>
+                    </li>
+                </ul>
+          </li>
+          <li>
+              <a href="#example" class="toc-h1 toc-link" data-title="Example">Example</a>
+          </li>
       </div>
         <ul class="toc-footer">
             <li><a href='https://www.drip.com/pricing' target='_blank'>Need a Drip Account? Sign Up</a></li>
@@ -751,6 +783,7 @@ Content-Type: application/json
 <p>To create or update a batch of subscribers:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -855,6 +888,7 @@ request and the time your data appears in the user interface.</p>
 <p>To globally unsubscribe a batch of subscribers:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/unsubscribes/batches"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -943,6 +977,7 @@ request and the time your data appears in the user interface.</p>
 <p>To record a batch of events:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -1039,6 +1074,7 @@ request and the time your data appears in the user interface.</p>
 <p>To create or update a batch of orders:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/orders/batches"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -1632,6 +1668,7 @@ use the <code>page</code> query parameter.</p>
 <p>To list broadcasts in an account:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY:
 </code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
@@ -1706,6 +1743,7 @@ use the <code>page</code> query parameter.</p>
 <p>To fetch a specific broadcast:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY:
 </code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
@@ -1771,8 +1809,6 @@ use the <code>page</code> query parameter.</p>
   </span><span class="s2">"email_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
   </span><span class="s2">"active_subscriber_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">320</span><span class="p">,</span><span class="w">
   </span><span class="s2">"unsubscribed_subscriber_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"email_open_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.15531</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"email_click_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.68232</span><span class="p">,</span><span class="w">
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.getdrip.com/v2/9999999/campaigns/123456"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1881,14 +1917,6 @@ use the <code>page</code> query parameter.</p>
     <tr>
       <td><code>unsubscribed_subscriber_count</code></td>
       <td>Returns a count of all subscribers who unsubscribed from the campaign via a delivered email.</td>
-    </tr>
-    <tr>
-      <td><code>email_open_rate</code></td>
-      <td>The campaign's all-time open rate.</td>
-    </tr>
-    <tr>
-      <td><code>email_click_rate</code></td>
-      <td>The campaign's all-time click-through rate.</td>
     </tr>
     <tr>
       <td><code>created_at</code></td>
@@ -2198,6 +2226,7 @@ end
 <p>To start a subscriber on a campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/subscribers"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -2331,7 +2360,8 @@ end
 <blockquote>
 <p>To list campaign subscriptions for a subscriber:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/SUBSCRIBER_ID/campaign_subscriptions"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/SUBSCRIBER_ID/campaign_subscription"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY:
 </code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
@@ -2646,6 +2676,7 @@ end
 <p>To create or update a subscriber:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -3501,6 +3532,7 @@ end
 <span class="k">end</span>
 </code></pre><pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/orders"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
   {
@@ -3875,6 +3907,7 @@ will be automatically incremented by the total amount of the order.</p>
 <p>To create or update a refund for an order:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/refunds"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -4137,19 +4170,20 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
 <p>To create or update a subscriber:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers"</span> <span class="se">\</span>
-  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
-  -u YOUR_API_KEY: <span class="se">\</span>
-  -d @- <span class="sh">&lt;&lt; EOF
-  {
-    "subscribers": [{
-      "email": "john@acme.com",
-      "time_zone": "America/Los_Angeles",
-      "custom_fields": {
-        "name": "John Doe"
-      }
-    }]
-  }
-  EOF
+-H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-u YOUR_API_KEY: <span class="se">\</span>
+-d @- <span class="sh">&lt;&lt; EOF
+{
+  "subscribers": [{
+    "email": "john@acme.com",
+    "time_zone": "America/Los_Angeles",
+    "custom_fields": {
+      "name": "John Doe"
+    }
+  }]
+}
+EOF
 </span></code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="no">Drip</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
@@ -4648,6 +4682,7 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
 <p>To apply a tag to a specific subscriber:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/tags"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -4721,6 +4756,7 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
 <p>To apply a tag to a specific subscriber:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X DELETE <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/tags/TAG"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY:
 </code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
@@ -5065,6 +5101,7 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
 <p>To start a someone on a workflow:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/subscribers"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
   -d @- <span class="sh">&lt;&lt; EOF
@@ -5814,7 +5851,7 @@ settings page, enter your URL, and hit &quot;Create Webhook&quot;. That&#39;s it
 
 <p>Because of the potential for high volume, we will not send notifications for
 <code>subscriber.received_email</code> events by default. To receive a post every time a subscriber
-receives and email, enable these events using the checkbox on the webhook&#39;s settings.</p>
+receives an email, enable these events using the checkbox on the webhook&#39;s settings.</p>
 
 <p>Please note that some webhook endpoints may implement rate limiting, especially for entry-level or free accounts.
 We will attempt to re-send webhooks for up to 3 days if they are rate limited.
@@ -6369,10 +6406,6 @@ only fires when lead scoring is enabled for your account.</strong></p>
   </span><span class="err">success</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="err">visitor_uuid</span><span class="p">:</span><span class="w"> </span><span class="s2">"f627ee608adb01315d1022000ab2058a"</span><span class="p">,</span><span class="w">
   </span><span class="err">anonymous</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-  </span><span class="err">email</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@acme.com"</span><span class="p">,</span><span class="w">
-  </span><span class="err">custom_fields</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="w"> </span><span class="p">},</span><span class="w">
-  </span><span class="err">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Customer"</span><span class="p">],</span><span class="w">
-  </span><span class="err">lead_score</span><span class="p">:</span><span class="w"> </span><span class="mi">35</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>The identify request will pass a response object to the <code>success</code> or <code>failure</code> callback functions (if provided) once the call completes.</p>
@@ -6396,22 +6429,6 @@ only fires when lead scoring is enabled for your account.</strong></p>
     <tr>
       <td><code>anonymous</code></td>
       <td>Boolean. False if the visitor is associated with a subscriber.</td>
-    </tr>
-    <tr>
-      <td><code>email</code></td>
-      <td>Included only if the visitor is not anonymous. The associated subscriber's email address.</td>
-    </tr>
-    <tr>
-      <td><code>custom_fields</code></td>
-      <td>An Object containing custom fields that are marked as public in your settings (see Subscribers > Custom Fields). Custom fields containing sensitive information should not be marked as public, for security purposes.</td>
-    </tr>
-    <tr>
-      <td><code>tags</code></td>
-      <td>An array of the subscriber's tags.</td>
-    </tr>
-    <tr>
-      <td><code>lead_score</code></td>
-      <td>Included if the subscriber is a prospect.</td>
     </tr>
     <tr>
       <td><code>error</code></td>
@@ -6672,6 +6689,123 @@ only fires when lead scoring is enabled for your account.</strong></p>
 </table>
 
 <p>By listening for these events, you can hook your own javascript onto the widget&#39;s actions. Each of the above events carries a data Object with the form&#39;s information.</p>
+<h1 id='cdc-section'>CDC Section</h1><h1 id='background'>Background</h1>
+<p><em>To request this feature be enabled on your account, contact our <a href="mailto:support@drip.com">support team</a>.</em></p>
+
+<p>Custom Dynamic Content allows you to pull data from your system into Drip emails. Your data is then available
+via Liquid, allowing you to build super-rich personalized emails augmented with fresh data from your own systems.</p>
+
+<p>Example use cases:</p>
+
+<ul>
+<li>Is it going to rain this weekend? Offer your customer an umbrella! Or maybe it&#39;ll be sunny? Show them a hat!</li>
+<li>Show up-to-date prices for a flight or ticketed event for which a customer is interested! Drip can pass customer information to your endpoint, and pull in the latest prices.</li>
+</ul>
+<h2 id='how-it-works'>How it works</h2>
+<ol>
+<li>You provide an API endpoint</li>
+<li>You choose the Liquid shortcode</li>
+<li>When we render an email, we&#39;ll <code>GET</code> a JSON document from your endpoint</li>
+<li>You&#39;ll then have access to that document in Liquid via your shortcode</li>
+</ol>
+
+<p>See <a href="https://github.com/DripEmail/drip-personalized-weather">Drip Weather</a> as an example endpoint.</p>
+<h1 id='api-requirements'>API Requirements</h1><h2 id='endpoint'>Endpoint</h2>
+<ul>
+<li>Responds to an HTTP GET request</li>
+<li>No additional authentication supported beyond the path and query params, e.g. you can set your base URL to something similar to one of:
+
+<ul>
+<li><code>https://api.example.com/?token=a7c43be</code></li>
+<li><code>https://api.example.com/a7c43be/</code></li>
+</ul></li>
+</ul>
+<h2 id='parameters'>Parameters</h2>
+<ul>
+<li>Parameters are scoped to an entity, e.g. <code>subscriber</code> or <code>event</code></li>
+<li>You&#39;ll specify which fields of these objects you want sent to your endpoint</li>
+<li>Scoped parameters are then named the same as the custom field
+
+<ul>
+<li>e.g. A subscriber custom field of <code>first_name</code> would be passed through as <code>subscriber[first_name]</code></li>
+<li>e.g. An event field of <code>product_id</code> would be passed through as <code>event[product_id]</code></li>
+</ul></li>
+<li>The <code>event</code> object is valid only within a Workflow</li>
+<li>Parameters will all be passed via the URL query string (we only support <code>GET</code> requests)</li>
+<li>There can be default parameters embedded in your endpoint URL
+
+<ul>
+<li>We will append our parameters to yours</li>
+<li>This is useful for authentication, such as providing <code>?key=12345</code></li>
+</ul></li>
+<li>Parameters without a value will be sent through as a key with no value
+
+<ul>
+<li>e.g. A subscriber with a custom field assigned for country, but not for zip would have a URL query string of <code>?subscriber[country]=US&amp;subscriber[zip]</code></li>
+</ul></li>
+<li>A parameter value should not be unique per subscriber; this allows for greater cacheability of responses, as to optimize your delivery throughput</li>
+</ul>
+<h2 id='response'>Response</h2>
+<ul>
+<li>Responses must have a <code>Content-Type</code> header of <code>application/json</code></li>
+<li>A response with a <code>2xx</code> status will be considered successful</li>
+<li>A successful response must contain a body that is a parseable JSON <em>document</em> (i.e. the top level must be either an object or an array)</li>
+<li>A <code>3xx</code> response will be followed as redirects per the HTTP specification</li>
+<li>Response codes in the <code>4xx</code> and <code>5xx</code> ranges will be considered an error</li>
+<li>No other response codes are supported</li>
+</ul>
+
+<p>When a <code>2xx</code> response is received, Drip will use whatever data is given, and will assume <code>null</code> values for any data not given. For example, response of <code>{}</code> would still be accessible in Liquid and would respond to any attribute with <code>nil</code>.</p>
+<h2 id='general'>General</h2>
+<ul>
+<li>We will retry failed responses (<code>4xx</code> or <code>5xx</code>) for a limited amount of time</li>
+<li>If retries continue to fail, we will give up sending the individual email</li>
+<li>In order to optimize your sending throughput, we will time out any response or series of redirects after 3 seconds</li>
+</ul>
+<h1 id='example'>Example</h1>
+<blockquote>
+<p>Example request from Drip to your endpoint</p>
+</blockquote>
+<pre class="highlight shell"><code>https://api.you.com/api?subscriber[zipcode]<span class="o">=</span>90210
+</code></pre>
+<blockquote>
+<p>Example response from Drip&#39;s <a href="https://github.com/DripEmail/custom-dynamic-weather">weather service</a></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"apparentTemperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">65.89</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cloudCover"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.09</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"dewPoint"</span><span class="p">:</span><span class="w"> </span><span class="mf">22.55</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.19</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"icon"</span><span class="p">:</span><span class="w"> </span><span class="s2">"clear-night"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"nearestStormBearing"</span><span class="p">:</span><span class="w"> </span><span class="mi">131</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"nearestStormDistance"</span><span class="p">:</span><span class="w"> </span><span class="mi">446</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ozone"</span><span class="p">:</span><span class="w"> </span><span class="mf">258.97</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"precipIntensity"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"precipProbability"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"pressure"</span><span class="p">:</span><span class="w"> </span><span class="mf">1018.59</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Clear"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">65.89</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"time"</span><span class="p">:</span><span class="w"> </span><span class="mi">1541727521</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uvIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.27</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"windBearing"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"windGust"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.09</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"windSpeed"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.39</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Imagine that you&#39;ve got a service that returns the weather for a given zipcode. As a canonical example, have a look at our <a href="https://github.com/DripEmail/custom-dynamic-weather">weather service</a>.</p>
+
+<p>Now, consider some Custom Dynamic Content that looks like this:</p>
+
+<p><code>Good morning {{ subscriber.first_name }}! Looks like it&#39;s {{ my.weather.summary | downcase }} in your neck of the woods!</code></p>
+
+<p>At the point that we render this content, we&#39;ll make a request to your API. If you&#39;re using our <a href="https://github.com/DripEmail/custom-dynamic-weather">weather service</a>, the request and response will look something like what you see to the right.</p>
+
+<p>In addition to having access to the <code>subscriber</code> object, all of your Custom Dynamic Content will be available in a <code>my</code> object. In this example, we&#39;re making the response above available as <code>my.weather</code>.</p>
+
+<p>And so, when the Liquid is rendered, it might look like:</p>
+
+<p><code>Good morning Mary! Looks like it&#39;s clear in your neck of the woods!</code></p>
 
       </div>
       <div class="dark-box">
