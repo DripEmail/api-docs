@@ -2,6 +2,7 @@
 
 
 
+
 <!doctype html>
 <html>
   <head>
@@ -261,6 +262,9 @@
                       <a href="#record-a-batch-of-events" class="toc-h2 toc-link" data-title="Record a batch of events">Record a batch of events</a>
                     </li>
                     <li>
+                      <a href="#create-or-update-a-batch-of-orders-legacy" class="toc-h2 toc-link" data-title="Create or update a batch of orders (Legacy)">Create or update a batch of orders (Legacy)</a>
+                    </li>
+                    <li>
                       <a href="#create-or-update-a-batch-of-orders" class="toc-h2 toc-link" data-title="Create or update a batch of orders">Create or update a batch of orders</a>
                     </li>
                 </ul>
@@ -369,7 +373,7 @@
                 </ul>
           </li>
           <li>
-              <a href="#orders" class="toc-h1 toc-link" data-title="Orders">Orders</a>
+              <a href="#orders-legacy" class="toc-h1 toc-link" data-title="Orders (Legacy)">Orders (Legacy)</a>
                 <ul class="toc-list-h2">
                     <li>
                       <a href="#create-or-update-an-order" class="toc-h2 toc-link" data-title="Create or update an order">Create or update an order</a>
@@ -572,6 +576,36 @@
                 </ul>
           </li>
           <li>
+              <p class="toc-section">Shopper Activity</p>
+          </li>
+          <li>
+              <a href="#shopper_activity_overview" class="toc-h1 toc-link" data-title="Overview">Overview</a>
+          </li>
+          <li>
+              <a href="#cart-activity" class="toc-h1 toc-link" data-title="Cart Activity">Cart Activity</a>
+                <ul class="toc-list-h2">
+                    <li>
+                      <a href="#create-or-update-a-cart" class="toc-h2 toc-link" data-title="Create or update a cart">Create or update a cart</a>
+                    </li>
+                </ul>
+          </li>
+          <li>
+              <a href="#order-activity" class="toc-h1 toc-link" data-title="Order Activity">Order Activity</a>
+                <ul class="toc-list-h2">
+                    <li>
+                      <a href="#create-or-update-an-order" class="toc-h2 toc-link" data-title="Create or update an order">Create or update an order</a>
+                    </li>
+                </ul>
+          </li>
+          <li>
+              <a href="#product-activity" class="toc-h1 toc-link" data-title="Product Activity">Product Activity</a>
+                <ul class="toc-list-h2">
+                    <li>
+                      <a href="#create-or-update-a-product" class="toc-h2 toc-link" data-title="Create or update a product">Create or update a product</a>
+                    </li>
+                </ul>
+          </li>
+          <li>
               <p class="toc-section">JS API</p>
           </li>
           <li>
@@ -630,7 +664,7 @@
               <p class="toc-section">Custom Dynamic Content</p>
           </li>
           <li>
-              <a href="#background" class="toc-h1 toc-link" data-title="Background">Background</a>
+              <a href="#cdc_overview" class="toc-h1 toc-link" data-title="Overview">Overview</a>
                 <ul class="toc-list-h2">
                     <li>
                       <a href="#how-it-works" class="toc-h2 toc-link" data-title="How it works">How it works</a>
@@ -647,12 +681,15 @@
                       <a href="#parameters" class="toc-h2 toc-link" data-title="Parameters">Parameters</a>
                     </li>
                     <li>
-                      <a href="#response" class="toc-h2 toc-link" data-title="Response">Response</a>
+                      <a href="#cdc-requirements-response" class="toc-h2 toc-link" data-title="Response">Response</a>
                     </li>
                     <li>
                       <a href="#general" class="toc-h2 toc-link" data-title="General">General</a>
                     </li>
                 </ul>
+          </li>
+          <li>
+              <a href="#preview-test-mode" class="toc-h1 toc-link" data-title="Preview/Test Mode">Preview/Test Mode</a>
           </li>
           <li>
               <a href="#example" class="toc-h1 toc-link" data-title="Example">Example</a>
@@ -674,13 +711,9 @@
         </div>
         <h1 id='introduction'>Introduction</h1>
 <p>Welcome to the Drip API! The REST API communicates exclusively in JSON over SSL (HTTPS).
-All endpoint URLs begin with <code>https://api.getdrip.com/v2/</code>. Additionally, the REST API requires the use of a client which supports <a href="https://en.wikipedia.org/wiki/Server_Name_Indication">SNI</a>.</p>
+All endpoint URLs begin with <code>https://api.getdrip.com/</code>. Additionally, the REST API requires the use of a client which supports <a href="https://en.wikipedia.org/wiki/Server_Name_Indication">SNI</a>.</p>
 
-<p>Parameters must be serialized in JSON and passed in the request body (not in the query string or form parameters).
-This API is modeled after earlier versions of the <a href="http://jsonapi.org/">JSON API</a> specification.</p>
-
-<p>It is recommended that you use the media type designation of <code>application/vnd.api+json</code>,
-although we will accept a media type designation of <code>application/json</code>.</p>
+<p>Parameters must be serialized in JSON and passed in the request body (not in the query string or form parameters). You should use the media type designation of <code>application/json</code>.</p>
 <h1 id='rest-section'>REST Section</h1><h1 id='authentication'>Authentication</h1>
 <blockquote>
 <p>For private integrations, you will need to use your personal API Token (found <a href="https://www.getdrip.com/user/edit">here</a>) via the <code>api_key</code> setting and must be Base64 encoded before use:</p>
@@ -867,7 +900,7 @@ Content-Type: application/json
 <p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
 request and the time your data appears in the user interface.</p>
 <h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/subscribers/batches</code></p>
+<p><code>POST /v2/:account_id/subscribers/batches</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -956,7 +989,7 @@ request and the time your data appears in the user interface.</p>
 <p>Responds with a <code>204 No Content</code> response if successful.</p>
 </blockquote>
 <h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/unsubscribes/batches</code></p>
+<p><code>POST /v2/:account_id/unsubscribes/batches</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <table>
   <thead>
@@ -1053,7 +1086,7 @@ request and the time your data appears in the user interface.</p>
 <p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
 request and the time your data appears in the user interface.</p>
 <h3 id='http-endpoint-3'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/events/batches</code></p>
+<p><code>POST /v2/:account_id/events/batches</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <table>
   <thead>
@@ -1069,7 +1102,7 @@ request and the time your data appears in the user interface.</p>
     </tr>
   </tbody>
 </table>
-<h2 id='create-or-update-a-batch-of-orders'>Create or update a batch of orders</h2>
+<h2 id='create-or-update-a-batch-of-orders-legacy'>Create or update a batch of orders (Legacy)</h2>
 <blockquote>
 <p>To create or update a batch of orders:</p>
 </blockquote>
@@ -1227,12 +1260,20 @@ request and the time your data appears in the user interface.</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{}</span><span class="w">
 </span></code></pre>
+<aside class="notice color-notice">
+We’ve released a new and improved batch endpoint for Orders functionality! Check it out <a href="#create-or-update-a-batch-of-orders">here</a>.
+
+<br>
+<br>
+Note that the legacy Orders endpoint will continue to function. We will give fair notice before we retire it in the future.
+</aside>
+
 <p>We recommend using this API endpoint when you need to create a collection of orders and subscribers at once that will likely exceed the regular rate limit of 3,600 requests per hour.</p>
 
 <p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
 request and the time your data appears in the user interface.</p>
 <h3 id='http-endpoint-4'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/orders/batches</code></p>
+<p><code>POST /v2/:account_id/orders/batches</code></p>
 <h3 id='arguments-4'>Arguments</h3>
 <table>
   <thead>
@@ -1245,6 +1286,179 @@ request and the time your data appears in the user interface.</p>
     <tr>
       <td><code>orders</code></td>
       <td>Required. An Array with between 1 and 1000 objects containing <a href="#orders">order data</a>.</td>
+    </tr>
+  </tbody>
+</table>
+<h2 id='create-or-update-a-batch-of-orders'>Create or update a batch of orders</h2>
+<blockquote>
+<p>To create or update a batch of orders:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/order/batch"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u YOUR_API_KEY: <span class="se">\</span>
+  -d @- <span class="sh">&lt;&lt; EOF
+  {
+    "orders": [
+      {
+        "provider": "my_custom_platform",
+        "email": "john@acme.com",
+        "action": "placed",
+        "occurred_at": "2019-03-12T15:31:58Z",
+        "order_id": "63754763",
+        "order_public_id": "#4",
+        "grand_total": 54.00,
+        "total_discounts": 1.00,
+        "total_taxes": 1.00,
+        "total_fees": 0,
+        "total_shipping": 5.00,
+        "currency": "USD",
+        "order_url": "http://myorders.com/orders/4",
+        "items": [{
+          "product_id": "B01F9AQ99M",
+          "product_variant_id": "B01F9AQ99M-YEL-BT",
+          "sku": "JDT-4321",
+          "name": "Yellow Boots of Might",
+          "brand": "Drip",
+          "categories": [
+            "Of Might",
+            "Outdoors"
+          ],
+          "price": 49.00,
+          "quantity": 1,
+          "discounts": 1.00,
+          "taxes": 1.00,
+          "fees": 0,
+          "shipping": 5.00,
+          "total": 54.00,
+          "color": "black",
+          "product_url": "https://mysuperstore.com/dp/B01F9AQ99M",
+          "image_url": "https://www.getdrip.com/images/example_products/boots.png"
+        }],
+        "billing_address": {
+          "label": "Primary Billing",
+          "first_name": "Bill",
+          "last_name": "Billington",
+          "company": "Bills R US",
+          "address_1": "123 Bill St.",
+          "address_2": "Apt. B",
+          "city": "Billtown",
+          "state": "CA",
+          "postal_code": "01234",
+          "country": "United States",
+          "phone": "555-555-5555"
+        },
+        "shipping_address": {
+          "label": "Downtown Office",
+          "first_name": "Ship",
+          "last_name": "Shipington",
+          "company": "Shipping 4 Less",
+          "address_1": "123 Ship St.",
+          "address_2": "null",
+          "city": "Shipville",
+          "state": "CA",
+          "postal_code": "01234",
+          "country": "United States",
+          "phone": "555-555-5555"
+        }
+      },
+      {
+        "provider": "my_custom_platform",
+        "email": "user@gmail.com",
+        "action": "updated",
+        "occurred_at": "2019-03-12T15:27:16Z",
+        "order_id": "456445746",
+        "order_public_id": "#5",
+        "grand_total": 21.48,
+        "total_discounts": 5.34,
+        "total_taxes": 1.00,
+        "total_fees": 2.00,
+        "total_shipping": 5.00,
+        "currency": "USD",
+        "order_url": "https://mysuperstore.com/order/5",
+        "items": [
+          {
+            "product_id": "B01J4SWO1G",
+            "product_variant_id": "B01J4SWO1G-CW-BOTT",
+            "sku": "XHB-1234",
+            "name": "The Coolest Water Bottle",
+            "brand": "Drip",
+            "categories": [
+              "Accessories"
+            ],
+            "price": 11.16,
+            "sale_price": 10.16,
+            "quantity": 2,
+            "discounts": 5.34,
+            "taxes": 1.00,
+            "fees": 0.50,
+            "shipping": 5.00,
+            "total": 21.48,
+            "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
+            "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png",
+            "product_tag": "Best Seller"
+          }
+        ],
+        "billing_address": {
+          "label": "Primary Billing",
+          "first_name": "Bill",
+          "last_name": "Billington",
+          "company": "Bills R US",
+          "address_1": "123 Bill St.",
+          "address_2": "Apt. B",
+          "city": "Billtown",
+          "state": "CA",
+          "postal_code": "01234",
+          "country": "United States",
+          "phone": "555-555-5555"
+        },
+        "shipping_address": {
+          "label": "Downtown Office",
+          "first_name": "Ship",
+          "last_name": "Shipington",
+          "company": "Shipping 4 Less",
+          "address_1": "123 Ship St.",
+          "city": "Shipville",
+          "state": "CA",
+          "postal_code": "01234",
+          "country": "United States",
+          "phone": "555-555-5555"
+        }
+      }
+    ]
+  }
+  EOF
+</span></code></pre>
+<blockquote>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a list of unique request_ids that can be used to check the status of the request later on:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"request_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"db8a7b16-32dd-4863-8b6e-818e3eaab99a"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"002048e9-3692-4f0a-8bbf-80a077acf642"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p></aside></p>
+
+<p>We recommend using this API endpoint when you need to import a collection of orders that will likely exceed the regular rate limit of 3,600 requests per hour.</p>
+
+<p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
+request and the time your data appears in the user interface.</p>
+<h3 id='http-endpoint-5'>HTTP Endpoint</h3>
+<p><code>POST /v3/:account_id/shopper_activity/order/batch</code></p>
+<h3 id='arguments-5'>Arguments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>orders</code></td>
+      <td>Required. An Array with between 1 and 1000 objects containing <a href="#order-activity">order activity</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -1511,7 +1725,7 @@ use the <code>page</code> query parameter.</p>
   </span><span class="s2">"accounts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /accounts</code></p>
+<p><code>GET /v2/accounts</code></p>
 <h3 id='arguments'>Arguments</h3>
 <p>None.</p>
 <h2 id='fetch-an-account'>Fetch an account</h2>
@@ -1555,7 +1769,7 @@ use the <code>page</code> query parameter.</p>
   </span><span class="s2">"accounts"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /accounts/:account_id</code></p>
+<p><code>GET /v2/accounts/:account_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
 <h1 id='broadcasts'>Broadcasts</h1>
@@ -1714,7 +1928,7 @@ use the <code>page</code> query parameter.</p>
   </span><span class="s2">"broadcasts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/broadcasts</code></p>
+<p><code>GET /v2/:account_id/broadcasts</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -1781,7 +1995,7 @@ use the <code>page</code> query parameter.</p>
   </span><span class="s2">"broadcasts"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/broadcasts/:broadcast_id</code></p>
+<p><code>GET /v2/:account_id/broadcasts/:broadcast_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
 <h1 id='campaigns'>Campaigns</h1>
@@ -1986,7 +2200,7 @@ use the <code>page</code> query parameter.</p>
   </span><span class="s2">"campaigns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/campaigns</code></p>
+<p><code>GET /v2/:account_id/campaigns</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -2056,7 +2270,7 @@ use the <code>page</code> query parameter.</p>
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/campaigns/:campaign_id</code></p>
+<p><code>GET /v2/:account_id/campaigns/:campaign_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
 <h2 id='activate-a-campaign'>Activate a campaign</h2>
@@ -2096,7 +2310,7 @@ use the <code>page</code> query parameter.</p>
 <p>Responds with a <code>204 No Content</code> if successful. If the campaign cannot be activated, returns a <code>422 Unprocessable Entity</code>.</p>
 </blockquote>
 <h3 id='http-endpoint-3'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/campaigns/:campaign_id/activate</code></p>
+<p><code>POST /v2/:account_id/campaigns/:campaign_id/activate</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <p>None.</p>
 <h2 id='pause-a-campaign'>Pause a campaign</h2>
@@ -2136,7 +2350,7 @@ use the <code>page</code> query parameter.</p>
 <p>Responds with a <code>204 No Content</code> if successful. If the campaign cannot be paused, returns a <code>422 Unprocessable Entity</code>.</p>
 </blockquote>
 <h3 id='http-endpoint-4'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/campaigns/:campaign_id/pause</code></p>
+<p><code>POST /v2/:account_id/campaigns/:campaign_id/pause</code></p>
 <h3 id='arguments-4'>Arguments</h3>
 <p>None.</p>
 <h2 id='list-all-subscribers-subscribed-to-a-campaign'>List all subscribers subscribed to a campaign</h2>
@@ -2189,7 +2403,7 @@ end
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-5'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/campaigns/:campaign_id/subscribers</code></p>
+<p><code>GET /v2/:account_id/campaigns/:campaign_id/subscribers</code></p>
 <h3 id='arguments-5'>Arguments</h3>
 <table>
   <thead>
@@ -2295,7 +2509,7 @@ end
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-6'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/campaigns/:campaign_id/subscribers</code></p>
+<p><code>POST /v2/:account_id/campaigns/:campaign_id/subscribers</code></p>
 <h3 id='arguments-6'>Arguments</h3>
 <table>
   <thead>
@@ -2421,7 +2635,7 @@ end
   </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-7'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/subscribers/:subscriber_id/campaign_subscriptions</code></p>
+<p><code>GET /v2/:account_id/subscribers/:subscriber_id/campaign_subscriptions</code></p>
 <h3 id='arguments-7'>Arguments</h3>
 <p>None.</p>
 <h1 id='custom-fields'>Custom Fields</h1><h2 id='list-all-custom-field-identifiers-used-in-an-account'>List all custom field identifiers used in an account</h2>
@@ -2479,7 +2693,7 @@ end
   </tbody>
 </table>
 <h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/custom_field_identifiers</code></p>
+<p><code>GET /v2/:account_id/custom_field_identifiers</code></p>
 <h3 id='arguments'>Arguments</h3>
 <p>None.</p>
 <h1 id='conversions'>Conversions</h1>
@@ -2602,7 +2816,7 @@ end
   </span><span class="s2">"goals"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/goals</code></p>
+<p><code>GET /v2/:account_id/goals</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -2668,7 +2882,7 @@ end
   </span><span class="s2">"goals"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/goals/:conversion_id</code></p>
+<p><code>GET /v2/:account_id/goals/:conversion_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
 <h1 id='events'>Events</h1><h2 id='record-an-event'>Record an event</h2>
@@ -2736,7 +2950,7 @@ end
 
 <p>If you need to create or update a collection of events at once, use the Batch API instead.</p>
 <h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/events</code></p>
+<p><code>POST /v2/:account_id/events</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -2823,7 +3037,7 @@ end
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/event_actions</code></p>
+<p><code>GET /v2/:account_id/event_actions</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <table>
   <thead>
@@ -3039,7 +3253,7 @@ end
   </span><span class="s2">"forms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/forms</code></p>
+<p><code>GET /v2/:account_id/forms</code></p>
 <h3 id='arguments'>Arguments</h3>
 <p>None.</p>
 <h2 id='fetch-a-form'>Fetch a form</h2>
@@ -3084,10 +3298,18 @@ end
   </span><span class="s2">"forms"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/forms/:form_id</code></p>
+<p><code>GET /v2/:account_id/forms/:form_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
-<h1 id='orders'>Orders</h1>
+<h1 id='orders-legacy'>Orders (Legacy)</h1>
+<aside class="notice color-notice">
+We’ve released a new and improved endpoint for Orders functionality! This new endpoint will allow you to trigger automations and segment people based on the items contained in their orders. Check it out <a href="#order-activity">here</a>.
+
+<br>
+<br>
+Note that the legacy Orders endpoint will continue to function. We will give fair notice before we retire it in the future.
+</aside>
+
 <blockquote>
 <p>Orders are represented as follows:</p>
 </blockquote>
@@ -3618,7 +3840,7 @@ will be automatically incremented by the total amount of the order.</p>
 
 <p><strong>Note</strong>: A matching subscriber record must already be present in Drip before an order can be created.</p>
 <h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/orders</code></p>
+<p><code>POST /v2/:account_id/orders</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -3842,11 +4064,11 @@ will be automatically incremented by the total amount of the order.</p>
           <tbody>
             <tr>
               <td><code>name</code></td>
-              <td>The product name</td>
+              <td>Required. The product name</td>
             </tr>
             <tr>
               <td><code>amount</code></td>
-              <td>The line total (in cents).</td>
+              <td>Required. The line total (in cents).</td>
             </tr>
             <tr>
               <td><code>price</code></td>
@@ -3954,7 +4176,7 @@ will be automatically decremented by the total amount of the refund.</p>
 
 <p>To update an existing refund, include the <code>upstream_id</code> for that refund in the payload.</p>
 <h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/refunds</code></p>
+<p><code>POST /v2/:account_id/refunds</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <table>
   <thead>
@@ -4069,6 +4291,8 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>On January 7, 2019 we renamed Subscribers to People to better represent who you’re talking to. Right now this is a small wording change but represents something bigger in the way we all think about our customers. To keep things simple nothing in the API is changing at the moment. There is no need to update existing integrations, for new ones continue to reference the developer docs as outlined here.</p>
+
 <p><strong>Properties</strong></p>
 
 <table>
@@ -4234,7 +4458,7 @@ EOF
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/subscribers</code></p>
+<p><code>POST /v2/:account_id/subscribers</code></p>
 
 <p>If you need to create or update a collection of subscribers at once, use our <a href="/">batch API</a> instead.</p>
 <h3 id='arguments'>Arguments</h3>
@@ -4248,11 +4472,15 @@ EOF
   <tbody>
     <tr>
       <td><code>email</code></td>
-      <td>Optional. The subscriber's email address. Either <code>email</code> or <code>id</code> must be included.</td>
+      <td>Optional. The subscriber's email address. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
     </tr>
     <tr>
       <td><code>id</code></td>
-      <td>Optional. The subscriber's Drip <code>id</code>. Either <code>email</code> or <code>id</code> must be included.</td>
+      <td>Optional. The subscriber's Drip <code>id</code>. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
+    </tr>
+    <tr>
+      <td><code>visitor_uuid</code></td>
+      <td>Optional. The <code>uuid</code> for a subscriber's visitor record. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
     </tr>
     <tr>
       <td><code>new_email</code></td>
@@ -4353,7 +4581,7 @@ EOF
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/subscribers</code></p>
+<p><code>GET /v2/:account_id/subscribers</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <table>
   <thead>
@@ -4398,7 +4626,7 @@ EOF
 <blockquote>
 <p>To fetch a subscriber:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL_OR_VISITOR_UUID"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY:
 </code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
@@ -4437,7 +4665,7 @@ EOF
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-3'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/subscribers/:id_or_email</code></p>
+<p><code>GET /v2/:account_id/subscribers/:id_or_email_or_visitor_uuid</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <p>None.</p>
 <h2 id='remove-a-subscriber-from-one-or-all-campaigns'>Remove a subscriber from one or all campaigns</h2>
@@ -4509,7 +4737,7 @@ EOF
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-4'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/subscribers/:id_or_email/remove</code></p>
+<p><code>POST /v2/:account_id/subscribers/:id_or_email/remove</code></p>
 
 <p>This endpoint was previously labeled <code>unsubscribe</code>.</p>
 <h3 id='arguments-4'>Arguments</h3>
@@ -4569,7 +4797,7 @@ EOF
   </span><span class="s2">"subscribers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-5'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/subscribers/:id_or_email/unsubscribe_all</code></p>
+<p><code>POST /v2/:account_id/subscribers/:id_or_email/unsubscribe_all</code></p>
 <h3 id='arguments-5'>Arguments</h3>
 <p>None.</p>
 <h2 id='delete-a-subscriber'>Delete a subscriber</h2>
@@ -4674,7 +4902,7 @@ EOF
   </tbody>
 </table>
 <h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/tags</code></p>
+<p><code>GET /v2/:account_id/tags</code></p>
 <h3 id='arguments'>Arguments</h3>
 <p>None.</p>
 <h2 id='apply-a-tag-to-a-subscriber'>Apply a tag to a subscriber</h2>
@@ -4731,7 +4959,7 @@ EOF
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/tags</code></p>
+<p><code>POST /v2/:account_id/tags</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <table>
   <thead>
@@ -4834,7 +5062,7 @@ EOF
   </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /user</code></p>
+<p><code>GET /v2/user</code></p>
 <h3 id='arguments'>Arguments</h3>
 <p>None.</p>
 <h1 id='workflows'>Workflows</h1>
@@ -4947,7 +5175,7 @@ EOF
   </span><span class="s2">"workflows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/workflows</code></p>
+<p><code>GET /v2/:account_id/workflows</code></p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -5013,7 +5241,7 @@ EOF
   </span><span class="s2">"workflows"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/workflows/:workflow_id</code></p>
+<p><code>GET /v2/:account_id/workflows/:workflow_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
 <h2 id='activate-a-workflow'>Activate a workflow</h2>
@@ -5053,7 +5281,7 @@ EOF
 <p>Responds with a <code>204 No Content</code> if successful.</p>
 </blockquote>
 <h3 id='http-endpoint-3'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/workflows/:workflow_id/activate</code></p>
+<p><code>POST /v2/:account_id/workflows/:workflow_id/activate</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <p>None.</p>
 <h2 id='pause-a-workflow'>Pause a workflow</h2>
@@ -5093,7 +5321,7 @@ EOF
 <p>Responds with a <code>204 No Content</code> if successful.</p>
 </blockquote>
 <h3 id='http-endpoint-4'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/workflows/:workflow_id/pause</code></p>
+<p><code>POST /v2/:account_id/workflows/:workflow_id/pause</code></p>
 <h3 id='arguments-4'>Arguments</h3>
 <p>None.</p>
 <h2 id='start-someone-on-a-workflow'>Start someone on a workflow</h2>
@@ -5166,7 +5394,7 @@ EOF
 </span></code></pre>
 <p>If the workflow is not active, the subscriber will not be added to the workflow.</p>
 <h3 id='http-endpoint-5'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/workflows/:workflow_id/subscribers</code></p>
+<p><code>POST /v2/:account_id/workflows/:workflow_id/subscribers</code></p>
 <h3 id='arguments-5'>Arguments</h3>
 <table>
   <thead>
@@ -5316,7 +5544,7 @@ EOF
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-7'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/workflows/:workflow_id/triggers</code></p>
+<p><code>GET /v2/:account_id/workflows/:workflow_id/triggers</code></p>
 <h3 id='arguments-7'>Arguments</h3>
 <p>None.</p>
 <h2 id='create-a-workflow-trigger'>Create a workflow trigger</h2>
@@ -5402,7 +5630,7 @@ EOF
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-8'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/workflows/:workflow_id/triggers</code></p>
+<p><code>POST /v2/:account_id/workflows/:workflow_id/triggers</code></p>
 <h3 id='arguments-8'>Arguments</h3>
 <table>
   <thead>
@@ -5647,7 +5875,7 @@ EOF
   </span><span class="s2">"webhooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/webhooks</code></p>
+<p><code>GET /v2/:account_id/webhooks</code></p>
 <h3 id='arguments'>Arguments</h3>
 <p>None.</p>
 <h2 id='fetch-a-webhook'>Fetch a webhook</h2>
@@ -5692,7 +5920,7 @@ EOF
   </span><span class="s2">"webhooks"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-2'>HTTP Endpoint</h3>
-<p><code>GET /:account_id/webhooks/:webhook_id</code></p>
+<p><code>GET /v2/:account_id/webhooks/:webhook_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
 <h2 id='create-a-new-webhook'>Create a new webhook</h2>
@@ -5775,7 +6003,7 @@ EOF
   </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-endpoint-3'>HTTP Endpoint</h3>
-<p><code>POST /:account_id/webhooks</code></p>
+<p><code>POST /v2/:account_id/webhooks</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <table>
   <thead>
@@ -6302,6 +6530,802 @@ only fires when lead scoring is enabled for your account.</strong></p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>This event is triggered when a subscriber&#39;s aliases are updated. <code>user_id</code> is currently the only natively supported alias.</p>
+<h1 id='shopper-activity-section'>Shopper Activity Section</h1><h1 id="shopper_activity_overview">Overview</h1>
+
+<p>When selling online, there are many activities your customers (and potential customers) can take. Passing the details of these activities to Drip helps us make you money. We do that by enabling deeper content personalization and providing actionable insights that bring people closer to your brand.</p>
+<h1 id='cart-activity'>Cart Activity</h1>
+<p>Passing in all required fields for Cart Activity will enable Cart Abandonment Dynamic Content in your Drip account. Leverage that content in our Visual Email Builder to send Cart Abandonment emails containing item details.</p>
+
+<p>Note that Cart Activity will show up on a person&#39;s activity timeline as either a &quot;Created a cart&quot; or &quot;Updated a cart&quot; event. For more information, see our Knowledge Base <a href="https://help.drip.com/hc/en-us/articles/360022922031">here</a>.</p>
+<h2 id='create-or-update-a-cart'>Create or update a cart</h2>
+<blockquote>
+<p>To record a cart event:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/cart"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u YOUR_API_KEY: <span class="se">\</span>
+  -d @- <span class="sh">&lt;&lt; EOF
+  {
+    "provider": "my_custom_platform",
+    "email": "user@gmail.com",
+    "action": "created",
+    "cart_id": "456445746",
+    "occurred_at": "2019-01-17T20:50:00Z",
+    "cart_public_id": "#5",
+    "grand_total": 16.99,
+    "total_discounts": 5.34,
+    "currency": "USD",
+    "cart_url": "https://mysuperstore.com/cart/456445746",
+    "items": [
+      {
+        "product_id": "B01J4SWO1G",
+        "product_variant_id": "B01J4SWO1G-CW-BOTT",
+        "sku": "XHB-1234",
+        "name": "The Coolest Water Bottle",
+        "brand": "Drip",
+        "categories": [
+          "Accessories"
+        ],
+        "price": 11.16,
+        "quantity": 2,
+        "discount": 5.34,
+        "total": 16.99,
+        "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
+        "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png",
+        "product_tag": "Best Seller"
+      }
+    ]
+  }
+  EOF
+</span></code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Drip</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">api_key</span> <span class="o">=</span> <span class="s2">"YOUR API KEY"</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">account_id</span> <span class="o">=</span> <span class="s2">"YOUR_ACCOUNT_ID"</span>
+<span class="k">end</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">create_cart_activity_event</span><span class="p">(</span>
+  <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
+  <span class="ss">email: </span><span class="s2">"user@gmail.com"</span><span class="p">,</span> <span class="c1"># or person_id</span>
+  <span class="ss">action: </span><span class="s2">"created"</span><span class="p">,</span>
+  <span class="ss">cart_id: </span><span class="s2">"456445746"</span><span class="p">,</span>
+  <span class="ss">occurred_at: </span><span class="s2">"2019-01-17T20:50:00Z"</span><span class="p">,</span>
+  <span class="ss">cart_public_id: </span><span class="s2">"#5"</span><span class="p">,</span>
+  <span class="ss">grand_total: </span><span class="mi">16</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span>
+  <span class="ss">total_discounts: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+  <span class="ss">currency: </span><span class="s2">"USD"</span><span class="p">,</span>
+  <span class="ss">cart_url: </span><span class="s2">"https://mysuperstore.example.com/cart/456445746"</span><span class="p">,</span>
+  <span class="ss">items: </span><span class="p">[</span>
+    <span class="p">{</span>
+      <span class="ss">product_id: </span><span class="s2">"B01J4SWO1G"</span><span class="p">,</span>
+      <span class="ss">product_variant_id: </span><span class="s2">"B01J4SWO1G-CW-BOTT"</span><span class="p">,</span>
+      <span class="ss">sku: </span><span class="s2">"XHB-1234"</span><span class="p">,</span>
+      <span class="ss">name: </span><span class="s2">"The Coolest Water Bottle"</span><span class="p">,</span>
+      <span class="ss">brand: </span><span class="s2">"Drip"</span><span class="p">,</span>
+      <span class="ss">categories: </span><span class="p">[</span>
+        <span class="s2">"Accessories"</span>
+      <span class="p">],</span>
+      <span class="ss">price: </span><span class="mi">11</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
+      <span class="ss">quantity: </span><span class="mi">2</span><span class="p">,</span>
+      <span class="ss">discount: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+      <span class="ss">total: </span><span class="mi">16</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span>
+      <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.com/dp/B01J4SWO1G"</span><span class="p">,</span>
+      <span class="ss">image_url: </span><span class="s2">"https://www.getdrip.com/images/example_products/water_bottle.png"</span><span class="p">,</span>
+      <span class="ss">product_tag: </span><span class="s2">"Best Seller"</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="nf">success?</span>
+  <span class="nb">puts</span> <span class="s2">"Request accepted"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Error occurred"</span>
+<span class="k">end</span>
+</code></pre>
+<blockquote>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a unique request_id that can be used to check the status of the request later on:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"990c99a7-5cba-42e8-8f36-aec3419186ef"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
+<p><code>POST /v3/:account_id/shopper_activity/cart</code></p>
+<h3 id='arguments'>Arguments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>provider</code></td>
+      <td>Required. The identifier for the provider from which the order data was received in lower snake cased form. For example, <code>shopify</code> or <code>my_custom_platform</code> or <code>my_store</code>.</td>
+    </tr>
+    <tr>
+      <td><code>person_id</code></td>
+      <td>Optional. The unique identifier of a person at Drip. Either <code>person_id</code> or <code>email</code> must be included. If both are included, <code>email</code> is ignored.</td>
+    </tr>
+    <tr>
+      <td><code>email</code></td>
+      <td>Optional. The person's email address. Either <code>person_id</code> or <code>email</code> must be included. If both are included, <code>email</code> is ignored.</td>
+    </tr>
+    <tr>
+      <td><code>action</code></td>
+      <td>Required. The event's action. For Cart Activity, this can be either <code>created</code> or <code>updated</code>. <code>created</code> will trigger a "Created a Cart" event on a person's timeline. <code>updated</code> will trigger an "Updated a Cart" event.</td>
+    </tr>
+    <tr>
+      <td><code>cart_id</code></td>
+      <td>Required. A unique, internal id for the cart (generally the primary key generated by the ecommerce platform).</td>
+    </tr>
+    <tr>
+      <td><code>occurred_at</code></td>
+      <td>Optional. The String time at which the order occurred in <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format. Defaults to the current time.</td>
+    </tr>
+    <tr>
+      <td><code>cart_public_id</code></td>
+      <td>Optional. A public, customer-facing identifier for the cart. This will be displayed in the Drip UI and should correspond to the identifier a customer might see in their own cart.</td>
+    </tr>
+    <tr>
+      <td><code>grand_total</code></td>
+      <td>Optional. The total amount of the cart. This should include any applicable discounts. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>total_discounts</code></td>
+      <td>Optional. The discount on the entire order. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>currency</code></td>
+      <td>Optional. The alphabetic <a href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a> code for the currency of the purchase.</td>
+    </tr>
+    <tr>
+      <td><code>cart_url</code></td>
+      <td>Required. A URL that links back to the shopper’s cart on your ecommerce platform.</td>
+    </tr>
+    <tr>
+      <td><code>items</code></td>
+      <td>
+        An Array of objects containing information about specific cart items.
+        <br><br>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>product_id</code></td>
+              <td>Required. A unique identifier for the product from the <code>provider</code>.</td>
+            </tr>
+            <tr>
+              <td><code>product_variant_id</code></td>
+              <td>Optional. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors.</td>
+            </tr>
+            <tr>
+              <td><code>sku</code></td>
+              <td>Optional. The product SKU.</td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>Required. The product name.</td>
+            </tr>
+            <tr>
+              <td><code>brand</code></td>
+              <td>Optional. The product's brand, vendor, or manufacturer.</td>
+            </tr>
+            <tr>
+              <td><code>categories</code></td>
+              <td>Optional. An array of categories associated with the product (e.g. shoes, vitamins, books, videos).</td>
+            </tr>
+            <tr>
+              <td><code>price</code></td>
+              <td>Required. The price of a single product.</td>
+            </tr>
+            <tr>
+              <td><code>quantity</code></td>
+              <td>Optional. The quantity of the item ordered. Defaults to 1.</td>
+            </tr>
+            <tr>
+              <td><code>discount</code></td>
+              <td>Optional. The discount on the items, taking quantity into account. For example, a $2.66 discount per item would be $5.34 if that item was of quantity 2. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>total</code></td>
+              <td>Optional. The line item total after quantity and discount. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>product_url</code></td>
+              <td>Optional. A URL to the site containing product details.</td>
+            </tr>
+            <tr>
+              <td><code>image_url</code></td>
+              <td>Optional. A direct URL to an image of the  product. We recommend using an image type that is supported by modern email clients (e.g. JPEG, GIF, PNG). For best display results, image size should be consistent across all products.</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The API will also allow custom attributes to be passed in. These will be exposed within Drip just like <a href="https://help.drip.com/hc/en-us/articles/115003737312-Event-Properties">event properties</a>.</p>
+
+<p>For example, if your platform includes the concept of product tags, you can include a product_tag attribute in the JSON that can be used in a Drip automation or email <a href="https://help.drip.com/hc/en-us/articles/115003737312-Event-Properties#access-properties">via Liquid</a>. You can attach custom attributes either to events or their items.</p>
+<h1 id='order-activity'>Order Activity</h1>
+<p>Order Activity will show up on a person&#39;s activity timeline as an event. The event is based on the <code>action</code> sent with the order payload. For example, sending <code>placed</code> will result in a &quot;Placed an order&quot; event and sending <code>updated</code> will result in an &quot;Updated an order&quot; event.</p>
+
+<p>Drip will keep a person’s Lifetime Value (LTV) up-to-date with their orders. For example, if a customer places an order with a <code>grand_total</code> of $100, their LTV will be incremented by $100. If the order is then updated, paid, or fulfilled with a <code>grand_total</code> value of $105, the customer’s LTV will increase by $5. If the order is then canceled or refunded with a <code>refund_amount</code> of $105, the customer’s LTV will decrease by $105.</p>
+<h2 id='create-or-update-an-order'>Create or update an order</h2>
+<p>To update an existing order, include the <code>provider</code> and <code>order_id</code> for that order in the payload.</p>
+
+<blockquote>
+<p>To record an order event:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/order"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u YOUR_API_KEY: <span class="se">\</span>
+  -d @- <span class="sh">&lt;&lt; EOF
+  {
+    "provider": "my_custom_platform",
+    "email": "user@gmail.com",
+    "action": "placed",
+    "occurred_at": "2019-01-17T20:50:00Z",
+    "order_id": "456445746",
+    "order_public_id": "#5",
+    "grand_total": 22.99,
+    "total_discounts": 5.34,
+    "total_taxes": 1.00,
+    "total_fees": 2.00,
+    "total_shipping": 5.00,
+    "currency": "USD",
+    "order_url": "https://mysuperstore.com/order/456445746",
+    "items": [
+      {
+        "product_id": "B01J4SWO1G",
+        "product_variant_id": "B01J4SWO1G-CW-BOTT",
+        "sku": "XHB-1234",
+        "name": "The Coolest Water Bottle",
+        "brand": "Drip",
+        "categories": [
+          "Accessories"
+        ],
+        "price": 11.16,
+        "sale_price": 10.16,
+        "quantity": 2,
+        "discounts": 5.34,
+        "taxes": 1.00,
+        "fees": 0.50,
+        "shipping": 5.00,
+        "total": 23.99,
+        "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
+        "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png",
+        "product_tag": "Best Seller"
+      }
+    ],
+    "billing_address": {
+      "label": "Primary Billing",
+      "first_name": "Bill",
+      "last_name": "Billington",
+      "company": "Bills R US",
+      "address_1": "123 Bill St.",
+      "address_2": "Apt. B",
+      "city": "Billtown",
+      "state": "CA",
+      "postal_code": "01234",
+      "country": "United States",
+      "phone": "555-555-5555"
+    },
+    "shipping_address": {
+      "label": "Downtown Office",
+      "first_name": "Ship",
+      "last_name": "Shipington",
+      "company": "Shipping 4 Less",
+      "address_1": "123 Ship St.",
+      "city": "Shipville",
+      "state": "CA",
+      "postal_code": "01234",
+      "country": "United States",
+      "phone": "555-555-5555"
+    }
+  }
+  EOF
+</span></code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Drip</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">api_key</span> <span class="o">=</span> <span class="s2">"YOUR API KEY"</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">account_id</span> <span class="o">=</span> <span class="s2">"YOUR_ACCOUNT_ID"</span>
+<span class="k">end</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">create_order_activity_event</span><span class="p">(</span>
+  <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
+  <span class="ss">email: </span><span class="s2">"user@gmail.com"</span><span class="p">,</span> <span class="c1"># or person_id</span>
+  <span class="ss">action: </span><span class="s2">"placed"</span><span class="p">,</span>
+  <span class="ss">occurred_at: </span><span class="s2">"2019-01-17T20:50:00Z"</span><span class="p">,</span>
+  <span class="ss">order_id: </span><span class="s2">"456445746"</span><span class="p">,</span>
+  <span class="ss">order_public_id: </span><span class="s2">"#5"</span><span class="p">,</span>
+  <span class="ss">grand_total: </span><span class="mi">22</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span>
+  <span class="ss">total_discounts: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+  <span class="ss">total_taxes: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+  <span class="ss">total_fees: </span><span class="mi">2</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+  <span class="ss">total_shipping: </span><span class="mi">5</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+  <span class="ss">currency: </span><span class="s2">"USD"</span><span class="p">,</span>
+  <span class="ss">order_url: </span><span class="s2">"https://mysuperstore.com/order/456445746"</span><span class="p">,</span>
+  <span class="ss">items: </span><span class="p">[</span>
+    <span class="p">{</span>
+      <span class="ss">product_id: </span><span class="s2">"B01J4SWO1G"</span><span class="p">,</span>
+      <span class="ss">product_variant_id: </span><span class="s2">"B01J4SWO1G-CW-BOTT"</span><span class="p">,</span>
+      <span class="ss">sku: </span><span class="s2">"XHB-1234"</span><span class="p">,</span>
+      <span class="ss">name: </span><span class="s2">"The Coolest Water Bottle"</span><span class="p">,</span>
+      <span class="ss">brand: </span><span class="s2">"Drip"</span><span class="p">,</span>
+      <span class="ss">categories: </span><span class="p">[</span>
+        <span class="s2">"Accessories"</span>
+      <span class="p">],</span>
+      <span class="ss">price: </span><span class="mi">11</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
+      <span class="ss">sale_price: </span><span class="mi">10</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
+      <span class="ss">quantity: </span><span class="mi">2</span><span class="p">,</span>
+      <span class="ss">discounts: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+      <span class="ss">taxes: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">fees: </span><span class="mi">0</span><span class="o">.</span><span class="mi">50</span><span class="p">,</span>
+      <span class="ss">shipping: </span><span class="mi">5</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">total: </span><span class="mi">23</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span>
+      <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.com/dp/B01J4SWO1G"</span><span class="p">,</span>
+      <span class="ss">image_url: </span><span class="s2">"https://www.getdrip.com/images/example_products/water_bottle.png"</span><span class="p">,</span>
+      <span class="ss">product_tag: </span><span class="s2">"Best Seller"</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="ss">billing_address: </span><span class="p">{</span>
+    <span class="ss">label: </span><span class="s2">"Primary Billing"</span><span class="p">,</span>
+    <span class="ss">first_name: </span><span class="s2">"Bill"</span><span class="p">,</span>
+    <span class="ss">last_name: </span><span class="s2">"Billington"</span><span class="p">,</span>
+    <span class="ss">company: </span><span class="s2">"Bills R US"</span><span class="p">,</span>
+    <span class="ss">address_1: </span><span class="s2">"123 Bill St."</span><span class="p">,</span>
+    <span class="ss">address_2: </span><span class="s2">"Apt. B"</span><span class="p">,</span>
+    <span class="ss">city: </span><span class="s2">"Billtown"</span><span class="p">,</span>
+    <span class="ss">state: </span><span class="s2">"CA"</span><span class="p">,</span>
+    <span class="ss">postal_code: </span><span class="s2">"01234"</span><span class="p">,</span>
+    <span class="ss">country: </span><span class="s2">"United States"</span><span class="p">,</span>
+    <span class="ss">phone: </span><span class="s2">"555-555-5555"</span>
+  <span class="p">},</span>
+  <span class="ss">shipping_address: </span><span class="p">{</span>
+    <span class="ss">label: </span><span class="s2">"Downtown Office"</span><span class="p">,</span>
+    <span class="ss">first_name: </span><span class="s2">"Ship"</span><span class="p">,</span>
+    <span class="ss">last_name: </span><span class="s2">"Shipington"</span><span class="p">,</span>
+    <span class="ss">company: </span><span class="s2">"Shipping 4 Less"</span><span class="p">,</span>
+    <span class="ss">address_1: </span><span class="s2">"123 Ship St."</span><span class="p">,</span>
+    <span class="ss">city: </span><span class="s2">"Shipville"</span><span class="p">,</span>
+    <span class="ss">state: </span><span class="s2">"CA"</span><span class="p">,</span>
+    <span class="ss">postal_code: </span><span class="s2">"01234"</span><span class="p">,</span>
+    <span class="ss">country: </span><span class="s2">"United States"</span><span class="p">,</span>
+    <span class="ss">phone: </span><span class="s2">"555-555-5555"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="nf">success?</span>
+  <span class="nb">puts</span> <span class="s2">"Request accepted"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Error occurred"</span>
+<span class="k">end</span>
+</code></pre>
+<blockquote>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a unique request_id that can be used to check the status of the request later on:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"990c99a7-5cba-42e8-8f36-aec3419186ef"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
+<p><code>POST /v3/:account_id/shopper_activity/order</code></p>
+<h3 id='arguments'>Arguments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>provider</code></td>
+      <td>Required. The identifier for the provider from which the order data was received in lower snake cased form. For example, <code>shopify</code> or <code>my_custom_platform</code> or <code>my_store</code>.</td>
+    </tr>
+    <tr>
+      <td><code>person_id</code></td>
+      <td>Optional. The unique identifier of a person at Drip. Either <code>person_id</code> or <code>email</code> must be included. If both are included, <code>email</code> is ignored.</td>
+    </tr>
+    <tr>
+      <td><code>email</code></td>
+      <td>Optional. The person's email address. Either <code>person_id</code> or <code>email</code> must be included. If both are included, <code>email</code> is ignored.</td>
+    </tr>
+    <tr>
+      <td><code>action</code></td>
+      <td>Required. The event's action. For Order Activity, this can be either <code>placed</code>, <code>updated</code>, <code>paid</code>, <code>fulfilled</code>, <code>refunded</code>, or <code>canceled</code>. These actions will result in "Placed an order", "Updated an order", "Paid an order", "Fulfilled an order", "Refunded an order", and "Canceled an order" events on the person's timeline, respectively.
+    </tr>
+    <tr>
+      <td><code>occurred_at</code></td>
+      <td>Optional. The String time at which the order occurred in <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format. Defaults to the current time.</td>
+    </tr>
+    <tr>
+      <td><code>order_id</code></td>
+      <td>Required. A unique, internal id for the order (generally the primary key generated by the ecommerce platform).</td>
+    </tr>
+    <tr>
+      <td><code>order_public_id</code></td>
+      <td>Optional. A public, customer-facing identifier for the order. This will be displayed in the Drip UI and should correspond to the identifier a customer might see in their own order.</td>
+    </tr>
+    <tr>
+      <td><code>grand_total</code></td>
+      <td>Optional. The total amount of the order. This should include any applicable discounts. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>total_discounts</code></td>
+      <td>Optional. The discounts on the entire order. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>total_taxes</code></td>
+      <td>Optional. The taxes on the entire order. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>total_fees</code></td>
+      <td>Optional. The fees on the entire order. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>total_shipping</code></td>
+      <td>Optional. The shipping on the entire order. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>refund_amount</code></td>
+      <td>Optional. To adjust a person’s lifetime value for a refund or cancelation, set <code>refund_amount</code> to the amount of the refund and leave <code>grand_total</code> unchanged. Defaults to 0.</td>
+    </tr>
+    <tr>
+      <td><code>currency</code></td>
+      <td>Optional. The alphabetic <a href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a> code for the currency of the purchase.</td>
+    </tr>
+    <tr>
+      <td><code>order_url</code></td>
+      <td>Optional. A URL that links back to the shopper’s order on your ecommerce platform.</td>
+    </tr>
+    <tr>
+      <td><code>items</code></td>
+      <td>
+        An Array of objects containing information about specific order items.
+        <br><br>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>product_id</code></td>
+              <td>Required. A unique identifier for the product from the <code>provider</code>.</td>
+            </tr>
+            <tr>
+              <td><code>product_variant_id</code></td>
+              <td>Optional. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors.</td>
+            </tr>
+            <tr>
+              <td><code>sku</code></td>
+              <td>Optional. The product SKU.</td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>Required. The product name.</td>
+            </tr>
+            <tr>
+              <td><code>brand</code></td>
+              <td>Optional. The product's brand, vendor, or manufacturer.</td>
+            </tr>
+            <tr>
+              <td><code>categories</code></td>
+              <td>Optional. An array of categories associated with the product (e.g. shoes, vitamins, books, videos).</td>
+            </tr>
+            <tr>
+              <td><code>price</code></td>
+              <td>Required. The price of a single product.</td>
+            </tr>
+            <tr>
+              <td><code>quantity</code></td>
+              <td>Optional. The quantity of the item ordered. Defaults to 1.</td>
+            </tr>
+            <tr>
+              <td><code>discount</code></td>
+              <td>Optional. The discount on the items, taking quantity into account. For example, a $2.66 discount per item would be $5.34 if that item was of quantity 2. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>taxes</code></td>
+              <td>Optional. The taxes on the items, taking quantity into account. For example, a $0.50 taxes per item would be $1.00 if that item was of quantity 2. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>fees</code></td>
+              <td>Optional. Any additional fees on the items, taking quantity into account. For example, a $0.25 fee per item would be $0.50 if that item was of quantity 2. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>shipping</code></td>
+              <td>Optional. The shipping cost on the items, taking quantity into account. For example, $2.50 fee per item would be $5.00 if that item was of quantity 2. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>total</code></td>
+              <td>Optional. The line item total after quantity, discount, taxes, fees, and shipping. Defaults to 0.</td>
+            </tr>
+            <tr>
+              <td><code>product_url</code></td>
+              <td>Optional. A URL to the site containing product details.</td>
+            </tr>
+            <tr>
+              <td><code>image_url</code></td>
+              <td>Optional. A direct URL to an image of the  product. We recommend using an image type that is supported by modern email clients (e.g. JPEG, GIF, PNG). For best display results, image size should be consistent across all products.</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td><code>billing_address</code></td>
+      <td>
+        An object containing billing address information.
+        <br><br>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>label</code></td>
+              <td>Optional. The label describing the billing address.</td>
+            </tr>
+            <tr>
+              <td><code>first_name</code></td>
+              <td>Optional. The first name on the billing address.</td>
+            </tr>
+            <tr>
+              <td><code>last_name</code></td>
+              <td>Optional. The last name on the billing address.</td>
+            </tr>
+            <tr>
+              <td><code>company</code></td>
+              <td>Optional. The company on the billing address.</td>
+            </tr>
+            <tr>
+              <td><code>address_1</code></td>
+              <td>Optional. The billing street address.</td>
+            </tr>
+            <tr>
+              <td><code>address_2</code></td>
+              <td>Optional. Additional line of the billing street address.</td>
+            </tr>
+            <tr>
+              <td><code>city</code></td>
+              <td>Optional. The billing address city.</td>
+            </tr>
+            <tr>
+              <td><code>state</code></td>
+              <td>Optional. The billing address state.</td>
+            </tr>
+            <tr>
+              <td><code>postal_code</code></td>
+              <td>Optional. The billing address postal code.</td>
+            </tr>
+            <tr>
+              <td><code>country</code></td>
+              <td>Optional. The billing address country.</td>
+            </tr>
+            <tr>
+              <td><code>phone</code></td>
+              <td>Optional. The phone number associated with the billing address.</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td><code>shipping_address</code></td>
+      <td>
+        An object containing shipping address information.
+        <br><br>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>label</code></td>
+              <td>Optional. The label describing the shipping address.</td>
+            </tr>
+            <tr>
+              <td><code>first_name</code></td>
+              <td>Optional. The first name on the shipping address.</td>
+            </tr>
+            <tr>
+              <td><code>last_name</code></td>
+              <td>Optional. The last name on the shipping address.</td>
+            </tr>
+            <tr>
+              <td><code>company</code></td>
+              <td>Optional. The company on the shipping address.</td>
+            </tr>
+            <tr>
+              <td><code>address_1</code></td>
+              <td>Optional. The shipping street address.</td>
+            </tr>
+            <tr>
+              <td><code>address_2</code></td>
+              <td>Optional. Additional line of the shipping street address.</td>
+            </tr>
+            <tr>
+              <td><code>city</code></td>
+              <td>Optional. The shipping address city.</td>
+            </tr>
+            <tr>
+              <td><code>state</code></td>
+              <td>Optional. The shipping address state.</td>
+            </tr>
+            <tr>
+              <td><code>postal_code</code></td>
+              <td>Optional. The shipping address postal code.</td>
+            </tr>
+            <tr>
+              <td><code>country</code></td>
+              <td>Optional. The shipping address country.</td>
+            </tr>
+            <tr>
+              <td><code>phone</code></td>
+              <td>Optional. The phone number associated with the shipping address.</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The API will also allow custom attributes to be passed in. These will be exposed within Drip just like <a href="https://help.drip.com/hc/en-us/articles/115003737312-Event-Properties">event properties</a>.</p>
+
+<p>For example, if your platform includes the concept of product tags, you can include a product_tag attribute in the JSON that can be used in a Drip automation or email <a href="https://help.drip.com/hc/en-us/articles/115003737312-Event-Properties#access-properties">via Liquid</a>. You can attach custom attributes either to events or their items.</p>
+<h1 id='product-activity'>Product Activity</h1>
+<p>Using the Product Activity endpoint will enable product-triggered automations in your Drip account. An example: price drop notifications. Send an email when a product in a customer’s cart drops in price, encouraging the customer to return and place an order.</p>
+<h2 id='create-or-update-a-product'>Create or update a product</h2>
+<p>To update an existing product, include the <code>provider</code> and <code>product_id</code> for that order in the payload.</p>
+
+<blockquote>
+<p>To record an order event:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/product"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u YOUR_API_KEY: <span class="se">\</span>
+  -d @- <span class="sh">&lt;&lt; EOF
+  {
+    "provider": "my_custom_platform",
+    "action": "created",
+    "occurred_at": "2019-01-28T12:15:23Z",
+    "product_id": "B01J4SWO1G",
+    "product_variant_id": "B01J4SWO1G-CW-BOTT",
+    "sku": "XHB-1234",
+    "name": "The Coolest Water Bottle",
+    "brand": "Drip",
+    "categories": [
+      "Accessories"
+    ],
+    "price": 11.16,
+    "inventory": 42,
+    "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
+    "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png"
+  }
+  EOF
+</span></code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Drip</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">api_key</span> <span class="o">=</span> <span class="s2">"YOUR API KEY"</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">account_id</span> <span class="o">=</span> <span class="s2">"YOUR_ACCOUNT_ID"</span>
+<span class="k">end</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">create_product_activity_event</span><span class="p">(</span>
+  <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
+  <span class="ss">action: </span><span class="s2">"created"</span><span class="p">,</span>
+  <span class="ss">occurred_at: </span><span class="s2">"2019-01-28T12:15:23Z"</span><span class="p">,</span>
+  <span class="ss">product_id: </span><span class="s2">"B01J4SWO1G"</span><span class="p">,</span>
+  <span class="ss">product_variant_id: </span><span class="s2">"B01J4SWO1G-CW-BOTT"</span><span class="p">,</span>
+  <span class="ss">sku: </span><span class="s2">"XHB-1234"</span><span class="p">,</span>
+  <span class="ss">name: </span><span class="s2">"The Coolest Water Bottle"</span><span class="p">,</span>
+  <span class="ss">brand: </span><span class="s2">"Drip"</span><span class="p">,</span>
+  <span class="ss">categories: </span><span class="p">[</span>
+    <span class="s2">"Accessories"</span>
+  <span class="p">],</span>
+  <span class="ss">price: </span><span class="mi">11</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
+  <span class="ss">inventory: </span><span class="mi">42</span><span class="p">,</span>
+  <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.example.com/dp/B01J4SWO1G"</span><span class="p">,</span>
+  <span class="ss">image_url: </span><span class="s2">"https://www.getdrip.com/images/example_products/water_bottle.png"</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="nf">success?</span>
+  <span class="nb">puts</span> <span class="s2">"Request accepted"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Error occurred"</span>
+<span class="k">end</span>
+</code></pre>
+<blockquote>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a unique request_id that can be used to check the status of the request later on:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"990c99a7-5cba-42e8-8f36-aec3419186ef"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='http-endpoint'>HTTP Endpoint</h3>
+<p><code>POST /v3/:account_id/shopper_activity/product</code></p>
+<h3 id='arguments'>Arguments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>provider</code></td>
+      <td>Required. The identifier for the provider from which the product data was received in lower snake cased form. For example, <code>shopify</code> or <code>my_custom_platform</code> or <code>my_store</code>.</td>
+    </tr>
+    <tr>
+      <td><code>action</code></td>
+      <td>Required. The event's action. For Product Activity, this can be either <code>created</code>, <code>updated</code> or <code>deleted</code>.
+    </tr>
+    <tr>
+      <td><code>occurred_at</code></td>
+      <td>Optional. The String time at which the product activity occurred in <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format. Defaults to the current time.</td>
+    </tr>
+    <tr>
+      <td><code>product_id</code></td>
+      <td>Required. A unique, internal id for the product (generally the primary key generated by the ecommerce platform).</td>
+    </tr>
+    <tr>
+      <td><code>product_variant_id</code></td>
+      <td>Optional. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors.</td>
+    </tr>
+    <tr>
+      <td><code>sku</code></td>
+      <td>Optional. The product SKU.</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td>Required. The product name.</td>
+    </tr>
+    <tr>
+      <td><code>brand</code></td>
+      <td>Optional. The product's brand, vendor, or manufacturer.</td>
+    </tr>
+    <tr>
+      <td><code>categories</code></td>
+      <td>Optional. An array of categories associated with the product (e.g. shoes, vitamins, books, videos).</td>
+    </tr>
+    <tr>
+      <td><code>price</code></td>
+      <td>Required. The price of a single product.</td>
+    </tr>
+    <tr>
+      <td><code>inventory</code></td>
+      <td>Optional. Integer. The currently available inventory of the product.</td>
+    </tr>
+    <tr>
+      <td><code>product_url</code></td>
+      <td>Optional. A URL to the site containing product details.</td>
+    </tr>
+    <tr>
+      <td><code>image_url</code></td>
+      <td>Optional. A direct URL to an image of the  product. We recommend using an image type that is supported by modern email clients (e.g. JPEG, GIF, PNG). For best display results, image size should be consistent across all products.</td>
+    </tr>
+  </tbody>
+</table>
 <h1 id='js-section'>JS Section</h1><h1 id='getting-started'>Getting Started</h1>
 <p>The Drip client library has a number of API methods for performing tasks right from your website, such as manually subscribing users and tracking conversions. This document details everything you can do via our JavaScript API.</p>
 <h2 id='installing-your-javascript-snippet'>Installing Your JavaScript Snippet</h2>
@@ -6516,7 +7540,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
   </tbody>
 </table>
 <h1 id='tagging-via-query-string'>Tagging via Query String</h1>
-<p>You can also tag visitors by appending a <code>dst</code> query string parameter to the URL of a page that has the Drip JavaScript installed. For example, the following url will tag vistitors with <code>Customer</code></p>
+<p>You can also tag visitors by appending a <code>dst</code> query string parameter to the URL of a page that has the Drip JavaScript installed. For example, the following URL will tag visitors with <code>Customer</code></p>
 
 <p><code>http://www.mysite.com?dst=Customer</code></p>
 <h1 id='campaign-subscriptions'>Campaign Subscriptions</h1><h2 id='subscribe-to-a-campaign'>Subscribe to a Campaign</h2>
@@ -6689,7 +7713,8 @@ only fires when lead scoring is enabled for your account.</strong></p>
 </table>
 
 <p>By listening for these events, you can hook your own javascript onto the widget&#39;s actions. Each of the above events carries a data Object with the form&#39;s information.</p>
-<h1 id='cdc-section'>CDC Section</h1><h1 id='background'>Background</h1>
+<h1 id='cdc-section'>CDC Section</h1><h1 id="cdc_overview">Overview</h1>
+
 <p><em>To request this feature be enabled on your account, contact our <a href="mailto:support@drip.com">support team</a>.</em></p>
 
 <p>Custom Dynamic Content allows you to pull data from your system into Drip emails. Your data is then available
@@ -6703,10 +7728,10 @@ via Liquid, allowing you to build super-rich personalized emails augmented with 
 </ul>
 <h2 id='how-it-works'>How it works</h2>
 <ol>
-<li>You provide an API endpoint</li>
+<li>You provide a custom API endpoint</li>
 <li>You choose the Liquid shortcode</li>
 <li>When we render an email, we&#39;ll <code>GET</code> a JSON document from your endpoint</li>
-<li>You&#39;ll then have access to that document in Liquid via your shortcode</li>
+<li>You&#39;ll then have access to that document in Liquid via your <code>my.</code> shortcode</li>
 </ol>
 
 <p>See <a href="https://github.com/DripEmail/drip-personalized-weather">Drip Weather</a> as an example endpoint.</p>
@@ -6723,7 +7748,12 @@ via Liquid, allowing you to build super-rich personalized emails augmented with 
 <h2 id='parameters'>Parameters</h2>
 <ul>
 <li>Parameters are scoped to an entity, e.g. <code>subscriber</code> or <code>event</code></li>
-<li>You&#39;ll specify which fields of these objects you want sent to your endpoint</li>
+<li>You&#39;ll specify which fields of these objects you want sent to your endpoint
+
+<ul>
+<li>Let us know the <em>exact</em> Custom Field names and Event property names you want us to pass to you via the query string</li>
+<li>This limitation (not sending all of them) exists because most HTTP servers enforce a URI length limit, and we&#39;re passing these fields to you via GET in order for them to be highly cacheable, as to optimize for delivery throughput</li>
+</ul></li>
 <li>Scoped parameters are then named the same as the custom field
 
 <ul>
@@ -6743,25 +7773,52 @@ via Liquid, allowing you to build super-rich personalized emails augmented with 
 <ul>
 <li>e.g. A subscriber with a custom field assigned for country, but not for zip would have a URL query string of <code>?subscriber[country]=US&amp;subscriber[zip]</code></li>
 </ul></li>
-<li>A parameter value should not be unique per subscriber; this allows for greater cacheability of responses, as to optimize your delivery throughput</li>
+<li>A parameter value should not be unique per subscriber (e.g. we won&#39;t send <code>email</code>); this allows for greater cacheability of responses, as to optimize your delivery throughput</li>
 </ul>
-<h2 id='response'>Response</h2>
+
+<h2 id="cdc-requirements-response">Response</h2>
+
 <ul>
 <li>Responses must have a <code>Content-Type</code> header of <code>application/json</code></li>
-<li>A response with a <code>2xx</code> status will be considered successful</li>
-<li>A successful response must contain a body that is a parseable JSON <em>document</em> (i.e. the top level must be either an object or an array)</li>
+<li>A response with a <code>2xx</code> status will be considered successful
+
+<ul>
+<li>A successful response should contain a body that is a parseable JSON <em>document</em> (i.e. the top level must be either an object or an array)</li>
+<li>The returned document should not exceed 350 KB in size</li>
+</ul></li>
 <li>A <code>3xx</code> response will be followed as redirects per the HTTP specification</li>
-<li>Response codes in the <code>4xx</code> and <code>5xx</code> ranges will be considered an error</li>
+<li>A client error response (those in the <code>4xx</code> range) will be considered a permanent error</li>
+<li>A server error response (those in the <code>5xx</code> range) will be considered a temporary error</li>
 <li>No other response codes are supported</li>
 </ul>
 
 <p>When a <code>2xx</code> response is received, Drip will use whatever data is given, and will assume <code>null</code> values for any data not given. For example, response of <code>{}</code> would still be accessible in Liquid and would respond to any attribute with <code>nil</code>.</p>
 <h2 id='general'>General</h2>
 <ul>
-<li>We will retry failed responses (<code>4xx</code> or <code>5xx</code>) for a limited amount of time</li>
+<li>We will retry temporary error responses for a limited amount of time
+
+<ul>
 <li>If retries continue to fail, we will give up sending the individual email</li>
+</ul></li>
+<li>A permanent error response will cause the the email to not be sent</li>
 <li>In order to optimize your sending throughput, we will time out any response or series of redirects after 3 seconds</li>
 </ul>
+<h1 id='preview-test-mode'>Preview/Test Mode</h1>
+<blockquote>
+<p>Example request from Drip to your endpoint during Preview/Test</p>
+</blockquote>
+<pre class="highlight shell"><code>https://api.you.com/api?subscriber[zipcode]&amp;preview<span class="o">=</span><span class="nb">true</span>
+</code></pre>
+<blockquote>
+<p>Example request from Drip to your endpoint during Preview As</p>
+</blockquote>
+<pre class="highlight shell"><code>https://api.you.com/api?subscriber[zipcode]<span class="o">=</span>90210&amp;preview<span class="o">=</span><span class="nb">true</span>
+</code></pre>
+<p>When previewing or sending a test email within Drip, we’ll make calls to your endpoint with an additional query parameter: <code>preview=true</code>.</p>
+
+<p>When that happens, we suggest your endpoint send back mocked data. This allows preview and test emails to populate with sample content for a more accurate experience.</p>
+
+<p>This is because in these contexts we won&#39;t have an Event to send to your endpoint. (And unless you&#39;re using Preview As, nor will we have a Person.)</p>
 <h1 id='example'>Example</h1>
 <blockquote>
 <p>Example request from Drip to your endpoint</p>
