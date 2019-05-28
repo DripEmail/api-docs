@@ -1428,7 +1428,149 @@ request and the time your data appears in the user interface.</p>
     ]
   }
   EOF
-</span></code></pre>
+</span></code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip'</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Drip</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">api_key</span> <span class="o">=</span> <span class="s2">"YOUR API KEY"</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">account_id</span> <span class="o">=</span> <span class="s2">"YOUR_ACCOUNT_ID"</span>
+<span class="k">end</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">create_order_activity_events</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
+      <span class="ss">email: </span><span class="s2">"john@acme.com"</span><span class="p">,</span>
+      <span class="ss">action: </span><span class="s2">"placed"</span><span class="p">,</span>
+      <span class="ss">occurred_at: </span><span class="s2">"2019-03-12T15:31:58Z"</span><span class="p">,</span>
+      <span class="ss">order_id: </span><span class="s2">"63754763"</span><span class="p">,</span>
+      <span class="ss">order_public_id: </span><span class="s2">"#4"</span><span class="p">,</span>
+      <span class="ss">grand_total: </span><span class="mi">54</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">total_discounts: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">total_taxes: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">total_fees: </span><span class="mi">0</span><span class="p">,</span>
+      <span class="ss">total_shipping: </span><span class="mi">5</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">currency: </span><span class="s2">"USD"</span><span class="p">,</span>
+      <span class="ss">order_url: </span><span class="s2">"http://myorders.com/orders/4"</span><span class="p">,</span>
+      <span class="ss">items: </span><span class="p">[{</span>
+        <span class="ss">product_id: </span><span class="s2">"B01F9AQ99M"</span><span class="p">,</span>
+        <span class="ss">product_variant_id: </span><span class="s2">"B01F9AQ99M-YEL-BT"</span><span class="p">,</span>
+        <span class="ss">sku: </span><span class="s2">"JDT-4321"</span><span class="p">,</span>
+        <span class="ss">name: </span><span class="s2">"Yellow Boots of Might"</span><span class="p">,</span>
+        <span class="ss">brand: </span><span class="s2">"Drip"</span><span class="p">,</span>
+        <span class="ss">categories: </span><span class="p">[</span>
+          <span class="s2">"Of Might"</span><span class="p">,</span>
+          <span class="s2">"Outdoors"</span>
+        <span class="p">],</span>
+        <span class="ss">price: </span><span class="mi">49</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+        <span class="ss">quantity: </span><span class="mi">1</span><span class="p">,</span>
+        <span class="ss">discounts: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+        <span class="ss">taxes: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+        <span class="ss">fees: </span><span class="mi">0</span><span class="p">,</span>
+        <span class="ss">shipping: </span><span class="mi">5</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+        <span class="ss">total: </span><span class="mi">54</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+        <span class="ss">color: </span><span class="s2">"black"</span><span class="p">,</span>
+        <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.com/dp/B01F9AQ99M"</span><span class="p">,</span>
+        <span class="ss">image_url: </span><span class="s2">"https://www.getdrip.com/images/example_products/boots.png"</span>
+      <span class="p">}],</span>
+      <span class="ss">billing_address: </span><span class="p">{</span>
+        <span class="ss">label: </span><span class="s2">"Primary Billing"</span><span class="p">,</span>
+        <span class="ss">first_name: </span><span class="s2">"Bill"</span><span class="p">,</span>
+        <span class="ss">last_name: </span><span class="s2">"Billington"</span><span class="p">,</span>
+        <span class="ss">company: </span><span class="s2">"Bills R US"</span><span class="p">,</span>
+        <span class="ss">address_1: </span><span class="s2">"123 Bill St."</span><span class="p">,</span>
+        <span class="ss">address_2: </span><span class="s2">"Apt. B"</span><span class="p">,</span>
+        <span class="ss">city: </span><span class="s2">"Billtown"</span><span class="p">,</span>
+        <span class="ss">state: </span><span class="s2">"CA"</span><span class="p">,</span>
+        <span class="ss">postal_code: </span><span class="s2">"01234"</span><span class="p">,</span>
+        <span class="ss">country: </span><span class="s2">"United States"</span><span class="p">,</span>
+        <span class="ss">phone: </span><span class="s2">"555-555-5555"</span>
+      <span class="p">},</span>
+      <span class="ss">shipping_address: </span><span class="p">{</span>
+        <span class="ss">label: </span><span class="s2">"Downtown Office"</span><span class="p">,</span>
+        <span class="ss">first_name: </span><span class="s2">"Ship"</span><span class="p">,</span>
+        <span class="ss">last_name: </span><span class="s2">"Shipington"</span><span class="p">,</span>
+        <span class="ss">company: </span><span class="s2">"Shipping 4 Less"</span><span class="p">,</span>
+        <span class="ss">address_1: </span><span class="s2">"123 Ship St."</span><span class="p">,</span>
+        <span class="ss">address_2: </span><span class="s2">"null"</span><span class="p">,</span>
+        <span class="ss">city: </span><span class="s2">"Shipville"</span><span class="p">,</span>
+        <span class="ss">state: </span><span class="s2">"CA"</span><span class="p">,</span>
+        <span class="ss">postal_code: </span><span class="s2">"01234"</span><span class="p">,</span>
+        <span class="ss">country: </span><span class="s2">"United States"</span><span class="p">,</span>
+        <span class="ss">phone: </span><span class="s2">"555-555-5555"</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
+      <span class="ss">email: </span><span class="s2">"user@gmail.com"</span><span class="p">,</span>
+      <span class="ss">action: </span><span class="s2">"updated"</span><span class="p">,</span>
+      <span class="ss">occurred_at: </span><span class="s2">"2019-03-12T15:27:16Z"</span><span class="p">,</span>
+      <span class="ss">order_id: </span><span class="s2">"456445746"</span><span class="p">,</span>
+      <span class="ss">order_public_id: </span><span class="s2">"#5"</span><span class="p">,</span>
+      <span class="ss">grand_total: </span><span class="mi">21</span><span class="o">.</span><span class="mi">48</span><span class="p">,</span>
+      <span class="ss">total_discounts: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+      <span class="ss">total_taxes: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">total_fees: </span><span class="mi">2</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">total_shipping: </span><span class="mi">5</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+      <span class="ss">currency: </span><span class="s2">"USD"</span><span class="p">,</span>
+      <span class="ss">order_url: </span><span class="s2">"https://mysuperstore.com/order/5"</span><span class="p">,</span>
+      <span class="ss">items: </span><span class="p">[</span>
+        <span class="p">{</span>
+          <span class="ss">product_id: </span><span class="s2">"B01J4SWO1G"</span><span class="p">,</span>
+          <span class="ss">product_variant_id: </span><span class="s2">"B01J4SWO1G-CW-BOTT"</span><span class="p">,</span>
+          <span class="ss">sku: </span><span class="s2">"XHB-1234"</span><span class="p">,</span>
+          <span class="ss">name: </span><span class="s2">"The Coolest Water Bottle"</span><span class="p">,</span>
+          <span class="ss">brand: </span><span class="s2">"Drip"</span><span class="p">,</span>
+          <span class="ss">categories: </span><span class="p">[</span>
+            <span class="s2">"Accessories"</span>
+          <span class="p">],</span>
+          <span class="ss">price: </span><span class="mi">11</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
+          <span class="ss">sale_price: </span><span class="mi">10</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
+          <span class="ss">quantity: </span><span class="mi">2</span><span class="p">,</span>
+          <span class="ss">discounts: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+          <span class="ss">taxes: </span><span class="mi">1</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+          <span class="ss">fees: </span><span class="mi">0</span><span class="o">.</span><span class="mi">50</span><span class="p">,</span>
+          <span class="ss">shipping: </span><span class="mi">5</span><span class="o">.</span><span class="mo">00</span><span class="p">,</span>
+          <span class="ss">total: </span><span class="mi">21</span><span class="o">.</span><span class="mi">48</span><span class="p">,</span>
+          <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.com/dp/B01J4SWO1G"</span><span class="p">,</span>
+          <span class="ss">image_url: </span><span class="s2">"https://www.getdrip.com/images/example_products/water_bottle.png"</span><span class="p">,</span>
+          <span class="ss">product_tag: </span><span class="s2">"Best Seller"</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="ss">billing_address: </span><span class="p">{</span>
+        <span class="ss">label: </span><span class="s2">"Primary Billing"</span><span class="p">,</span>
+        <span class="ss">first_name: </span><span class="s2">"Bill"</span><span class="p">,</span>
+        <span class="ss">last_name: </span><span class="s2">"Billington"</span><span class="p">,</span>
+        <span class="ss">company: </span><span class="s2">"Bills R US"</span><span class="p">,</span>
+        <span class="ss">address_1: </span><span class="s2">"123 Bill St."</span><span class="p">,</span>
+        <span class="ss">address_2: </span><span class="s2">"Apt. B"</span><span class="p">,</span>
+        <span class="ss">city: </span><span class="s2">"Billtown"</span><span class="p">,</span>
+        <span class="ss">state: </span><span class="s2">"CA"</span><span class="p">,</span>
+        <span class="ss">postal_code: </span><span class="s2">"01234"</span><span class="p">,</span>
+        <span class="ss">country: </span><span class="s2">"United States"</span><span class="p">,</span>
+        <span class="ss">phone: </span><span class="s2">"555-555-5555"</span>
+      <span class="p">},</span>
+      <span class="ss">shipping_address: </span><span class="p">{</span>
+        <span class="ss">label: </span><span class="s2">"Downtown Office"</span><span class="p">,</span>
+        <span class="ss">first_name: </span><span class="s2">"Ship"</span><span class="p">,</span>
+        <span class="ss">last_name: </span><span class="s2">"Shipington"</span><span class="p">,</span>
+        <span class="ss">company: </span><span class="s2">"Shipping 4 Less"</span><span class="p">,</span>
+        <span class="ss">address_1: </span><span class="s2">"123 Ship St."</span><span class="p">,</span>
+        <span class="ss">city: </span><span class="s2">"Shipville"</span><span class="p">,</span>
+        <span class="ss">state: </span><span class="s2">"CA"</span><span class="p">,</span>
+        <span class="ss">postal_code: </span><span class="s2">"01234"</span><span class="p">,</span>
+        <span class="ss">country: </span><span class="s2">"United States"</span><span class="p">,</span>
+        <span class="ss">phone: </span><span class="s2">"555-555-5555"</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="nf">success?</span>
+  <span class="nb">puts</span> <span class="s2">"Request accepted"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Error occurred"</span>
+<span class="k">end</span>
+</code></pre>
 <blockquote>
 <p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a list of unique request_ids that can be used to check the status of the request later on:</p>
 </blockquote>
