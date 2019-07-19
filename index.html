@@ -267,6 +267,9 @@
                     <li>
                       <a href="#create-or-update-a-batch-of-orders" class="toc-h2 toc-link" data-title="Create or update a batch of orders">Create or update a batch of orders</a>
                     </li>
+                    <li>
+                      <a href="#create-or-update-a-batch-of-products" class="toc-h2 toc-link" data-title="Create or update a batch of products">Create or update a batch of products</a>
+                    </li>
                 </ul>
           </li>
           <li>
@@ -716,7 +719,7 @@ All endpoint URLs begin with <code>https://api.getdrip.com/</code>. Additionally
 <p>Parameters must be serialized in JSON and passed in the request body (not in the query string or form parameters). You should use the media type designation of <code>application/json</code>.</p>
 <h1 id='rest-section'>REST Section</h1><h1 id='authentication'>Authentication</h1>
 <blockquote>
-<p>For private integrations, you will need to use your personal API Token (found <a href="https://www.getdrip.com/user/edit">here</a>) via the <code>api_key</code> setting and must be Base64 encoded before use:</p>
+<p>For private integrations, you will need to use your personal API Token (found <a href="https://www.getdrip.com/user/edit">here</a>) via the <code>api_key</code> setting. The API Token is the username portion of the Basic Authentication scheme, with an empty password. (Note the trailing colon to indicate an empty password.)</p>
 </blockquote>
 <pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'drip-ruby'</span>
 
@@ -734,7 +737,11 @@ All endpoint URLs begin with <code>https://api.getdrip.com/</code>. Additionally
 <span class="p">);</span>
 </code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"api_endpoint_here"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
-  -H <span class="s1">'Authorization: Basic (YOUR_API_KEY)'</span>
+  -H <span class="s1">'Authorization: Basic $(echo YOUR_API_KEY: | base64)'</span>
+
+curl <span class="s2">"api_endpoint_here"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u <span class="s1">'YOUR_API_KEY:'</span>
 </code></pre>
 <blockquote>
 <p>For public integrations, for example, when allowing your customers within your application to authorize access directly to their Drip accounts, pass in the user&#39;s OAuth token via the <code>access_token</code> setting or pass the <code>Bearer</code> token type when using the JS wrapper:</p>
@@ -828,7 +835,7 @@ Content-Type: application/json
           "time_zone": "America/Los_Angeles",
           "tags": ["Customer", "SEO"],
           "custom_fields": {
-            "name": "John Doe"
+            "shirt_size": "Medium"
           }
         },
         {
@@ -836,7 +843,7 @@ Content-Type: application/json
           "time_zone": "America/Los_Angeles",
           "tags": ["Prospect"],
           "custom_fields": {
-            "name": "Joe"
+            "shirt_size": "Medium"
           }
         }
       ]
@@ -1126,7 +1133,7 @@ request and the time your data appears in the user interface.</p>
           "permalink": "http://myorders.com/orders/123456",
           "currency_code": "USD",
           "properties": {
-            "size": "medium",
+            "shirt_size": "Medium",
             "color": "red"
           },
           "occurred_at": "2013-06-21T10:31:58Z",
@@ -1601,6 +1608,105 @@ request and the time your data appears in the user interface.</p>
     <tr>
       <td><code>orders</code></td>
       <td>Required. An Array with between 1 and 1000 objects containing <a href="#order-activity">order activity</a>.</td>
+    </tr>
+  </tbody>
+</table>
+<h2 id='create-or-update-a-batch-of-products'>Create or update a batch of products</h2>
+<blockquote>
+<p>To create or update a batch of products:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/product/batch"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u YOUR_API_KEY: <span class="se">\</span>
+  -d @- <span class="sh">&lt;&lt; EOF
+  {
+    "products": [
+      {
+        "provider": "my_custom_platform",
+        "action": "created",
+        "occurred_at": "2019-01-28T12:15:23Z",
+        "product_id": "B01J4SWO1G",
+        "product_variant_id": "B01J4SWO1G-CW-BOTT",
+        "sku": "XHB-1234",
+        "name": "The Coolest Water Bottle",
+        "brand": "Drip",
+        "categories": [
+          "Accessories"
+        ],
+        "price": 11.16,
+        "inventory": 42,
+        "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
+        "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png"
+      },
+      {
+        "provider": "my_custom_platform",
+        "action": "created",
+        "occurred_at": "2019-01-28T12:15:23Z",
+        "product_id": "B01J4SWO1G2",
+        "product_variant_id": "B01J4SWO1G-CW-BOTT2",
+        "sku": "XHB-1235",
+        "name": "The Coolest Water Bottle",
+        "brand": "Drip",
+        "categories": [
+          "Accessories"
+        ],
+        "price": 11.16,
+        "inventory": 42,
+        "product_url": "https://mysuperstore.com/dp/B01J4SWO1G2",
+        "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png"
+      },
+      {
+        "provider": "my_custom_platform",
+        "action": "created",
+        "occurred_at": "2019-01-28T12:15:23Z",
+        "product_id": "B01J4SWO1G3",
+        "product_variant_id": "B01J4SWO1G-CW-BOTT3",
+        "sku": "XHB-1236",
+        "name": "The Coolest Water Bottle",
+        "brand": "Drip",
+        "categories": [
+          "Accessories"
+        ],
+        "price": 11.16,
+        "inventory": 42,
+        "product_url": "https://mysuperstore.com/dp/B01J4SWO1G3",
+        "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png"
+      }
+    ]
+  }
+  EOF
+</span></code></pre>
+<blockquote>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a list of unique request_ids that can be used to check the status of the request later on:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"request_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"db8a7b16-32dd-4863-8b6e-818e3eaab99a"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"002048e9-3692-4f0a-8bbf-80a077acf642"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p></aside></p>
+
+<p>We recommend using this API endpoint when you need to import a collection of products that will likely exceed the regular rate limit of 3,600 requests per hour.</p>
+
+<p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
+request and the time your data appears in the user interface.</p>
+<h3 id='http-endpoint-6'>HTTP Endpoint</h3>
+<p><code>POST /v3/:account_id/shopper_activity/product/batch</code></p>
+<h3 id='arguments-6'>Arguments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>products</code></td>
+      <td>Required. An Array with between 1 and 1000 products containing <a href="#product-activity">product activity</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -2594,7 +2700,7 @@ end
       "starting_email_index": 0,
       "reactivate_if_removed": true,
       "custom_fields": {
-        "name": "John Doe"
+        "shirt_size": "Medium"
       }
     }]
   }
@@ -2683,7 +2789,7 @@ end
     </tr>
     <tr>
       <td><code>custom_fields</code></td>
-      <td>Optional. An Object containing custom field data. E.g. <code>{ "name": "John Doe" }</code>.</td>
+      <td>Optional. An Object containing custom field data. E.g. <code>{ "shirt_size": "Medium" }</code>.</td>
     </tr>
     <tr>
       <td><code>tags</code></td>
@@ -3467,7 +3573,7 @@ Note that the legacy Orders endpoint will continue to function. We will give fai
   </span><span class="s2">"permalink"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://myorders.com/orders/123456"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"medium"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"shirt_size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Medium"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"red"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">2013-06-21</span><span class="err">T</span><span class="mi">10</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">58</span><span class="err">Z</span><span class="p">,</span><span class="w">
@@ -3833,7 +3939,7 @@ Note that the legacy Orders endpoint will continue to function. We will give fai
   <span class="ss">permalink: </span><span class="s2">"http://myorders.com/orders/123456"</span><span class="p">,</span>
   <span class="ss">currency_code: </span><span class="s2">"USD"</span><span class="p">,</span>
   <span class="ss">properties: </span><span class="p">{</span>
-    <span class="ss">size: </span><span class="s2">"medium"</span><span class="p">,</span>
+    <span class="ss">shirt_size: </span><span class="s2">"Medium"</span><span class="p">,</span>
     <span class="ss">color: </span><span class="s2">"red"</span>
   <span class="p">},</span>
   <span class="ss">occurred_at: </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="p">,</span>
@@ -3912,7 +4018,7 @@ Note that the legacy Orders endpoint will continue to function. We will give fai
       "permalink": "http://myorders.com/orders/123456",
       "currency_code": "USD",
       "properties": {
-        "size": "medium",
+        "shirt_size": "Medium",
         "color": "red"
       },
       "occurred_at": "2013-06-21T10:31:58Z",
@@ -4400,12 +4506,21 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"z1togz2hcjrkpp5treip"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@acme.com"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"address1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123 Main St."</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"address2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Suite 200"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Los Angeles"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"90210"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"phone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555-555-5555"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"eu_consent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"granted"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"time_zone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/Los_Angeles"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"utc_offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-440</span><span class="p">,</span><span class="w">
   </span><span class="s2">"visitor_uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sa8f7sdf78sdsdahf788d7asf8sd"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"custom_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="w">
+    </span><span class="s2">"shirt_size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Medium"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Customer"</span><span class="p">,</span><span class="w"> </span><span class="s2">"SEO"</span><span class="p">],</span><span class="w">
   </span><span class="s2">"ip_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"111.111.111.11"</span><span class="p">,</span><span class="w">
@@ -4458,6 +4573,42 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
       <td>The subscriber's email address.</td>
     </tr>
     <tr>
+      <td><code>first_name</code></td>
+      <td>The subscriber's first name.</td>
+    </tr>
+    <tr>
+      <td><code>last_name</code></td>
+      <td>The subscriber's last name.</td>
+    </tr>
+    <tr>
+      <td><code>address1</code></td>
+      <td>The subscriber's mailing address.</td>
+    </tr>
+    <tr>
+      <td><code>address2</code></td>
+      <td>An additional field for the subscriber's mailing address.</td>
+    </tr>
+    <tr>
+      <td><code>city</code></td>
+      <td>The city, town, or village in which the subscriber resides.</td>
+    </tr>
+    <tr>
+      <td><code>state</code></td>
+      <td>The region in which the subscriber resides. Typically a province, a state, or a prefecture.</td>
+    </tr>
+    <tr>
+      <td><code>zip</code></td>
+      <td>The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.</td>
+    </tr>
+    <tr>
+      <td><code>country</code></td>
+      <td>The country in which the subscriber resides.</td>
+    </tr>
+    <tr>
+      <td><code>phone</code></td>
+      <td>The subscriber's primary phone number.</td>
+    </tr>
+    <tr>
       <td><code>eu_consent</code></td>
       <td>A string describing whether the subscriber GDPR consent is <code>granted</code>, <code>denied</code>, or <code>unknown</code>.</td>
     </tr>
@@ -4475,7 +4626,7 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
     </tr>
     <tr>
       <td><code>custom_fields</code></td>
-      <td>An Object containing custom field data. E.g. <code>{ "name": "John Doe" }</code>.</td>
+      <td>An Object containing custom field data. E.g. <code>{ "shirt_size": "Medium" }</code>.</td>
     </tr>
     <tr>
       <td><code>tags</code></td>
@@ -4545,7 +4696,7 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
     "email": "john@acme.com",
     "time_zone": "America/Los_Angeles",
     "custom_fields": {
-      "name": "John Doe"
+      "shirt_size": "Medium"
     }
   }]
 }
@@ -4561,7 +4712,7 @@ EOF
 <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
   <span class="ss">time_zone: </span><span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
   <span class="ss">custom_fields: </span><span class="p">{</span>
-    <span class="ss">name: </span><span class="s2">"John Doe"</span>
+    <span class="ss">shirt_size: </span><span class="s2">"Medium"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
@@ -4578,7 +4729,7 @@ EOF
     <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
     <span class="na">time_zone</span><span class="p">:</span> <span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
     <span class="na">custom_fields</span><span class="p">:</span> <span class="p">{</span>
-      <span class="na">name</span><span class="p">:</span> <span class="s2">"John Doe"</span>
+      <span class="na">shirt_size</span><span class="p">:</span> <span class="s2">"Medium"</span>
     <span class="p">}</span>
   <span class="p">}]</span>
 <span class="p">};</span>
@@ -4603,6 +4754,8 @@ EOF
 <p><code>POST /v2/:account_id/subscribers</code></p>
 
 <p>If you need to create or update a collection of subscribers at once, use our <a href="/">batch API</a> instead.</p>
+
+<p><strong>Note:</strong> Concurrently updating the same subscriber via multiple API calls is not supported and will fail with a rate limit error and the message &quot;Too many concurrent requests for the same subscriber&quot;. You should retry the call after a short wait period to let the other requests to the same subscriber complete. Triggering this rate limit does not mean you&#39;ve consumed your overall API rate limited capacity.</p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -4629,6 +4782,42 @@ EOF
       <td>Optional. A new email address for the subscriber. If provided and a subscriber with the <code>email</code> above does not exist, this address will be used to create a new subscriber.</td>
     </tr>
     <tr>
+      <td><code>first_name</code></td>
+      <td>Optional. The subscriber's first name.</td>
+    </tr>
+    <tr>
+      <td><code>last_name</code></td>
+      <td>Optional. The subscriber's last name.</td>
+    </tr>
+    <tr>
+      <td><code>address1</code></td>
+      <td>Optional. The subscriber's mailing address.</td>
+    </tr>
+    <tr>
+      <td><code>address2</code></td>
+      <td>Optional. An additional field for the subscriber's mailing address.</td>
+    </tr>
+    <tr>
+      <td><code>city</code></td>
+      <td>Optional. The city, town, or village in which the subscriber resides.</td>
+    </tr>
+    <tr>
+      <td><code>state</code></td>
+      <td>Optional. The region in which the subscriber resides. Typically a province, a state, or a prefecture.</td>
+    </tr>
+    <tr>
+      <td><code>zip</code></td>
+      <td>Optional. The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.</td>
+    </tr>
+    <tr>
+      <td><code>country</code></td>
+      <td>Optional. The country in which the subscriber resides.</td>
+    </tr>
+    <tr>
+      <td><code>phone</code></td>
+      <td>Optional. The subscriber's primary phone number.</td>
+    </tr>
+    <tr>
       <td><code>user_id</code></td>
       <td>Optional. A unique identifier for the user in your database, such as a primary key.</td>
     </tr>
@@ -4646,7 +4835,7 @@ EOF
     </tr>
     <tr>
       <td><code>custom_fields</code></td>
-      <td>Optional. An Object containing custom field data. E.g. <code>{ "name": "John Doe" }</code>.</td>
+      <td>Optional. An Object containing custom field data. E.g. <code>{ "shirt_size": "Medium" }</code>.</td>
     </tr>
     <tr>
       <td><code>tags</code></td>
@@ -5480,7 +5669,7 @@ EOF
       "email": "john@acme.com",
       "time_zone": "America/Los_Angeles",
       "custom_fields": {
-        "name": "John Doe"
+        "shirt_size": "Medium"
       }
     }]
   }
@@ -5497,7 +5686,7 @@ EOF
   <span class="ss">email: </span><span class="s2">"john@acme.com"</span><span class="p">,</span>
   <span class="ss">time_zone: </span><span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
   <span class="ss">custom_fields: </span><span class="p">{</span>
-    <span class="ss">name: </span><span class="s2">"John Doe"</span>
+    <span class="ss">shirt_size: </span><span class="s2">"Medium"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">start_subscriber_workflow</span><span class="p">(</span><span class="n">workflow_id</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
@@ -5513,7 +5702,7 @@ EOF
   <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
   <span class="na">time_zone</span><span class="p">:</span> <span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
   <span class="na">custom_fields</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">name</span><span class="p">:</span> <span class="s2">"John Doe"</span>
+    <span class="na">shirt_size</span><span class="p">:</span> <span class="s2">"Medium"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
@@ -5555,6 +5744,42 @@ EOF
       <td>Optional. The subscriber's Drip <code>id</code>. Either <code>email</code> or <code>id</code> must be included.</td>
     </tr>
     <tr>
+      <td><code>first_name</code></td>
+      <td>Optional. The subscriber's first name.</td>
+    </tr>
+    <tr>
+      <td><code>last_name</code></td>
+      <td>Optional. The subscriber's last name.</td>
+    </tr>
+    <tr>
+      <td><code>address1</code></td>
+      <td>Optional. The subscriber's mailing address.</td>
+    </tr>
+    <tr>
+      <td><code>address2</code></td>
+      <td>Optional. An additional field for the subscriber's mailing address.</td>
+    </tr>
+    <tr>
+      <td><code>city</code></td>
+      <td>Optional. The city, town, or village in which the subscriber resides.</td>
+    </tr>
+    <tr>
+      <td><code>state</code></td>
+      <td>Optional. The region in which the subscriber resides. Typically a province, a state, or a prefecture.</td>
+    </tr>
+    <tr>
+      <td><code>zip</code></td>
+      <td>Optional. The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.</td>
+    </tr>
+    <tr>
+      <td><code>country</code></td>
+      <td>Optional. The country in which the subscriber resides.</td>
+    </tr>
+    <tr>
+      <td><code>phone</code></td>
+      <td>Optional. The subscriber's primary phone number.</td>
+    </tr>
+    <tr>
       <td><code>user_id</code></td>
       <td>Optional. A unique identifier for the user in your database, such as a primary key.</td>
     </tr>
@@ -5564,7 +5789,7 @@ EOF
     </tr>
     <tr>
       <td><code>custom_fields</code></td>
-      <td>Optional. An Object containing custom field data. E.g. <code>{ "name": "John Doe" }</code>.</td>
+      <td>Optional. An Object containing custom field data. E.g. <code>{ "shirt_size": "Medium" }</code>.</td>
     </tr>
     <tr>
       <td><code>tags</code></td>
@@ -6231,7 +6456,7 @@ In addition, you will be notified and your webhook will be temporarily disabled 
   </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@acme.com"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"custom_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="w">
+    </span><span class="s2">"shirt_size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Medium"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Customer"</span><span class="p">,</span><span class="w"> </span><span class="s2">"SEO"</span><span class="p">],</span><span class="w">
   </span><span class="s2">"time_zone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/Los_Angeles"</span><span class="p">,</span><span class="w">
@@ -6845,7 +7070,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
             </tr>
             <tr>
               <td><code>product_variant_id</code></td>
-              <td>Optional. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors.</td>
+              <td>Required. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
             </tr>
             <tr>
               <td><code>sku</code></td>
@@ -7149,7 +7374,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
             </tr>
             <tr>
               <td><code>product_variant_id</code></td>
-              <td>Optional. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors.</td>
+              <td>Required. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
             </tr>
             <tr>
               <td><code>sku</code></td>
@@ -7432,7 +7657,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
     </tr>
     <tr>
       <td><code>product_variant_id</code></td>
-      <td>Optional. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors.</td>
+      <td>Required. A unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
     </tr>
     <tr>
       <td><code>sku</code></td>
