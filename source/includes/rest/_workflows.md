@@ -456,7 +456,7 @@ If the workflow is not active, the subscriber will not be added to the workflow.
     </tr>
     <tr>
       <td><code>sms_consent</code></td>
-      <td>Optional. Boolean. Required if <code>sms_phone_number</code> is not <code>nil</code>. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
+      <td>Optional. Boolean. Required if <code>sms_phone_number</code> is not <code>null</code>. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
     </tr>
     <tr>
       <td><code>user_id</code></td>
