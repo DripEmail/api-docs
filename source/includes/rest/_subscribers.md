@@ -16,6 +16,8 @@
   "zip": "90210",
   "country": "US",
   "phone": "555-555-5555",
+  "sms_phone_number": "+16125551212",
+  "sms_consent": true,
   "eu_consent": "granted",
   "time_zone": "America/Los_Angeles",
   "utc_offset": -440,
@@ -116,6 +118,14 @@ On January 7, 2019 we renamed Subscribers to People to better represent who youâ
     <tr>
       <td><code>phone</code></td>
       <td>The subscriber's primary phone number.</td>
+    </tr>
+    <tr>
+      <td><code>sms_phone_number</code></td>
+      <td>The subscriber's mobile phone number in E.164 formatting.</td>
+    </tr>
+    <tr>
+      <td><code>sms_consent</code></td>
+      <td>A boolean describing whether the person has granted SMS consent.</td>
     </tr>
     <tr>
       <td><code>eu_consent</code></td>
@@ -340,6 +350,14 @@ If you need to create or update a collection of subscribers at once, use our [ba
     <tr>
       <td><code>phone</code></td>
       <td>Optional. The subscriber's primary phone number.</td>
+    </tr>
+    <tr>
+      <td><code>sms_phone_number</code></td>
+      <td>Optional. String. The subscriber's mobile phone number in E.164 formatting. E.g. <code>"+16125551212"</code>. Only US-based numbers are supported at this time.</td>
+    </tr>
+    <tr>
+      <td><code>sms_consent</code></td>
+      <td>Optional. Boolean. Required if <code>sms_phone_number</code> is not <code>nil</code>. <code>true</code> if the person has granted SMS consent; <code>false</code> otherwise. If youâ€™re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
     </tr>
     <tr>
       <td><code>user_id</code></td>
