@@ -451,14 +451,6 @@ If the workflow is not active, the subscriber will not be added to the workflow.
       <td>Optional. The subscriber's primary phone number.</td>
     </tr>
     <tr>
-      <td><code>sms_phone_number</code></td>
-      <td>Optional. String. The subscriber's mobile phone number in E.164 formatting. E.g. <code>"+16125551212"</code>. Only US-based numbers are supported at this time.</td>
-    </tr>
-    <tr>
-      <td><code>sms_consent</code></td>
-      <td>Optional. Boolean. Required if <code>sms_phone_number</code> is not <code>null</code>. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
-    </tr>
-    <tr>
       <td><code>user_id</code></td>
       <td>Optional. A unique identifier for the user in your database, such as a primary key.</td>
     </tr>
