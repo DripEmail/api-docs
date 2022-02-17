@@ -74,6 +74,10 @@ If validation errors occur while attempting to create or update a resource, you 
       <td>The attribute must be a valid email address.</td>
     </tr>
     <tr>
+      <td><code>sms_error</code></td>
+      <td>The attribute must be a valid US mobile number with E.164 formatting. E.g. <code>"+16125551212"</code>.</td>
+    </tr>
+    <tr>
       <td><code>url_error</code></td>
       <td>The attribute must be a valid URL.</td>
     </tr>
