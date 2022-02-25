@@ -785,7 +785,7 @@ client.deleteSubscriber(idOrEmail)
 
 ### HTTP Endpoint
 
-`DELETE /:account_id/subscribers/:id_or_email`
+`DELETE /v2/:account_id/subscribers/:id_or_email`
 
 ### Arguments
 

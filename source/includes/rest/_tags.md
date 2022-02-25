@@ -216,7 +216,7 @@ client.removeSubscriberTag(email, tag)
 
 ### HTTP Endpoint
 
-`DELETE /:account_id/subscribers/:email/tags/:tag`
+`DELETE /v2/:account_id/subscribers/:email/tags/:tag`
 
 ### Arguments
 
