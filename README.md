@@ -2,7 +2,7 @@
 
 ## Deploying
 
-To push the `master` version of the API docs up to the production Drip site, use:
+To push the `main` version of the API docs up to the production Drip site, use:
 
 ```bash
 script/release
