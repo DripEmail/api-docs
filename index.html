@@ -216,12 +216,12 @@
   <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;javascript&quot;]">
     <a href="#" id="nav-button">
       <span>
-        <img src="images/navbar.png" alt="Navbar" />
+        <img src="images/navbar.png" alt="" />
       </span>
     </a>
 
     <div class="toc-wrapper">
-      <img src="images/logo.svg" class="logo" alt="Logo" />
+      <img src="images/logo.svg" class="logo" alt="" />
         <div class="lang-selector">
               <a href="#" data-language-name="shell">cURL</a>
               <a href="#" data-language-name="ruby">Ruby</a>
@@ -262,6 +262,9 @@
                       <a href="#record-a-batch-of-events" class="toc-h2 toc-link" data-title="Record a batch of events">Record a batch of events</a>
                     </li>
                     <li>
+                      <a href="#create-or-update-a-batch-of-carts" class="toc-h2 toc-link" data-title="Create or update a batch of carts">Create or update a batch of carts</a>
+                    </li>
+                    <li>
                       <a href="#create-or-update-a-batch-of-orders-legacy" class="toc-h2 toc-link" data-title="Create or update a batch of orders (Legacy)">Create or update a batch of orders (Legacy)</a>
                     </li>
                     <li>
@@ -298,39 +301,39 @@
                 </ul>
           </li>
           <li>
-              <a href="#broadcasts" class="toc-h1 toc-link" data-title="Broadcasts">Broadcasts</a>
+              <a href="#single-email-campaigns-br-aka-broadcasts" class="toc-h1 toc-link" data-title="Single-Email Campaigns <br>(aka Broadcasts)">Single-Email Campaigns <br>(aka Broadcasts)</a>
                 <ul class="toc-list-h2">
                     <li>
-                      <a href="#list-all-broadcasts" class="toc-h2 toc-link" data-title="List all broadcasts">List all broadcasts</a>
+                      <a href="#list-all-single-email-campaigns" class="toc-h2 toc-link" data-title="List all Single-Email Campaigns">List all Single-Email Campaigns</a>
                     </li>
                     <li>
-                      <a href="#fetch-a-broadcast" class="toc-h2 toc-link" data-title="Fetch a broadcast">Fetch a broadcast</a>
+                      <a href="#fetch-a-single-email-campaign" class="toc-h2 toc-link" data-title="Fetch a Single-Email Campaign">Fetch a Single-Email Campaign</a>
                     </li>
                 </ul>
           </li>
           <li>
-              <a href="#campaigns" class="toc-h1 toc-link" data-title="Campaigns">Campaigns</a>
+              <a href="#email-series-campaigns" class="toc-h1 toc-link" data-title="Email Series Campaigns">Email Series Campaigns</a>
                 <ul class="toc-list-h2">
                     <li>
-                      <a href="#list-all-campaigns" class="toc-h2 toc-link" data-title="List all campaigns">List all campaigns</a>
+                      <a href="#list-all-email-series-campaigns" class="toc-h2 toc-link" data-title="List all Email Series Campaigns">List all Email Series Campaigns</a>
                     </li>
                     <li>
-                      <a href="#fetch-a-campaign" class="toc-h2 toc-link" data-title="Fetch a campaign">Fetch a campaign</a>
+                      <a href="#fetch-an-email-series-campaign" class="toc-h2 toc-link" data-title="Fetch an Email Series Campaign">Fetch an Email Series Campaign</a>
                     </li>
                     <li>
-                      <a href="#activate-a-campaign" class="toc-h2 toc-link" data-title="Activate a campaign">Activate a campaign</a>
+                      <a href="#activate-an-email-series-campaign" class="toc-h2 toc-link" data-title="Activate an Email Series Campaign">Activate an Email Series Campaign</a>
                     </li>
                     <li>
-                      <a href="#pause-a-campaign" class="toc-h2 toc-link" data-title="Pause a campaign">Pause a campaign</a>
+                      <a href="#pause-an-email-series-campaign" class="toc-h2 toc-link" data-title="Pause an Email Series Campaign">Pause an Email Series Campaign</a>
                     </li>
                     <li>
-                      <a href="#list-all-subscribers-subscribed-to-a-campaign" class="toc-h2 toc-link" data-title="List all subscribers subscribed to a campaign">List all subscribers subscribed to a campaign</a>
+                      <a href="#list-all-subscribers-subscribed-to-an-email-series-campaign" class="toc-h2 toc-link" data-title="List all subscribers subscribed to an Email Series Campaign">List all subscribers subscribed to an Email Series Campaign</a>
                     </li>
                     <li>
-                      <a href="#subscribe-someone-to-a-campaign" class="toc-h2 toc-link" data-title="Subscribe someone to a campaign">Subscribe someone to a campaign</a>
+                      <a href="#subscribe-someone-to-an-email-series-campaign" class="toc-h2 toc-link" data-title="Subscribe someone to an Email Series Campaign">Subscribe someone to an Email Series Campaign</a>
                     </li>
                     <li>
-                      <a href="#list-all-of-a-subscriber-39-s-campaign-subscriptions" class="toc-h2 toc-link" data-title="List all of a subscriber's campaign subscriptions">List all of a subscriber's campaign subscriptions</a>
+                      <a href="#list-all-of-a-subscriber-39-s-email-series-campaign-subscriptions" class="toc-h2 toc-link" data-title="List all of a subscriber's Email Series Campaign subscriptions">List all of a subscriber's Email Series Campaign subscriptions</a>
                     </li>
                 </ul>
           </li>
@@ -402,7 +405,7 @@
                       <a href="#fetch-a-subscriber" class="toc-h2 toc-link" data-title="Fetch a subscriber">Fetch a subscriber</a>
                     </li>
                     <li>
-                      <a href="#remove-a-subscriber-from-one-or-all-campaigns" class="toc-h2 toc-link" data-title="Remove a subscriber from one or all campaigns">Remove a subscriber from one or all campaigns</a>
+                      <a href="#remove-a-subscriber-from-one-or-all-email-series-campaigns" class="toc-h2 toc-link" data-title="Remove a subscriber from one or all Email Series Campaigns">Remove a subscriber from one or all Email Series Campaigns</a>
                     </li>
                     <li>
                       <a href="#unsubscribe-from-all-mailings" class="toc-h2 toc-link" data-title="Unsubscribe from all mailings">Unsubscribe from all mailings</a>
@@ -596,7 +599,11 @@
               <a href="#order-activity" class="toc-h1 toc-link" data-title="Order Activity">Order Activity</a>
                 <ul class="toc-list-h2">
                     <li>
-                      <a href="#create-or-update-an-order" class="toc-h2 toc-link" data-title="Create or update an order">Create or update an order</a>
+                      <a href="#sapi-create-or-update-order" class="toc-h2 toc-link" data-title="Create or update an order
+
+">Create or update an order
+
+</a>
                     </li>
                 </ul>
           </li>
@@ -639,13 +646,24 @@
                 </ul>
           </li>
           <li>
+              <a href="#tracking-product-views" class="toc-h1 toc-link" data-title="Tracking Product Views">Tracking Product Views</a>
+                <ul class="toc-list-h2">
+                    <li>
+                      <a href="#properties" class="toc-h2 toc-link" data-title="Properties">Properties</a>
+                    </li>
+                    <li>
+                      <a href="#response" class="toc-h2 toc-link" data-title="Response">Response</a>
+                    </li>
+                </ul>
+          </li>
+          <li>
               <a href="#tagging-via-query-string" class="toc-h1 toc-link" data-title="Tagging via Query String">Tagging via Query String</a>
           </li>
           <li>
-              <a href="#campaign-subscriptions" class="toc-h1 toc-link" data-title="Campaign Subscriptions">Campaign Subscriptions</a>
+              <a href="#email-series-campaign-subscriptions" class="toc-h1 toc-link" data-title="Email Series Campaign Subscriptions">Email Series Campaign Subscriptions</a>
                 <ul class="toc-list-h2">
                     <li>
-                      <a href="#subscribe-to-a-campaign" class="toc-h2 toc-link" data-title="Subscribe to a Campaign">Subscribe to a Campaign</a>
+                      <a href="#subscribe-to-an-email-series-campaign" class="toc-h2 toc-link" data-title="Subscribe to an Email Series Campaign">Subscribe to an Email Series Campaign</a>
                     </li>
                     <li>
                       <a href="#unsubscribe-a-subscriber" class="toc-h2 toc-link" data-title="Unsubscribe a Subscriber">Unsubscribe a Subscriber</a>
@@ -977,7 +995,7 @@ request and the time your data appears in the user interface.</p>
     <span class="p">{</span>
       <span class="na">subscribers</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-          <span class="na">email</span><span class="p">:</span> <span class="s1">'someone@example.com'</span>
+          <span class="na">email</span><span class="p">:</span> <span class="s2">"someone@example.com"</span>
         <span class="p">}</span>
       <span class="p">]</span>
     <span class="p">}</span>
@@ -1106,6 +1124,115 @@ request and the time your data appears in the user interface.</p>
     <tr>
       <td><code>events</code></td>
       <td>Required. An Array with between 1 and 1000 objects containing event data.</td>
+    </tr>
+  </tbody>
+</table>
+<h2 id='create-or-update-a-batch-of-carts'>Create or update a batch of carts</h2>
+<blockquote>
+<p>To create or update a batch of carts:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/cart/batch"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
+  -u YOUR_API_KEY: <span class="se">\</span>
+  -d @- <span class="sh">&lt;&lt; EOF
+  {
+    "carts": [
+      {
+        "provider": "my_custom_platform",
+        "email": "user@gmail.com",
+        "action": "created",
+        "cart_id": "456445746",
+        "occurred_at": "2019-01-17T20:50:00Z",
+        "cart_public_id": "#5",
+        "grand_total": 16.99,
+        "total_discounts": 5.34,
+        "currency": "USD",
+        "cart_url": "https://mysuperstore.com/cart/456445746",
+        "items": [
+          {
+            "product_id": "B01J4SWO1G",
+            "product_variant_id": "B01J4SWO1G-CW-BOTT",
+            "sku": "XHB-1234",
+            "name": "The Coolest Water Bottle",
+            "brand": "Drip",
+            "categories": [
+              "Accessories"
+            ],
+            "price": 11.16,
+            "quantity": 2,
+            "discounts": 5.34,
+            "total": 16.99,
+            "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
+            "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png",
+            "product_tag": "Best Seller"
+          }
+        ]
+      },
+      {
+        "provider": "my_custom_platform",
+        "email": "john@acme.com",
+        "action": "created",
+        "occurred_at": "2019-03-12T15:31:58Z",
+        "cart_id": "63754763",
+        "cart_public_id": "#4",
+        "grand_total": 54.00,
+        "total_discounts": 1.00,
+        "currency": "USD",
+        "order_url": "http://myorders.com/orders/4",
+        "items": [{
+          "product_id": "B01F9AQ99M",
+          "product_variant_id": "B01F9AQ99M-YEL-BT",
+          "sku": "JDT-4321",
+          "name": "Yellow Boots of Might",
+          "brand": "Drip",
+          "categories": [
+            "Of Might",
+            "Outdoors"
+          ],
+          "price": 55.00,
+          "quantity": 1,
+          "discounts": 1.00,
+          "total": 54.00,
+          "color": "black",
+          "product_url": "https://mysuperstore.com/dp/B01F9AQ99M",
+          "image_url": "https://www.getdrip.com/images/example_products/boots.png"
+        }]
+      }
+    ]
+  }
+  EOF
+</span></code></pre>
+<blockquote>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a list of unique request_ids that can be used to check the status of the request later on:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"request_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"db8a7b16-32dd-4863-8b6e-818e3eaab99a"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"002048e9-3692-4f0a-8bbf-80a077acf642"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p></aside></p>
+
+<p>We recommend using this API endpoint when you need to import a collection of carts that will likely exceed the regular rate limit of 3,600 requests per hour.</p>
+
+<p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
+request and the time your data appears in the user interface.</p>
+<h3 id='http-endpoint-4'>HTTP Endpoint</h3>
+<p><code>POST /v3/:account_id/shopper_activity/cart/batch</code></p>
+<h3 id='arguments-4'>Arguments</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>carts</code></td>
+      <td>Required. An Array with between 1 and 1000 objects containing <a href="#cart-activity">cart activity</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -1279,9 +1406,9 @@ Note that the legacy Orders endpoint will continue to function. We will give fai
 
 <p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
 request and the time your data appears in the user interface.</p>
-<h3 id='http-endpoint-4'>HTTP Endpoint</h3>
+<h3 id='http-endpoint-5'>HTTP Endpoint</h3>
 <p><code>POST /v2/:account_id/orders/batches</code></p>
-<h3 id='arguments-4'>Arguments</h3>
+<h3 id='arguments-5'>Arguments</h3>
 <table>
   <thead>
     <tr>
@@ -1594,9 +1721,9 @@ request and the time your data appears in the user interface.</p>
 
 <p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
 request and the time your data appears in the user interface.</p>
-<h3 id='http-endpoint-5'>HTTP Endpoint</h3>
+<h3 id='http-endpoint-6'>HTTP Endpoint</h3>
 <p><code>POST /v3/:account_id/shopper_activity/order/batch</code></p>
-<h3 id='arguments-5'>Arguments</h3>
+<h3 id='arguments-6'>Arguments</h3>
 <table>
   <thead>
     <tr>
@@ -1693,9 +1820,9 @@ request and the time your data appears in the user interface.</p>
 
 <p>Note: Since our batch APIs process requests in the background, there may be a delay between the time you submit your
 request and the time your data appears in the user interface.</p>
-<h3 id='http-endpoint-6'>HTTP Endpoint</h3>
+<h3 id='http-endpoint-7'>HTTP Endpoint</h3>
 <p><code>POST /v3/:account_id/shopper_activity/product/batch</code></p>
-<h3 id='arguments-6'>Arguments</h3>
+<h3 id='arguments-7'>Arguments</h3>
 <table>
   <thead>
     <tr>
@@ -1796,6 +1923,10 @@ use the <code>page</code> query parameter.</p>
     <tr>
       <td><code>email_error</code></td>
       <td>The attribute must be a valid email address.</td>
+    </tr>
+    <tr>
+      <td><code>sms_error</code></td>
+      <td>The attribute must be a valid US mobile number with E.164 formatting. E.g. <code>"+16125551212"</code>.</td>
     </tr>
     <tr>
       <td><code>url_error</code></td>
@@ -1929,7 +2060,7 @@ use the <code>page</code> query parameter.</p>
     </tr>
     <tr>
       <td><code>links</code></td>
-      <td>An object containing URLs for campaign, broadcast and conversion resources. Note, conversions are represented as "Goals".</td>
+      <td>An object containing URLs for campaign and conversion resources. Note, conversions are represented as "Goals".</td>
     </tr>
   </tbody>
 </table>
@@ -2020,9 +2151,9 @@ use the <code>page</code> query parameter.</p>
 <p><code>GET /v2/accounts/:account_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
-<h1 id='broadcasts'>Broadcasts</h1>
+<h1 id='single-email-campaigns-br-aka-broadcasts'>Single-Email Campaigns <br/>(aka Broadcasts)</h1>
 <blockquote>
-<p>Broadcasts are represented as follows:</p>
+<p>Single-Email Campaigns are represented as follows:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
@@ -2045,7 +2176,7 @@ use the <code>page</code> query parameter.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
-<p>All responses containing broadcast data also include the following top-level link data:</p>
+<p>All responses containing Single-Email Campaign data also include the following top-level link data:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2065,15 +2196,15 @@ use the <code>page</code> query parameter.</p>
   <tbody>
     <tr>
       <td><code>id</code></td>
-      <td>A read-only Drip generated unique id used to identify each broadcast record.</td>
+      <td>A read-only Drip generated unique id used to identify each Single-Email Campaign record.</td>
     </tr>
     <tr>
       <td><code>status</code></td>
-      <td>Returns whether the broadcast is draft, canceled, scheduled, sent or sending.</td>
+      <td>Returns whether the Single-Email Campaign is draft, canceled, scheduled, sent or sending.</td>
     </tr>
     <tr>
       <td><code>name</code></td>
-      <td>The private name given to the broadcast.</td>
+      <td>The private name given to the Single-Email Campaign.</td>
     </tr>
     <tr>
       <td><code>from_name</code></td>
@@ -2093,15 +2224,15 @@ use the <code>page</code> query parameter.</p>
     </tr>
     <tr>
       <td><code>send_at</code></td>
-      <td>The timestamp representing when the broadcast will be delivered.</td>
+      <td>The timestamp representing when the Single-Email Campaign will be delivered.</td>
     </tr>
     <tr>
       <td><code>bcc</code></td>
-      <td>A list of emails designated to receive a blind copy of the broadcast.</td>
+      <td>A list of emails designated to receive a blind copy of the Single-Email Campaign.</td>
     </tr>
     <tr>
       <td><code>created_at</code></td>
-      <td>A read-only Drip generated timestamp for when the broadcast was first created.</td>
+      <td>A read-only Drip generated timestamp for when the Single-Email Campaign was first created.</td>
     </tr>
     <tr>
       <td><code>href</code></td>
@@ -2109,7 +2240,7 @@ use the <code>page</code> query parameter.</p>
     </tr>
     <tr>
       <td><code>subject</code></td>
-      <td>The broadcast email's subject.</td>
+      <td>The Single-Email Campaign's subject.</td>
     </tr>
     <tr>
       <td><code>html_body</code></td>
@@ -2125,9 +2256,9 @@ use the <code>page</code> query parameter.</p>
     </tr>
   </tbody>
 </table>
-<h2 id='list-all-broadcasts'>List all broadcasts</h2>
+<h2 id='list-all-single-email-campaigns'>List all Single-Email Campaigns</h2>
 <blockquote>
-<p>To list broadcasts in an account:</p>
+<p>To list Single-Email Campaigns in an account:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts"</span> <span class="se">\</span>
   -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
@@ -2200,9 +2331,9 @@ use the <code>page</code> query parameter.</p>
     </tr>
   </tbody>
 </table>
-<h2 id='fetch-a-broadcast'>Fetch a broadcast</h2>
+<h2 id='fetch-a-single-email-campaign'>Fetch a Single-Email Campaign</h2>
 <blockquote>
-<p>To fetch a specific broadcast:</p>
+<p>To fetch a specific Single-Email Campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID"</span> <span class="se">\</span>
   -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
@@ -2246,9 +2377,9 @@ use the <code>page</code> query parameter.</p>
 <p><code>GET /v2/:account_id/broadcasts/:broadcast_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
-<h1 id='campaigns'>Campaigns</h1>
+<h1 id='email-series-campaigns'>Email Series Campaigns</h1>
 <blockquote>
-<p>Campaigns are represented as follows:</p>
+<p>Email Series Campaigns are represented as follows:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
@@ -2280,7 +2411,7 @@ use the <code>page</code> query parameter.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
-<p>All responses containing campaign data also include the following top-level link data:</p>
+<p>All responses containing Email Series Campaign data also include the following top-level link data:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2302,15 +2433,15 @@ use the <code>page</code> query parameter.</p>
   <tbody>
     <tr>
       <td><code>id</code></td>
-      <td>A read-only Drip generated unique id used to identify each campaign record.</td>
+      <td>A read-only Drip generated unique id used to identify each Email Series Campaign record.</td>
     </tr>
     <tr>
       <td><code>status</code></td>
-      <td>Returns whether the campaign is active, paused or in draft.</td>
+      <td>Returns whether the Email Series Campaign is active, paused or in draft.</td>
     </tr>
     <tr>
       <td><code>name</code></td>
-      <td>The private name given to the campaign.</td>
+      <td>The private name given to the Email Series Campaign.</td>
     </tr>
     <tr>
       <td><code>from_name</code></td>
@@ -2338,11 +2469,11 @@ use the <code>page</code> query parameter.</p>
     </tr>
     <tr>
       <td><code>start_immediately</code></td>
-      <td>Returns true if the first email in the campaign is set to be delivered immediately after a campaign subscription.</td>
+      <td>Returns true if the first email in the Email Series Campaign is set to be delivered immediately after a Email Series Campaign subscription.</td>
     </tr>
     <tr>
       <td><code>double_optin</code></td>
-      <td>Returns true if double opt-in is enabled for the campaign.</td>
+      <td>Returns true if double opt-in is enabled for the Email Series Campaign.</td>
     </tr>
     <tr>
       <td><code>send_to_confirmation_page</code></td>
@@ -2366,41 +2497,41 @@ use the <code>page</code> query parameter.</p>
     </tr>
     <tr>
       <td><code>bcc</code></td>
-      <td>A blind copy email address set for all campaign email deliveries.</td>
+      <td>A blind copy email address set for all Email Series Campaign email deliveries.</td>
     </tr>
     <tr>
       <td><code>email_count</code></td>
-      <td>Returns a count of all emails associated with the campaign. Includes all email statuses.</td>
+      <td>Returns a count of all emails associated with the Email Series Campaign. Includes all email statuses.</td>
     </tr>
     <tr>
       <td><code>active_subscriber_count</code></td>
-      <td>Returns a count of all subscribers who are actively subscribed to the campaign.</td>
+      <td>Returns a count of all subscribers who are actively subscribed to the Email Series Campaign.</td>
     </tr>
     <tr>
       <td><code>unsubscribed_subscriber_count</code></td>
-      <td>Returns a count of all subscribers who unsubscribed from the campaign via a delivered email.</td>
+      <td>Returns a count of all subscribers who unsubscribed from the Email Series Campaign via a delivered email.</td>
     </tr>
     <tr>
       <td><code>created_at</code></td>
-      <td>A timestamp representing when the campaign was first created.</td>
+      <td>A timestamp representing when the Email Series Campaign was first created.</td>
     </tr>
     <tr>
       <td><code>href</code></td>
-      <td>The url designated for retrieving the campaign record via the REST API.</td>
+      <td>The url designated for retrieving the Email Series Campaign record via the REST API.</td>
     </tr>
     <tr>
       <td><code>links</code></td>
-      <td>An object containing the REST API URL for the account, any associated campaign forms and subscribers subscribed to the campaign.</td>
+      <td>An object containing the REST API URL for the account, any associated Email Series Campaign forms and subscribers subscribed to the Email Series Campaign.</td>
     </tr>
     <tr>
       <td><code>forms</code></td>
-      <td>An object containing the associated form created for the campaign. This is only populated if a form is created for the campaign. <a href="#forms">Refer to Forms</a> for an overview of the properties returned here.</td>
+      <td>An object containing the associated form created for the Email Series Campaign. This is only populated if a form is created for the Email Series Campaign. <a href="#forms">Refer to Forms</a> for an overview of the properties returned here.</td>
     </tr>
   </tbody>
 </table>
-<h2 id='list-all-campaigns'>List all campaigns</h2>
+<h2 id='list-all-email-series-campaigns'>List all Email Series Campaigns</h2>
 <blockquote>
-<p>To list all campaigns:</p>
+<p>To list all Email Series Campaigns:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
@@ -2472,9 +2603,9 @@ use the <code>page</code> query parameter.</p>
     </tr>
   </tbody>
 </table>
-<h2 id='fetch-a-campaign'>Fetch a campaign</h2>
+<h2 id='fetch-an-email-series-campaign'>Fetch an Email Series Campaign</h2>
 <blockquote>
-<p>To fetch a specific campaign:</p>
+<p>To fetch a specific Email Series Campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
@@ -2521,9 +2652,9 @@ use the <code>page</code> query parameter.</p>
 <p><code>GET /v2/:account_id/campaigns/:campaign_id</code></p>
 <h3 id='arguments-2'>Arguments</h3>
 <p>None.</p>
-<h2 id='activate-a-campaign'>Activate a campaign</h2>
+<h2 id='activate-an-email-series-campaign'>Activate an Email Series Campaign</h2>
 <blockquote>
-<p>To activate a campaign:</p>
+<p>To activate an Email Series Campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/activate"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
@@ -2555,15 +2686,15 @@ use the <code>page</code> query parameter.</p>
   <span class="p">});</span>
 </code></pre>
 <blockquote>
-<p>Responds with a <code>204 No Content</code> if successful. If the campaign cannot be activated, returns a <code>422 Unprocessable Entity</code>.</p>
+<p>Responds with a <code>204 No Content</code> if successful. If the Email Series Campaign cannot be activated, returns a <code>422 Unprocessable Entity</code>.</p>
 </blockquote>
 <h3 id='http-endpoint-3'>HTTP Endpoint</h3>
 <p><code>POST /v2/:account_id/campaigns/:campaign_id/activate</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <p>None.</p>
-<h2 id='pause-a-campaign'>Pause a campaign</h2>
+<h2 id='pause-an-email-series-campaign'>Pause an Email Series Campaign</h2>
 <blockquote>
-<p>To pause a campaign:</p>
+<p>To pause an Email Series Campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/pause"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
@@ -2595,15 +2726,15 @@ use the <code>page</code> query parameter.</p>
   <span class="p">});</span>
 </code></pre>
 <blockquote>
-<p>Responds with a <code>204 No Content</code> if successful. If the campaign cannot be paused, returns a <code>422 Unprocessable Entity</code>.</p>
+<p>Responds with a <code>204 No Content</code> if successful. If the Email Series Campaign cannot be paused, returns a <code>422 Unprocessable Entity</code>.</p>
 </blockquote>
 <h3 id='http-endpoint-4'>HTTP Endpoint</h3>
 <p><code>POST /v2/:account_id/campaigns/:campaign_id/pause</code></p>
 <h3 id='arguments-4'>Arguments</h3>
 <p>None.</p>
-<h2 id='list-all-subscribers-subscribed-to-a-campaign'>List all subscribers subscribed to a campaign</h2>
+<h2 id='list-all-subscribers-subscribed-to-an-email-series-campaign'>List all subscribers subscribed to an Email Series Campaign</h2>
 <blockquote>
-<p>To list subscribers on a campaign:</p>
+<p>To list subscribers on an Email Series Campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/subscribers"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
@@ -2683,9 +2814,9 @@ end
     </tr>
   </tbody>
 </table>
-<h2 id='subscribe-someone-to-a-campaign'>Subscribe someone to a campaign</h2>
+<h2 id='subscribe-someone-to-an-email-series-campaign'>Subscribe someone to an Email Series Campaign</h2>
 <blockquote>
-<p>To start a subscriber on a campaign:</p>
+<p>To start a subscriber on an Email Series Campaign:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/subscribers"</span> <span class="se">\</span>
   -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
@@ -2781,7 +2912,7 @@ end
     </tr>
     <tr>
       <td><code>double_optin</code></td>
-      <td>Optional. If <code>true</code>, the double opt-in confirmation email is sent; if <code>false</code>, the confirmation email is skipped. Defaults to the value set on the campaign.</td>
+      <td>Optional. If <code>true</code>, the double opt-in confirmation email is sent; if <code>false</code>, the confirmation email is skipped. Defaults to the value set on the Email Series Campaign.</td>
     </tr>
     <tr>
       <td><code>starting_email_index</code></td>
@@ -2797,7 +2928,7 @@ end
     </tr>
     <tr>
       <td><code>reactivate_if_removed</code></td>
-      <td>Optional. If <code>true</code>, re-subscribe the subscriber to the campaign if there is a removed subscriber in Drip with the same email address; otherwise, respond with <code>422 Unprocessable Entity</code>. Defaults to <code>true</code>.</td>
+      <td>Optional. If <code>true</code>, re-subscribe the subscriber to the Email Series Campaign if there is a removed subscriber in Drip with the same email address; otherwise, respond with <code>422 Unprocessable Entity</code>. Defaults to <code>true</code>.</td>
     </tr>
     <tr>
       <td><code>prospect</code></td>
@@ -2818,9 +2949,9 @@ end
     </tr>
   </tbody>
 </table>
-<h2 id='list-all-of-a-subscriber-39-s-campaign-subscriptions'>List all of a subscriber&#39;s campaign subscriptions</h2>
+<h2 id='list-all-of-a-subscriber-39-s-email-series-campaign-subscriptions'>List all of a subscriber&#39;s Email Series Campaign subscriptions</h2>
 <blockquote>
-<p>To list campaign subscriptions for a subscriber:</p>
+<p>To list Email Series Campaign subscriptions for a subscriber:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/SUBSCRIBER_ID/campaign_subscription"</span> <span class="se">\</span>
   -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
@@ -2856,7 +2987,7 @@ end
 <blockquote>
 <p>The response looks like this:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="err">#</span><span class="w"> </span><span class="err">The</span><span class="w"> </span><span class="err">campaign</span><span class="w"> </span><span class="err">subscriptions</span><span class="w"> </span><span class="err">property</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">an</span><span class="w"> </span><span class="err">array</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">campaign</span><span class="w"> </span><span class="err">subscription</span><span class="w"> </span><span class="err">objects.</span><span class="w">
+<pre class="highlight json tab-json"><code><span class="err">#</span><span class="w"> </span><span class="err">The</span><span class="w"> </span><span class="err">Email</span><span class="w"> </span><span class="err">Series</span><span class="w"> </span><span class="err">Campaign</span><span class="w"> </span><span class="err">subscriptions</span><span class="w"> </span><span class="err">property</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">an</span><span class="w"> </span><span class="err">array</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">campaign</span><span class="w"> </span><span class="err">subscription</span><span class="w"> </span><span class="err">objects.</span><span class="w">
 </span><span class="p">{</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"campaign_subscriptions.account"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.getdrip.com/v2/accounts/{campaign_subscriptions.account}"</span><span class="p">,</span><span class="w">
@@ -3576,9 +3707,9 @@ Note that the legacy Orders endpoint will continue to function. We will give fai
     </span><span class="s2">"shirt_size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Medium"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"red"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">2013-06-21</span><span class="err">T</span><span class="mi">10</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">58</span><span class="err">Z</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"closed_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">2013-06-21</span><span class="err">T</span><span class="mi">10</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mi">58</span><span class="err">Z</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cancelled_at"</span><span class="p">:</span><span class="w"> </span><span class="err">nil</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"closed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:35:58Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"cancelled_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="s2">"financial_state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"paid"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"fulfillment_state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fulfilled"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"billing_address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -4515,6 +4646,8 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
   </span><span class="s2">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"90210"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"phone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555-555-5555"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sms_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+16125551212"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sms_consent"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"eu_consent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"granted"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"time_zone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/Los_Angeles"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"utc_offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-440</span><span class="p">,</span><span class="w">
@@ -4550,6 +4683,8 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
 </span></code></pre>
 <p>On January 7, 2019 we renamed Subscribers to People to better represent who you’re talking to. Right now this is a small wording change but represents something bigger in the way we all think about our customers. To keep things simple nothing in the API is changing at the moment. There is no need to update existing integrations, for new ones continue to reference the developer docs as outlined here.</p>
 
+<p><strong>Note:</strong> All subscriber API endpoints only work with your <a href="https://www.drip.com/learn/docs/manual/people/active" target="_blank">active</a> people. Attempting to modify or delete an <a href="https://www.drip.com/learn/docs/manual/people/inactive" target="_blank">inactive</a> person will result in an error.</p>
+
 <p><strong>Properties</strong></p>
 
 <table>
@@ -4567,6 +4702,10 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
     <tr>
       <td><code>status</code></td>
       <td>The subscriber's status whether <code>active</code> or <code>unsubscribed</code>.</td>
+    </tr>
+    <tr>
+      <td><code>initial_status</code></td>
+      <td>The subscriber's known status whether <code>active</code> or <code>unsubscribed</code>. To be used instead of <code>status</code> if subscriber's status is unchanged.</td>
     </tr>
     <tr>
       <td><code>email</code></td>
@@ -4607,6 +4746,14 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
     <tr>
       <td><code>phone</code></td>
       <td>The subscriber's primary phone number.</td>
+    </tr>
+    <tr>
+      <td><code>sms_number</code></td>
+      <td>Optional. String. The subscriber's mobile phone number in E.164 formatting. E.g. <code>"+16125551212"</code>. Only US-based numbers are supported at this time.</td>
+    </tr>
+    <tr>
+      <td><code>sms_consent</code></td>
+      <td>Optional. Boolean. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. Default: false. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
     </tr>
     <tr>
       <td><code>eu_consent</code></td>
@@ -4725,13 +4872,11 @@ EOF
 
 <span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'drip-nodejs'</span><span class="p">)({</span> <span class="na">token</span><span class="p">:</span> <span class="nx">YOUR_API_KEY</span><span class="p">,</span> <span class="na">accountId</span><span class="p">:</span> <span class="nx">YOUR_ACCOUNT_ID</span> <span class="p">});</span>
 <span class="kr">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">subscribers</span><span class="p">:</span> <span class="p">[{</span>
-    <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
-    <span class="na">time_zone</span><span class="p">:</span> <span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
-    <span class="na">custom_fields</span><span class="p">:</span> <span class="p">{</span>
-      <span class="na">shirt_size</span><span class="p">:</span> <span class="s2">"Medium"</span>
-    <span class="p">}</span>
-  <span class="p">}]</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
+  <span class="na">time_zone</span><span class="p">:</span> <span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
+  <span class="na">custom_fields</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">shirt_size</span><span class="p">:</span> <span class="s2">"Medium"</span>
+  <span class="p">}</span>
 <span class="p">};</span>
 
 <span class="nx">client</span><span class="p">.</span><span class="nx">createUpdateSubscriber</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span>
@@ -4818,6 +4963,14 @@ EOF
       <td>Optional. The subscriber's primary phone number.</td>
     </tr>
     <tr>
+      <td><code>sms_number</code></td>
+      <td>Optional. String. The subscriber's mobile phone number in E.164 formatting. E.g. <code>"+16125551212"</code>. Only US-based numbers are supported at this time.</td>
+    </tr>
+    <tr>
+      <td><code>sms_consent</code></td>
+      <td>Optional. Boolean. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. Default: false. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
+    </tr>
+    <tr>
       <td><code>user_id</code></td>
       <td>Optional. A unique identifier for the user in your database, such as a primary key.</td>
     </tr>
@@ -4861,6 +5014,14 @@ EOF
     <tr>
       <td><code>eu_consent_message</code></td>
       <td>Optional. A String containing the message the subscriber granted or denied their consent to.</td>
+    </tr>
+    <tr>
+      <td><code>status</code></td>
+      <td>Optional. A String specifying the subscriber's status: either <code>active</code> or <code>unsubscribed</code>.</td>
+    </tr>
+    <tr>
+      <td><code>initial_status</code></td>
+      <td>Optional. A String specifying the subscriber's known status: either <code>active</code> or <code>unsubscribed</code>. To be used if subscriber's status is unchanged.</td>
     </tr>
   </tbody>
 </table>
@@ -4999,15 +5160,15 @@ EOF
 <p><code>GET /v2/:account_id/subscribers/:id_or_email_or_visitor_uuid</code></p>
 <h3 id='arguments-3'>Arguments</h3>
 <p>None.</p>
-<h2 id='remove-a-subscriber-from-one-or-all-campaigns'>Remove a subscriber from one or all campaigns</h2>
+<h2 id='remove-a-subscriber-from-one-or-all-email-series-campaigns'>Remove a subscriber from one or all Email Series Campaigns</h2>
 <blockquote>
-<p>To remove a subscriber from all campaigns:</p>
+<p>To remove a subscriber from all Email Series s:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/remove"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY:
 </code></pre><pre class="highlight ruby tab-ruby"><code><span class="c1">##</span>
-<span class="c1"># To remove a subscriber from all campaigns:</span>
+<span class="c1"># To remove a subscriber from all Email Series Campaigns:</span>
 <span class="c1">##</span>
 
 <span class="nb">require</span> <span class="s1">'drip'</span>
@@ -5082,7 +5243,7 @@ EOF
   <tbody>
     <tr>
       <td><code>campaign_id</code></td>
-      <td>Optional. The campaign from which to remove the subscriber. Defaults to all.</td>
+      <td>Optional. The Email Series Campaign from which to remove the subscriber. Defaults to all.</td>
     </tr>
   </tbody>
 </table>
@@ -5168,7 +5329,7 @@ EOF
 <p>Responds with <code>204 No Content</code> if successful.</p>
 </blockquote>
 <h3 id='http-endpoint-6'>HTTP Endpoint</h3>
-<p><code>DELETE /:account_id/subscribers/:id_or_email</code></p>
+<p><code>DELETE /v2/:account_id/subscribers/:id_or_email</code></p>
 <h3 id='arguments-6'>Arguments</h3>
 <p>None.</p>
 <h1 id='tags'>Tags</h1><h2 id='list-all-tags-used-in-an-account'>List all tags used in an account</h2>
@@ -5699,11 +5860,13 @@ EOF
 <span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'drip-nodejs'</span><span class="p">)({</span> <span class="na">token</span><span class="p">:</span> <span class="nx">YOUR_API_KEY</span><span class="p">,</span> <span class="na">accountId</span><span class="p">:</span> <span class="nx">YOUR_ACCOUNT_ID</span> <span class="p">});</span>
 <span class="kr">const</span> <span class="nx">workflowId</span> <span class="o">=</span> <span class="mi">222333</span><span class="p">;</span>
 <span class="kr">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
-  <span class="na">time_zone</span><span class="p">:</span> <span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
-  <span class="na">custom_fields</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">shirt_size</span><span class="p">:</span> <span class="s2">"Medium"</span>
-  <span class="p">}</span>
+  <span class="na">subscribers</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
+    <span class="na">time_zone</span><span class="p">:</span> <span class="s2">"America/Los_Angeles"</span><span class="p">,</span>
+    <span class="na">custom_fields</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">shirt_size</span><span class="p">:</span> <span class="s2">"Medium"</span>
+    <span class="p">}</span>
+  <span class="p">}]</span>
 <span class="p">}</span>
 
 <span class="nx">client</span><span class="p">.</span><span class="nx">startOnWorkflow</span><span class="p">(</span><span class="nx">workflowId</span><span class="p">,</span> <span class="nx">payload</span><span class="p">)</span>
@@ -6564,7 +6727,7 @@ due to a hard bounce or spam complaint.</p>
   </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This event is triggered when a subscriber subscribes to a campaign.</p>
+<p>This event is triggered when a subscriber subscribes to an Email Series Campaign.</p>
 <h2 id='subscriber-removed_from_campaign'>subscriber.removed_from_campaign</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscriber.removed_from_campaign"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -6578,7 +6741,7 @@ due to a hard bounce or spam complaint.</p>
   </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This event is triggered when a subscriber is removed from a campaign.</p>
+<p>This event is triggered when a subscriber is removed from an Email Series Campaign.</p>
 <h2 id='subscriber-unsubscribed_from_campaign'>subscriber.unsubscribed_from_campaign</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscriber.unsubscribed_from_campaign"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -6592,7 +6755,7 @@ due to a hard bounce or spam complaint.</p>
   </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This event is triggered when a subscriber unsubscribes from a campaign.</p>
+<p>This event is triggered when a subscriber unsubscribes from an Email Series Campaign.</p>
 <h2 id='subscriber-unsubscribed_all'>subscriber.unsubscribed_all</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscriber.unsubscribed_all"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -6628,7 +6791,7 @@ due to a hard bounce or spam complaint.</p>
   </span><span class="s2">"occurred_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-06-21T10:31:58Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This event is triggered when a subscriber completes a campaign.</p>
+<p>This event is triggered when a subscriber completes an Email Series Campaign.</p>
 <h2 id='subscriber-applied_tag'>subscriber.applied_tag</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscriber.applied_tag"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -6900,10 +7063,14 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <h1 id='shopper-activity-section'>Shopper Activity Section</h1><h1 id="shopper_activity_overview">Overview</h1>
 
 <p>When selling online, there are many activities your customers (and potential customers) can take. Passing the details of these activities to Drip helps us make you money. We do that by enabling deeper content personalization and providing actionable insights that bring people closer to your brand.</p>
+
+<aside class="notice color-notice">
+If you're planning on migrating from <a href="/#orders-legacy">Legacy Orders</a>, please note that we consider an Order to be unique based on <tt>provider</tt> and <tt>upstream_id</tt>.
+</aside>
 <h1 id='cart-activity'>Cart Activity</h1>
 <p>Passing in all required fields for Cart Activity will enable Cart Abandonment Dynamic Content in your Drip account. Leverage that content in our Visual Email Builder to send Cart Abandonment emails containing item details.</p>
 
-<p>Note that Cart Activity will show up on a person&#39;s activity timeline as either a &quot;Created a cart&quot; or &quot;Updated a cart&quot; event. For more information, see our Knowledge Base <a href="https://help.drip.com/hc/en-us/articles/360022922031">here</a>.</p>
+<p>Note that Cart Activity will show up on a person&#39;s activity timeline as either a &quot;Created a cart&quot; or &quot;Updated a cart&quot; event. For more information, see our guide in MyDrip <a href="https://www.drip.com/learn/docs/guides/report-revenue">here</a>.</p>
 <h2 id='create-or-update-a-cart'>Create or update a cart</h2>
 <blockquote>
 <p>To record a cart event:</p>
@@ -6916,6 +7083,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
   {
     "provider": "my_custom_platform",
     "email": "user@gmail.com",
+    "initial_status": "active",
     "action": "created",
     "cart_id": "456445746",
     "occurred_at": "2019-01-17T20:50:00Z",
@@ -6936,7 +7104,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
         ],
         "price": 11.16,
         "quantity": 2,
-        "discount": 5.34,
+        "discounts": 5.34,
         "total": 16.99,
         "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
         "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png",
@@ -6955,6 +7123,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">create_cart_activity_event</span><span class="p">(</span>
   <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
   <span class="ss">email: </span><span class="s2">"user@gmail.com"</span><span class="p">,</span> <span class="c1"># or person_id</span>
+  <span class="ss">initial_status: </span><span class="s2">"active"</span><span class="p">,</span>
   <span class="ss">action: </span><span class="s2">"created"</span><span class="p">,</span>
   <span class="ss">cart_id: </span><span class="s2">"456445746"</span><span class="p">,</span>
   <span class="ss">occurred_at: </span><span class="s2">"2019-01-17T20:50:00Z"</span><span class="p">,</span>
@@ -6975,7 +7144,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
       <span class="p">],</span>
       <span class="ss">price: </span><span class="mi">11</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
       <span class="ss">quantity: </span><span class="mi">2</span><span class="p">,</span>
-      <span class="ss">discount: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
+      <span class="ss">discounts: </span><span class="mi">5</span><span class="o">.</span><span class="mi">34</span><span class="p">,</span>
       <span class="ss">total: </span><span class="mi">16</span><span class="o">.</span><span class="mi">99</span><span class="p">,</span>
       <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.com/dp/B01J4SWO1G"</span><span class="p">,</span>
       <span class="ss">image_url: </span><span class="s2">"https://www.getdrip.com/images/example_products/water_bottle.png"</span><span class="p">,</span>
@@ -6991,7 +7160,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <span class="k">end</span>
 </code></pre>
 <blockquote>
-<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a unique request_id that can be used to check the status of the request later on:</p>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing.</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"990c99a7-5cba-42e8-8f36-aec3419186ef"</span><span class="w">
@@ -7018,6 +7187,10 @@ only fires when lead scoring is enabled for your account.</strong></p>
     <tr>
       <td><code>email</code></td>
       <td>Optional. The person's email address. Either <code>person_id</code> or <code>email</code> must be included. If both are included, <code>email</code> is ignored.</td>
+    </tr>
+    <tr>
+      <td><code>initial_status</code></td>
+      <td>Optional. The person's status whether <code>active</code> or <code>unsubscribed</code>. If this field is not included, the person will become subscribed.
     </tr>
     <tr>
       <td><code>action</code></td>
@@ -7066,11 +7239,12 @@ only fires when lead scoring is enabled for your account.</strong></p>
           <tbody>
             <tr>
               <td><code>product_id</code></td>
-              <td>Required. A unique identifier for the product from the <code>provider</code>.</td>
+              <td>Required. A unique identifier for the product from the <code>provider</code>.
+              (Note: This field is used by segmentation.)</td>
             </tr>
             <tr>
               <td><code>product_variant_id</code></td>
-              <td>Required. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
+              <td>Required. If applicable, a unique identifier for the specific product variant from the <code>provider</code>. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
             </tr>
             <tr>
               <td><code>sku</code></td>
@@ -7097,8 +7271,8 @@ only fires when lead scoring is enabled for your account.</strong></p>
               <td>Optional. The quantity of the item ordered. Defaults to 1.</td>
             </tr>
             <tr>
-              <td><code>discount</code></td>
-              <td>Optional. The discount on the items, taking quantity into account. For example, a $2.66 discount per item would be $5.34 if that item was of quantity 2. Defaults to 0.</td>
+              <td><code>discounts</code></td>
+              <td>Optional. The discounts on the items, taking quantity into account. For example, a $2.66 discount per item would be $5.34 if that item was of quantity 2. Defaults to 0.</td>
             </tr>
             <tr>
               <td><code>total</code></td>
@@ -7125,8 +7299,12 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <h1 id='order-activity'>Order Activity</h1>
 <p>Order Activity will show up on a person&#39;s activity timeline as an event. The event is based on the <code>action</code> sent with the order payload. For example, sending <code>placed</code> will result in a &quot;Placed an order&quot; event and sending <code>updated</code> will result in an &quot;Updated an order&quot; event.</p>
 
+<p>Order Activity places special value on <code>action</code> with the <code>placed</code> value. This event will determine when an order is considered to have originated based on the <code>occurred_at</code>. If you send an Order Activity <code>&quot;action&quot;: &quot;placed&quot;</code> event without including a valid <code>occurred_at</code> value, the order will be considered to have originated at the current time. If you send Order Activity events without previously sending <code>placed</code>, the order will be considered to have originated at the current time the first event was received.</p>
+
 <p>Drip will keep a person’s Lifetime Value (LTV) up-to-date with their orders. For example, if a customer places an order with a <code>grand_total</code> of $100, their LTV will be incremented by $100. If the order is then updated, paid, or fulfilled with a <code>grand_total</code> value of $105, the customer’s LTV will increase by $5. If the order is then canceled or refunded with a <code>refund_amount</code> of $105, the customer’s LTV will decrease by $105.</p>
-<h2 id='create-or-update-an-order'>Create or update an order</h2>
+
+<p><h2 id="sapi-create-or-update-order">Create or update an order</h1></p>
+
 <p>To update an existing order, include the <code>provider</code> and <code>order_id</code> for that order in the payload.</p>
 
 <blockquote>
@@ -7140,6 +7318,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
   {
     "provider": "my_custom_platform",
     "email": "user@gmail.com",
+    "initial_status": "active",
     "action": "placed",
     "occurred_at": "2019-01-17T20:50:00Z",
     "order_id": "456445746",
@@ -7211,6 +7390,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">create_order_activity_event</span><span class="p">(</span>
   <span class="ss">provider: </span><span class="s2">"my_custom_platform"</span><span class="p">,</span>
   <span class="ss">email: </span><span class="s2">"user@gmail.com"</span><span class="p">,</span> <span class="c1"># or person_id</span>
+  <span class="ss">initial_status: </span><span class="s2">"active"</span><span class="p">,</span>
   <span class="ss">action: </span><span class="s2">"placed"</span><span class="p">,</span>
   <span class="ss">occurred_at: </span><span class="s2">"2019-01-17T20:50:00Z"</span><span class="p">,</span>
   <span class="ss">order_id: </span><span class="s2">"456445746"</span><span class="p">,</span>
@@ -7279,7 +7459,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <span class="k">end</span>
 </code></pre>
 <blockquote>
-<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a unique request_id that can be used to check the status of the request later on:</p>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"990c99a7-5cba-42e8-8f36-aec3419186ef"</span><span class="w">
@@ -7306,6 +7486,10 @@ only fires when lead scoring is enabled for your account.</strong></p>
     <tr>
       <td><code>email</code></td>
       <td>Optional. The person's email address. Either <code>person_id</code> or <code>email</code> must be included. If both are included, <code>email</code> is ignored.</td>
+    </tr>
+    <tr>
+      <td><code>initial_status</code></td>
+      <td>Optional. The person's status whether <code>active</code> or <code>unsubscribed</code>. If this field is not included, the person will become subscribed.
     </tr>
     <tr>
       <td><code>action</code></td>
@@ -7370,11 +7554,13 @@ only fires when lead scoring is enabled for your account.</strong></p>
           <tbody>
             <tr>
               <td><code>product_id</code></td>
-              <td>Required. A unique identifier for the product from the <code>provider</code>.</td>
+              <td>Optional. A unique identifier for the product from the <code>provider</code>.
+              We recommend using this field whenever possible to allow for product level segmentation.
+              (Note: This field is used by segmentation.)</td>
             </tr>
             <tr>
               <td><code>product_variant_id</code></td>
-              <td>Required. If applicable, a unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
+              <td>Optional. If applicable, a unique identifier for the specific product variant from the <code>provider</code>. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here. (Note: this field is used by segmentation.)</td>
             </tr>
             <tr>
               <td><code>sku</code></td>
@@ -7401,8 +7587,8 @@ only fires when lead scoring is enabled for your account.</strong></p>
               <td>Optional. The quantity of the item ordered. Defaults to 1.</td>
             </tr>
             <tr>
-              <td><code>discount</code></td>
-              <td>Optional. The discount on the items, taking quantity into account. For example, a $2.66 discount per item would be $5.34 if that item was of quantity 2. Defaults to 0.</td>
+              <td><code>discounts</code></td>
+              <td>Optional. The discounts on the items, taking quantity into account. For example, a $2.66 discount per item would be $5.34 if that item was of quantity 2. Defaults to 0.</td>
             </tr>
             <tr>
               <td><code>taxes</code></td>
@@ -7623,7 +7809,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <span class="k">end</span>
 </code></pre>
 <blockquote>
-<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a unique request_id that can be used to check the status of the request later on:</p>
+<p>Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing.</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"request_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"990c99a7-5cba-42e8-8f36-aec3419186ef"</span><span class="w">
@@ -7653,7 +7839,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
     </tr>
     <tr>
       <td><code>product_id</code></td>
-      <td>Required. A unique, internal id for the product (generally the primary key generated by the ecommerce platform).</td>
+      <td>Required. A unique, internal id for the product (generally the primary key generated by the ecommerce platform). (Note: this field is used by segmentation.)</td>
     </tr>
     <tr>
       <td><code>product_variant_id</code></td>
@@ -7718,7 +7904,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 <p>To interact with the JavaScript API, you&#39;ll need to have your Drip snippet installed on your website. Each Drip account has a unique snippet that can be found under Settings → Account → Site Setup.</p>
 <h2 id='how-to-send-a-js-api-request'>How to Send a JS API Request</h2><pre class="highlight javascript tab-javascript"><code><span class="nx">_dcq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s2">"methodName"</span><span class="p">,</span> <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="s2">"value"</span><span class="p">,</span> <span class="p">...</span> <span class="p">}]);</span>
 </code></pre>
-<p>All requests follow the same conventions. If you&#39;ve ever worked with the Google Analytics API, the sematics should look familiar. This is the basis structure of an API request.</p>
+<p>All requests follow the same conventions. If you&#39;ve ever worked with the Google Analytics API, the semantics should look familiar. This is the basis structure of an API request.</p>
 
 <p>API requests are executed asynchronously, so you may safely place then anywhere on the page (even above the Drip snippet).</p>
 <h1 id='identifying-visitors'>Identifying Visitors</h1><h2 id='attach-identifying-data-to-visitors'>Attach Identifying Data to Visitors</h2>
@@ -7737,7 +7923,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
 </code></pre>
 <p>The <code>identify</code> method pushes subscriber data into Drip. If the subscriber is not yet in your account, we will create a new record for them; otherwise, we update their record with the information you pass in. To update a subscriber&#39;s email address, use the <code>new_email</code> property.</p>
 <h3 id='properties'>Properties</h3>
-<p>The following are treated as special properties. All other data passed in will be added to the subscriber&#39;s custom fields. Keys should be lowercase, with words separated by underscores.</p>
+<p>The following are treated as special properties. All other data passed in will be added to the subscriber&#39;s custom fields. Keys should be lowercase, with words separated by underscores. Keys that begin with <code>drip_</code> are reserved for internal Drip usage.</p>
 
 <table>
   <thead>
@@ -7906,11 +8092,126 @@ only fires when lead scoring is enabled for your account.</strong></p>
     </tr>
   </tbody>
 </table>
+<h1 id='tracking-product-views'>Tracking Product Views</h1>
+<blockquote>
+<p>Example product view request</p>
+</blockquote>
+<pre class="highlight javascript tab-javascript"><code><span class="nx">_dcq</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="s2">"track"</span><span class="p">,</span> <span class="s2">"Viewed a Product"</span><span class="p">,</span>
+    <span class="p">{</span>
+      <span class="na">product_id</span><span class="p">:</span> <span class="s2">"B01J4SWO1G"</span><span class="p">,</span>
+      <span class="na">product_variant_id</span><span class="p">:</span> <span class="s2">"B01J4SWO1G-CW-BOTT"</span><span class="p">,</span>
+      <span class="na">sku</span><span class="p">:</span> <span class="s2">"XHB-1234"</span><span class="p">,</span>
+      <span class="na">name</span><span class="p">:</span> <span class="s2">"The Coolest Water Bottle"</span><span class="p">,</span>
+      <span class="na">categories</span><span class="p">:</span> <span class="s2">"Accessories,Bottles"</span><span class="p">,</span>
+      <span class="na">price</span><span class="p">:</span> <span class="mf">11.16</span><span class="p">,</span>
+      <span class="na">currency</span><span class="p">:</span> <span class="s2">"USD"</span><span class="p">,</span>
+      <span class="na">product_url</span><span class="p">:</span> <span class="s2">"https://mysuperstore.com/dp/B01J4SWO1G"</span><span class="p">,</span>
+      <span class="na">image_url</span><span class="p">:</span> <span class="s2">"https://www.getdrip.com/images/example_products/water_bottle.png"</span><span class="p">,</span>
+      <span class="na">brand</span><span class="p">:</span> <span class="s2">"Drip"</span><span class="p">,</span>
+      <span class="na">source</span><span class="p">:</span> <span class="s2">"my_custom_platform"</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">);</span>
+</code></pre>
+<p>You can use the <code>track</code> method to send product views to Drip. By sending with a &quot;Viewed a product&quot; <code>action</code> and sending product data via the <a href="#product-activity">Shopper Activity API</a>, you can segment on product views in Drip.</p>
+<h3 id='properties'>Properties</h3>
+<p>Include the following optional custom event properties to enable automation and segmentation options in Drip.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>product_id</code></td>
+      <td>A unique, internal id for the product (generally the primary key generated by the ecommerce platform). (Note: this field is used by segmentation.)</td>
+    </tr>
+    <tr>
+      <td><code>product_variant_id</code></td>
+      <td>A unique identifier for the specific product variant from the provider. For example, a t-shirt may have one product_id, but several product_variant_ids for sizes and colors. If a product does not have multiple variants and you do not have a variant identifier in your system, repeat the product_id here.</td>
+    </tr>
+    <tr>
+      <td><code>sku</code></td>
+      <td>The product SKU.</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td>The product name.</td>
+    </tr>
+    <tr>
+      <td><code>brand</code></td>
+      <td>The product's brand, vendor, or manufacturer.</td>
+    </tr>
+    <tr>
+      <td><code>categories</code></td>
+      <td>An comma separated list of categories associated with the product (e.g. shoes, vitamins, books, videos).</td>
+    </tr>
+    <tr>
+      <td><code>price</code></td>
+      <td>The price of a single product.</td>
+    </tr>
+    <tr>
+      <td><code>occurred_at</code></td>
+      <td>The String time at which the event occurred in <a href="http://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO-8601</a> format. Defaults to the current time.</td>
+    </tr>
+    <tr>
+      <td><code>success</code></td>
+      <td>Optional. A callback function that is executed upon successful completion of the request.</td>
+    </tr>
+    <tr>
+      <td><code>failure</code></td>
+      <td>Optional. A callback function that is executed if the request fails.</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">success</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="err">visitor_uuid</span><span class="p">:</span><span class="w"> </span><span class="s2">"f627ee608adb01315d1022000ab2058a"</span><span class="p">,</span><span class="w">
+  </span><span class="err">anonymous</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='response'>Response</h3>
+<p>The track request will return a response object that can be passed into the callback functions.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>success</code></td>
+      <td>Boolean. True if the call to Drip succeeded.</td>
+    </tr>
+    <tr>
+      <td><code>visitor_uuid</code></td>
+      <td>The unique id for the visitor identified.</td>
+    </tr>
+    <tr>
+      <td><code>anonymous</code></td>
+      <td>Boolean. False if the visitor is associated with a subscriber.</td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td>String. Contains an error message if the request failed.</td>
+    </tr>
+  </tbody>
+</table>
 <h1 id='tagging-via-query-string'>Tagging via Query String</h1>
 <p>You can also tag visitors by appending a <code>dst</code> query string parameter to the URL of a page that has the Drip JavaScript installed. For example, the following URL will tag visitors with <code>Customer</code></p>
 
 <p><code>http://www.mysite.com?dst=Customer</code></p>
-<h1 id='campaign-subscriptions'>Campaign Subscriptions</h1><h2 id='subscribe-to-a-campaign'>Subscribe to a Campaign</h2>
+<h1 id='email-series-campaign-subscriptions'>Email Series Campaign Subscriptions</h1><h2 id='subscribe-to-an-email-series-campaign'>Subscribe to an Email Series Campaign</h2>
 <blockquote>
 <p>Example request</p>
 </blockquote>
@@ -7930,7 +8231,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
   <span class="p">]</span>
 <span class="p">);</span>
 </code></pre>
-<p>This method will add a subscriber directly to campaign. If you would like to add a subscriber to your account without subscribing them to a campaign, use an <a href="#identifying-visitors">identify call</a> instead.</p>
+<p>This method will add a subscriber directly to an Email Series Campaign. If you would like to add a subscriber to your account without subscribing them to an Email Series Campaign, use an <a href="#identifying-visitors">identify call</a> instead.</p>
 <h3 id='arguments'>Arguments</h3>
 <table>
   <thead>
@@ -7942,7 +8243,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
   <tbody>
     <tr>
       <td><code>campaign_id</code></td>
-      <td>Required. The String campaign ID, which can be found on the campaign settings page.</td>
+      <td>Required. The String campaign ID, which can be found on the Email Series Campaign settings page.</td>
     </tr>
     <tr>
       <td><code>fields</code></td>
@@ -7950,7 +8251,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
     </tr>
     <tr>
       <td><code>double_optin</code></td>
-      <td>Optional. If <code>true</code>, the double opt-in confirmation email is sent; if <code>false</code>, the confirmation email is skipped. Defaults to the value set on the campaign.</td>
+      <td>Optional. If <code>true</code>, the double opt-in confirmation email is sent; if <code>false</code>, the confirmation email is skipped. Defaults to the value set on the Email Series Campaign.</td>
     </tr>
     <tr>
       <td><code>success</code></td>
@@ -7976,7 +8277,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
   <span class="p">]</span>
 <span class="p">);</span>
 </code></pre>
-<p>Use this method to unsubscribe a subscriber from one or all of your campaigns.</p>
+<p>Use this method to unsubscribe a subscriber from one or all of your Email Series Campaigns.</p>
 <h3 id='arguments-2'>Arguments</h3>
 <table>
   <thead>
@@ -7992,7 +8293,7 @@ only fires when lead scoring is enabled for your account.</strong></p>
     </tr>
     <tr>
       <td><code>campaign_id</code></td>
-      <td>Optional. The String campaign ID, which can be found on the campaign settings page. If not included, the subscriber will be unsubscribed from all campaigns.</td>
+      <td>Optional. The String campaign ID, which can be found on the Email Series Campaign settings page. If not included, the subscriber will be unsubscribed from all Email Series Campaigns.</td>
     </tr>
     <tr>
       <td><code>success</code></td>
@@ -8151,10 +8452,14 @@ via Liquid, allowing you to build super-rich personalized emails augmented with 
 
 <ul>
 <li>A successful response should contain a body that is a parseable JSON <em>document</em> (i.e. the top level must be either an object or an array)</li>
-<li>The returned document should not exceed 350 KB in size</li>
+<li>The returned document must not exceed 350 KB in size</li>
 </ul></li>
 <li>A <code>3xx</code> response will be followed as redirects per the HTTP specification</li>
-<li>A client error response (those in the <code>4xx</code> range) will be considered a permanent error</li>
+<li>A client error response (those in the <code>4xx</code> range) will be considered a permanent error
+
+<ul>
+<li>Except <code>429</code>; this signals to Drip that the request should be tried again later</li>
+</ul></li>
 <li>A server error response (those in the <code>5xx</code> range) will be considered a temporary error</li>
 <li>No other response codes are supported</li>
 </ul>
@@ -8168,7 +8473,12 @@ via Liquid, allowing you to build super-rich personalized emails augmented with 
 <li>If retries continue to fail, we will give up sending the individual email</li>
 </ul></li>
 <li>A permanent error response will cause the the email to not be sent</li>
-<li>In order to optimize your sending throughput, we will time out any response or series of redirects after 3 seconds</li>
+<li>In order to optimize your sending throughput, we will time out any response or series of redirects after 3 seconds
+
+<ul>
+<li>If you need additional time to process Drip&#39;s request (e.g. to warm a cache), you can respond with a <code>429</code>, at
+which point we will retry the request with exponential backoff</li>
+</ul></li>
 </ul>
 <h1 id='preview-test-mode'>Preview/Test Mode</h1>
 <blockquote>
