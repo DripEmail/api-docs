@@ -32,7 +32,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches" \
       ]
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby
@@ -141,7 +141,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/unsubscribes/batches" \
       ]
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby
@@ -243,7 +243,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches" \
       ]
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby
@@ -405,7 +405,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/cart/b
       }
     ]
   }
-  EOF
+EOF
 ```
 
 > Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a list of unique request_ids that can be used to check the status of the request later on:
@@ -598,7 +598,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/orders/batches" \
       ]
     }]
   }
-  EOF
+EOF
 ```
 
 > Responds with a `202 Accepted` response and an empty JSON response:
@@ -779,7 +779,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/order/
       }
     ]
   }
-  EOF
+EOF
 ```
 
 ```ruby
@@ -1030,7 +1030,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/produc
       }
     ]
   }
-  EOF
+EOF
 ```
 
 > Responds with a <code>202 Accepted</code> if successful. That means the server accepted the request and queued it for processing. The response includes a list of unique request_ids that can be used to check the status of the request later on:

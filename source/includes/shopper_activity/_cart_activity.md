@@ -46,7 +46,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/cart" 
       }
     ]
   }
-  EOF
+EOF
 ```
 
 ```ruby

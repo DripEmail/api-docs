@@ -530,7 +530,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/orders" \
         }]
     }]
   }
-  EOF
+EOF
 ```
 
 
@@ -856,7 +856,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/refunds" \
         "processed_at": "2013-06-22T10:41:11Z"
       }]
   }
-  EOF
+EOF
 ```
 
 ```ruby

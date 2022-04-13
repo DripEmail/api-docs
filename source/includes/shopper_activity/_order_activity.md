@@ -82,7 +82,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/order"
       "phone": "555-555-5555"
     }
   }
-  EOF
+EOF
 ```
 
 ```ruby

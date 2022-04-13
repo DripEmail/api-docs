@@ -525,7 +525,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/s
       }
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby

@@ -31,7 +31,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/produc
     "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
     "image_url": "https://www.getdrip.com/images/example_products/water_bottle.png"
   }
-  EOF
+EOF
 ```
 
 ```ruby
