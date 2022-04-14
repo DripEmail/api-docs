@@ -20,7 +20,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events" \
       "occurred_at": "2014-03-22T03:00:00Z"
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby

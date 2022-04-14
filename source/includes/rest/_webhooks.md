@@ -209,7 +209,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/webhooks" \
       ]
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby

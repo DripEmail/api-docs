@@ -330,7 +330,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/s
       }
     }]
   }
-  EOF
+EOF
 ```
 
 ```ruby
@@ -631,7 +631,7 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/t
       }
     ]
   }
-  EOF
+EOF
 ```
 
 ```ruby
@@ -752,7 +752,7 @@ curl -X PUT "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/tr
       }
     ]
   }
-  EOF
+EOF
 ```
 
 ```ruby
