@@ -456,7 +456,6 @@ client.listAllSubscribesToCampaign(campaignId)
   "links": { ... },
   "meta": {
     "page": 1,
-    "sort": "created_at",
     "direction": "desc",
     "count": 20,
     "total_pages": 1,
@@ -489,12 +488,8 @@ client.listAllSubscribesToCampaign(campaignId)
       <td>Optional. The page number. Defaults to <code>1</code>.</td>
     </tr>
     <tr>
-      <td><code>sort</code></td>
-      <td>Optional. The attribute by which to sort the results: <code>id</code> or <code>created_at</code>. Defaults to <code>created_at</code>.</td>
-    </tr>
-    <tr>
       <td><code>direction</code></td>
-      <td>Optional. The direction to sort the results: <code>asc</code> or <code>desc</code>. Defaults to <code>desc</code>.</td>
+      <td>Optional. The direction to sort the results for <code>created_at</code>: <code>asc</code> or <code>desc</code>. Defaults to <code>desc</code>.</td>
     </tr>
     <tr>
       <td><code>per_page</code></td>
