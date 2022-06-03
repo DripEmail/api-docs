@@ -159,7 +159,7 @@ due to a hard bounce or spam complaint.
 }
 ```
 
-This event is triggered when a subscriber subscribes to a email marketing.
+This event is triggered when a subscriber subscribes to email marketing.
 
 ## subscriber.subscribed_to_campaign
 
