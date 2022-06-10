@@ -146,6 +146,21 @@ This event is triggered when a subscriber transitions from being "undeliverable"
 This event is triggered when a subscriber transitions to being "undeliverable"
 due to a hard bounce or spam complaint.
 
+## subscriber.subscribed_to_email_marketing
+
+```json
+{
+  "event": "subscriber.subscribed_to_email_marketing",
+  "data": {
+    "account_id": "9999999",
+    "subscriber": { ... }
+  },
+  "occurred_at": "2013-06-21T10:31:58Z"
+}
+```
+
+This event is triggered when a subscriber subscribes to email marketing.
+
 ## subscriber.subscribed_to_campaign
 
 ```json
