@@ -354,7 +354,7 @@ client.destroyWebhook(webhookId)
 
 ### HTTP Endpoint
 
-`DELETE /:account_id/webhooks/:webhook_id`
+`DELETE /v2/:account_id/webhooks/:webhook_id`
 
 ### Arguments
 
