@@ -487,7 +487,7 @@ If the workflow is not active, the subscriber will not be added to the workflow.
 > To remove someone from a workflow:
 
 ```shell
-curl -X DELETE "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/subscribers/ID_OR_EMAIL" \
+curl -X DELETE "https://v2/api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/subscribers/ID_OR_EMAIL" \
   -H 'User-Agent: Your App Name (www.yourapp.com)' \
   -u YOUR_API_KEY:
 ```
@@ -532,7 +532,7 @@ If the subscriber is not already on the workflow, nothing will happen.
 
 ### HTTP Endpoint
 
-`DELETE /:account_id/workflows/:workflow_id/subscribers/:id_or_email`
+`DELETE /v2/:account_id/workflows/:workflow_id/subscribers/:id_or_email`
 
 ### Arguments
 
@@ -827,7 +827,7 @@ client.updateTrigger(workflowId, triggerId, payload)
 
 ### HTTP Endpoint
 
-`PUT /:account_id/workflows/:workflow_id/triggers/:trigger_id`
+`PUT /v2/:account_id/workflows/:workflow_id/triggers/:trigger_id`
 
 ### Arguments
 
