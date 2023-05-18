@@ -11,14 +11,12 @@ curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events" \
   -u YOUR_API_KEY: \
   -d @- << EOF
   {
-    "events": [{
-      "email": "john@acme.com",
-      "action": "Logged in",
-      "properties": {
-        "affiliate_code": "XYZ"
-      },
-      "occurred_at": "2014-03-22T03:00:00Z"
-    }]
+    "email": "john@acme.com",
+    "action": "Logged in",
+    "properties": {
+      "affiliate_code": "XYZ"
+    },
+    "occurred_at": "2014-03-22T03:00:00Z"
   }
 EOF
 ```
