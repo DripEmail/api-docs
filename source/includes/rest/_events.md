@@ -49,13 +49,11 @@ end
 
 const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
 const payload = {
-  events: [{
-    email: "john@acme.com",
-    action: "Logged in",
-    properties: {
-      affiliate_code: "XYZ"
-    }
-  }]
+  email: "john@acme.com",
+  action: "Logged in",
+  properties: {
+    affiliate_code: "XYZ"
+  }
 };
 
 client.recordEvent(payload)
