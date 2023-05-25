@@ -292,7 +292,7 @@ end
             </tr>
             <tr>
               <td><code>price</code></td>
-              <td>Required. The price of a single product.</td>
+              <td>Optional. The price of a single product. Note that products without prices will be unavailable for segmentation by purchase price.</td>
             </tr>
             <tr>
               <td><code>quantity</code></td>
