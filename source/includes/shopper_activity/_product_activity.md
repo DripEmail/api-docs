@@ -26,7 +26,7 @@ curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/produc
     "categories": [
       "Accessories"
     ],
-    "currency": "USD"
+    "currency": "USD",
     "price": 11.16,
     "inventory": 42,
     "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
