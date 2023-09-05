@@ -129,7 +129,7 @@ end
     </tr>
     <tr>
       <td><code>currency</code></td>
-      <td>Optional. The currency of a single product. Defaults to USD ($)</td>
+      <td>Optional. The currency of a single product. Defaults to USD ($).</td>
     </tr>
     <tr>
       <td><code>price</code></td>
