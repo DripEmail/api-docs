@@ -54,6 +54,7 @@ response = client.create_product_activity_event(
   categories: [
     "Accessories"
   ],
+  currency: "USD",
   price: 11.16,
   inventory: 42,
   product_url: "https://mysuperstore.example.com/dp/B01J4SWO1G",
@@ -124,6 +125,10 @@ end
     <tr>
       <td><code>categories</code></td>
       <td>Optional. An array of categories associated with the product (e.g. shoes, vitamins, books, videos).</td>
+    </tr>
+    <tr>
+      <td><code>currency</code></td>
+      <td>Optional. The currency of a single product. Defaults to USD ($)</td>
     </tr>
     <tr>
       <td><code>price</code></td>
