@@ -32,6 +32,6 @@ To interact with the JavaScript API, you'll need to have your Drip snippet insta
 _dcq.push(["methodName", { key: "value", ... }]);
 ```
 
-All requests follow the same conventions. If you've ever worked with the Google Analytics API, the semantics should look familiar. This is the basis structure of an API request.
+All requests follow the same conventions. If you've ever worked with the Google Analytics API, the semantics should look familiar. This is the basic structure of an API request.
 
 API requests are executed asynchronously, so you may safely place then anywhere on the page (even above the Drip snippet).
