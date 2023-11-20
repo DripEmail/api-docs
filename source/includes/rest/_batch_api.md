@@ -224,7 +224,7 @@ client.unsubscribeBatchSubscribers(payload)
 > To record a batch of events:
 
 ```shell
-curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches" \
+curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events/batches" \
   -H "Content-Type: application/json" \
   -H 'User-Agent: Your App Name (www.yourapp.com)' \
   -u YOUR_API_KEY: \
