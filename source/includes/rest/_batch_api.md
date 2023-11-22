@@ -224,7 +224,7 @@ client.unsubscribeBatchSubscribers(payload)
 > To record a batch of events:
 
 ```shell
-curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches" \
+curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events/batches" \
   -H "Content-Type: application/json" \
   -H 'User-Agent: Your App Name (www.yourapp.com)' \
   -u YOUR_API_KEY: \
@@ -274,8 +274,7 @@ response = client.track_events(events)
 // npm install drip-nodejs --save
 
 const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
-const payload = {
-  batches: [{
+const payload = [{
     events: [
       {
         email: "john@acme.com",
@@ -286,8 +285,7 @@ const payload = {
         action: "Closed a door"
       }
     ]
-  }]
-};
+  }];
 
 client.recordBatchEvents(payload)
   .then((response) => {
