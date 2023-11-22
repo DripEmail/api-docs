@@ -274,8 +274,7 @@ response = client.track_events(events)
 // npm install drip-nodejs --save
 
 const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
-const payload = {
-  batches: [{
+const payload = [{
     events: [
       {
         email: "john@acme.com",
@@ -286,8 +285,7 @@ const payload = {
         action: "Closed a door"
       }
     ]
-  }]
-};
+  }];
 
 client.recordBatchEvents(payload)
   .then((response) => {
