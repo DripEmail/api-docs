@@ -12,6 +12,7 @@ The Drip client library has a number of API methods for performing tasks right f
   var _dcq = _dcq || [];
   var _dcs = _dcs || {};
   _dcs.account = `your account id`;
+  // _dcs.cookiePath = '/en'; // If you want to limit the cookie to a specific path.
 
   (function() {
     var dc = document.createElement('script');
