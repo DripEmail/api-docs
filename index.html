@@ -1037,7 +1037,7 @@ EOF
 <blockquote>
 <p>To record a batch of events:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/batches"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events/batches"</span> <span class="se">\</span>
   -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   -H <span class="s1">'User-Agent: Your App Name (www.yourapp.com)'</span> <span class="se">\</span>
   -u YOUR_API_KEY: <span class="se">\</span>
@@ -1081,8 +1081,7 @@ EOF
 </code></pre><pre class="highlight javascript tab-javascript"><code><span class="c1">// npm install drip-nodejs --save</span>
 
 <span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'drip-nodejs'</span><span class="p">)({</span> <span class="na">token</span><span class="p">:</span> <span class="nx">YOUR_API_KEY</span><span class="p">,</span> <span class="na">accountId</span><span class="p">:</span> <span class="nx">YOUR_ACCOUNT_ID</span> <span class="p">});</span>
-<span class="kr">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">batches</span><span class="p">:</span> <span class="p">[{</span>
+<span class="kr">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="p">[{</span>
     <span class="na">events</span><span class="p">:</span> <span class="p">[</span>
       <span class="p">{</span>
         <span class="na">email</span><span class="p">:</span> <span class="s2">"john@acme.com"</span><span class="p">,</span>
@@ -1093,8 +1092,7 @@ EOF
         <span class="na">action</span><span class="p">:</span> <span class="s2">"Closed a door"</span>
       <span class="p">}</span>
     <span class="p">]</span>
-  <span class="p">}]</span>
-<span class="p">};</span>
+  <span class="p">}];</span>
 
 <span class="nx">client</span><span class="p">.</span><span class="nx">recordBatchEvents</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span>
   <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -4677,8 +4675,6 @@ triggers for these events by selecting <code>Drip Order API</code> from the prov
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>On January 7, 2019 we renamed Subscribers to People to better represent who you’re talking to. Right now this is a small wording change but represents something bigger in the way we all think about our customers. To keep things simple nothing in the API is changing at the moment. There is no need to update existing integrations, for new ones continue to reference the developer docs as outlined here.</p>
-
 <p><strong>Note:</strong> All subscriber API endpoints only work with your <a href="https://www.drip.com/learn/docs/manual/people/active" target="_blank">active</a> people. Attempting to modify or delete an <a href="https://www.drip.com/learn/docs/manual/people/inactive" target="_blank">inactive</a> person will result in an error.</p>
 
 <p><strong>Properties</strong></p>
@@ -7586,7 +7582,7 @@ EOF
             </tr>
             <tr>
               <td><code>price</code></td>
-              <td>Required. The price of a single product.</td>
+              <td>Optional. The price of a single product. Note that products without prices will be unavailable for segmentation by purchase price.</td>
             </tr>
             <tr>
               <td><code>quantity</code></td>
@@ -7777,6 +7773,7 @@ EOF
     "categories": [
       "Accessories"
     ],
+    "currency": "USD",
     "price": 11.16,
     "inventory": 42,
     "product_url": "https://mysuperstore.com/dp/B01J4SWO1G",
@@ -7802,6 +7799,7 @@ EOF
   <span class="ss">categories: </span><span class="p">[</span>
     <span class="s2">"Accessories"</span>
   <span class="p">],</span>
+  <span class="ss">currency: </span><span class="s2">"USD"</span><span class="p">,</span>
   <span class="ss">price: </span><span class="mi">11</span><span class="o">.</span><span class="mi">16</span><span class="p">,</span>
   <span class="ss">inventory: </span><span class="mi">42</span><span class="p">,</span>
   <span class="ss">product_url: </span><span class="s2">"https://mysuperstore.example.com/dp/B01J4SWO1G"</span><span class="p">,</span>
@@ -7868,6 +7866,10 @@ EOF
       <td>Optional. An array of categories associated with the product (e.g. shoes, vitamins, books, videos).</td>
     </tr>
     <tr>
+      <td><code>currency</code></td>
+      <td>Optional. The currency of a single product. Defaults to USD ($).</td>
+    </tr>
+    <tr>
       <td><code>price</code></td>
       <td>Required. The price of a single product.</td>
     </tr>
@@ -7896,6 +7898,7 @@ EOF
   <span class="kd">var</span> <span class="nx">_dcq</span> <span class="o">=</span> <span class="nx">_dcq</span> <span class="o">||</span> <span class="p">[];</span>
   <span class="kd">var</span> <span class="nx">_dcs</span> <span class="o">=</span> <span class="nx">_dcs</span> <span class="o">||</span> <span class="p">{};</span>
   <span class="nx">_dcs</span><span class="p">.</span><span class="nx">account</span> <span class="o">=</span> <span class="s2">`your account id`</span><span class="p">;</span>
+  <span class="c1">// _dcs.cookiePath = '/en'; // If you want to limit the cookie to a specific path.</span>
 
   <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">dc</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
@@ -7910,9 +7913,9 @@ EOF
 <p>To interact with the JavaScript API, you&#39;ll need to have your Drip snippet installed on your website. Each Drip account has a unique snippet that can be found under Settings → Account → Site Setup.</p>
 <h2 id='how-to-send-a-js-api-request'>How to Send a JS API Request</h2><pre class="highlight javascript tab-javascript"><code><span class="nx">_dcq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s2">"methodName"</span><span class="p">,</span> <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="s2">"value"</span><span class="p">,</span> <span class="p">...</span> <span class="p">}]);</span>
 </code></pre>
-<p>All requests follow the same conventions. If you&#39;ve ever worked with the Google Analytics API, the semantics should look familiar. This is the basis structure of an API request.</p>
+<p>All requests follow the same conventions. If you&#39;ve ever worked with the Google Analytics API, the semantics should look familiar. This is the basic structure of an API request.</p>
 
-<p>API requests are executed asynchronously, so you may safely place then anywhere on the page (even above the Drip snippet).</p>
+<p>API requests are executed asynchronously, so you may safely place them anywhere on the page (even above the Drip snippet).</p>
 <h1 id='identifying-visitors'>Identifying Visitors</h1><h2 id='attach-identifying-data-to-visitors'>Attach Identifying Data to Visitors</h2>
 <blockquote>
 <p>Example identify request with a success callback</p>
