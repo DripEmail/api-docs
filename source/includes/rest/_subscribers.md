@@ -53,8 +53,6 @@
 }
 ```
 
-On January 7, 2019 we renamed Subscribers to People to better represent who you’re talking to. Right now this is a small wording change but represents something bigger in the way we all think about our customers. To keep things simple nothing in the API is changing at the moment. There is no need to update existing integrations, for new ones continue to reference the developer docs as outlined here.
-
 **Note:** All subscriber API endpoints only work with your <a href="https://www.drip.com/learn/docs/manual/people/active" target="_blank">active</a> people. Attempting to modify or delete an <a href="https://www.drip.com/learn/docs/manual/people/inactive" target="_blank">inactive</a> person will result in an error.
 
 **Properties**
