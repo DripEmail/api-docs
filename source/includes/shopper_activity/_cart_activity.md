@@ -2,7 +2,7 @@
 
 Passing in all required fields for Cart Activity will enable Cart Abandonment Dynamic Content in your Drip account. Leverage that content in our Visual Email Builder to send Cart Abandonment emails containing item details.
 
-Note that Cart Activity will show up on a person's activity timeline as either a "Created a cart" or "Updated a cart" event. For more information, see our guide in MyDrip [here](https://www.drip.com/learn/docs/guides/report-revenue).
+Note that Cart Activity will show up on a person's activity timeline as either a "Created a cart" or "Updated a cart" event. For more information, see our help center article [here](https://help.drip.com/hc/en-us/articles/4424695494541-Install-a-Shareable-Cart-Abandonment-Workflow-Using-the-Shopper-Activity-API).
 
 ## Create or update a cart
 
