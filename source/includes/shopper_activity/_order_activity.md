@@ -1,10 +1,54 @@
 # Order Activity
 
-Order Activity will show up on a person's activity timeline as an event. The event is based on the <code>action</code> sent with the order payload. For example, sending <code>placed</code> will result in a "Placed an order" event and sending <code>updated</code> will result in an "Updated an order" event.
+Order Activity will show up on a person's activity timeline as an event. The event is based on the <code>action</code> sent with the order payload. There are six supported actions: <code>placed</code> ("Placed an order"), <code>updated</code> ("Updated an order"), <code>paid</code> ("Paid an order"), <code>fulfilled</code> ("Fulfilled an order"), <code>refunded</code> ("Refunded an order"), and <code>canceled</code> ("Canceled an order"). Each action creates the corresponding event on the person's timeline.
 
 Order Activity places special value on <code>action</code> with the <code>placed</code> value. This event will determine when an order is considered to have originated based on the <code>occurred_at</code>. If you send an Order Activity <code>"action": "placed"</code> event without including a valid <code>occurred_at</code> value, the order will be considered to have originated at the current time. If you send Order Activity events without previously sending <code>placed</code>, the order will be considered to have originated at the current time the first event was received.
 
 Drip will keep a person’s Lifetime Value (LTV) up-to-date with their orders. For example, if a customer places an order with a <code>grand_total</code> of $100, their LTV will be incremented by $100. If the order is then updated, paid, or fulfilled with a <code>grand_total</code> value of $105, the customer’s LTV will increase by $5. If the order is then canceled or refunded with a <code>refund_amount</code> of $105, the customer’s LTV will decrease by $105.
+
+### Action Reference
+
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>When to use</th>
+      <th>LTV effect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>placed</code></td>
+      <td>Initial order creation. Sets the order’s origination time via <code>occurred_at</code>.</td>
+      <td>Increments LTV by <code>grand_total</code>.</td>
+    </tr>
+    <tr>
+      <td><code>updated</code></td>
+      <td>Order details changed (e.g., items added or removed).</td>
+      <td>LTV adjusts to match the new <code>grand_total</code>.</td>
+    </tr>
+    <tr>
+      <td><code>paid</code></td>
+      <td>Payment has been confirmed.</td>
+      <td>LTV adjusts to match <code>grand_total</code>.</td>
+    </tr>
+    <tr>
+      <td><code>fulfilled</code></td>
+      <td>Order has been shipped or delivered.</td>
+      <td>LTV adjusts to match <code>grand_total</code>.</td>
+    </tr>
+    <tr>
+      <td><code>refunded</code></td>
+      <td>Full or partial refund issued. Set <code>refund_amount</code> to the refund value and keep <code>grand_total</code> unchanged.</td>
+      <td>LTV decreases by <code>refund_amount</code>.</td>
+    </tr>
+    <tr>
+      <td><code>canceled</code></td>
+      <td>Order canceled. Set <code>refund_amount</code> to the amount to return and keep <code>grand_total</code> unchanged.</td>
+      <td>LTV decreases by <code>refund_amount</code>.</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="sapi-create-or-update-order">Create or update an order</h1>
 
@@ -172,6 +216,71 @@ end
   "request_id": "990c99a7-5cba-42e8-8f36-aec3419186ef"
 }
 ```
+
+> To record a refund event for an existing order:
+
+```shell
+curl -X POST "https://api.getdrip.com/v3/YOUR_ACCOUNT_ID/shopper_activity/order" \
+  -H "Content-Type: application/json" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY: \
+  -d @- << EOF
+  {
+    "provider": "my_custom_platform",
+    "email": "user@gmail.com",
+    "action": "refunded",
+    "occurred_at": "2019-01-20T14:30:00Z",
+    "order_id": "456445746",
+    "grand_total": 22.99,
+    "refund_amount": 22.99,
+    "currency": "USD",
+    "items": [
+      {
+        "product_id": "B01J4SWO1G",
+        "name": "The Coolest Water Bottle",
+        "price": 11.16,
+        "quantity": 2
+      }
+    ]
+  }
+EOF
+```
+
+```ruby
+require 'drip'
+
+client = Drip::Client.new do |c|
+  c.api_key = "YOUR API KEY"
+  c.account_id = "YOUR_ACCOUNT_ID"
+end
+
+response = client.create_order_activity_event(
+  provider: "my_custom_platform",
+  email: "user@gmail.com",
+  action: "refunded",
+  occurred_at: "2019-01-20T14:30:00Z",
+  order_id: "456445746",
+  grand_total: 22.99,
+  refund_amount: 22.99,
+  currency: "USD",
+  items: [
+    {
+      product_id: "B01J4SWO1G",
+      name: "The Coolest Water Bottle",
+      price: 11.16,
+      quantity: 2
+    }
+  ]
+)
+
+if response.success?
+  puts "Request accepted"
+else
+  puts "Error occurred"
+end
+```
+
+> Note: Set <code>refund_amount</code> to the amount being refunded and keep <code>grand_total</code> at the original order total. The person's LTV will decrease by the <code>refund_amount</code>.
 
 ### HTTP Endpoint
 
