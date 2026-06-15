@@ -1,0 +1,1217 @@
+tags:
+  - name: Broadcasts
+    description: Single-Email Campaigns (Broadcasts) are one-time emails sent to a segment of your subscribers.
+    x-slate:
+      title: Single-Email Campaigns <br/>(aka Broadcasts)
+      represent:
+        - intro: "Single-Email Campaigns are represented as follows:"
+          schema: Broadcast
+        - intro: "All responses containing Single-Email Campaign data also include the following top-level link data:"
+          json: |
+            {
+              "links": {
+                "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+              }
+            }
+      properties: Broadcast
+      lead_extra: |
+        ## Email Content
+
+        > The content object structure:
+
+        ```json
+        {
+          "content": {
+            "html": {
+              "type": "document",
+              "value": "<html><body><h1>Hello!</h1></body></html>"
+            },
+            "text": {
+              "type": "document",
+              "value": "Hello!\n\nWelcome to our newsletter."
+            }
+          }
+        }
+        ```
+
+        Email content is provided via a `content` object containing content type keys. Each key maps
+        to an object with a `type` (the content variant) and a `value` (the content itself).
+
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>html</code></td>
+              <td>Required when creating. The HTML email content. Currently the only supported <code>type</code> is <code>document</code>: a full HTML document with a complete <code>&lt;html&gt;</code> structure. Supports Liquid templating.</td>
+            </tr>
+            <tr>
+              <td><code>text</code></td>
+              <td>Optional. The plain text version of the email. Currently the only supported <code>type</code> is <code>document</code>: a full plain text document. Supports Liquid templating. If omitted, the plain text version is generated automatically from the HTML.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        HTML content is validated and sanitized for security: JavaScript is not allowed, and dangerous
+        CSS patterns are blocked.
+
+paths:
+  /{account_id}/broadcasts:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listBroadcasts
+      tags: [Broadcasts]
+      summary: List all Single-Email Campaigns
+      x-slate:
+        intro: "To list Single-Email Campaigns in an account:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      parameters:
+        - name: page
+          in: query
+          description: The page number (1-indexed). Defaults to `1`.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          description: The number of results per page, up to a maximum of `100`. Defaults to `100`.
+          schema:
+            type: integer
+            maximum: 100
+            default: 100
+        - name: status
+          in: query
+          description: >-
+            Filter by one of the following statuses: `draft`, `scheduled`,
+            `sending`, `sent`, `canceled`, `deleted`, or `all`. By default,
+            deleted Single-Email Campaigns are excluded; use `status=deleted`
+            or `status=all` to include them.
+          schema:
+            type: string
+            enum: [draft, scheduled, sending, sent, canceled, deleted, all]
+        - name: sort
+          in: query
+          description: >-
+            Sort results by one of these fields: `created_at`, `updated_at`,
+            `send_at`, or `name`. Defaults to `created_at`.
+          schema:
+            type: string
+            enum: [created_at, updated_at, send_at, name]
+            default: created_at
+        - name: direction
+          in: query
+          description: "Filter sort direction with: `asc` or `desc`. Defaults to `asc`."
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        "200":
+          description: >-
+            A paginated list of Single-Email Campaigns. The `broadcasts`
+            property is an array of broadcast objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [broadcasts]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                    properties:
+                      "broadcasts.account":
+                        type: string
+                  meta:
+                    type: object
+                    description: Pagination metadata.
+                    properties:
+                      page:
+                        type: integer
+                      sort:
+                        type: string
+                      direction:
+                        type: string
+                      count:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      status:
+                        type: string
+                  broadcasts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Broadcast"
+              example:
+                links:
+                  broadcasts.account: "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+                meta:
+                  page: 1
+                  sort: created_at
+                  direction: asc
+                  count: 5
+                  total_pages: 1
+                  total_count: 5
+                  status: all
+                broadcasts:
+                  - id: "123456"
+                    status: sent
+                    name: "4 Marketing Automation Trends for 2015"
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    localize_sending_time: true
+                    send_at: "2015-07-01T10:00:00Z"
+                    bcc: null
+                    created_at: "2015-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/broadcast/123456"
+                    preview_url: "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7"
+                    subject: "4 Marketing Automation Trends for 2015"
+                    html_body: HTML body
+                    text_body: Text body
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.broadcasts
+
+            if response.success?
+              puts response.body["broadcasts"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const options = { status: "sent" };
+
+            client.listBroadcasts(options)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    post:
+      operationId: createBroadcast
+      tags: [Broadcasts]
+      summary: Create a Single-Email Campaign
+      description: >-
+        Single-Email Campaigns created via the API start in the `draft` status.
+        Scheduling and sending are then managed through the Drip UI.
+      x-slate:
+        intro: "To create a Single-Email Campaign:"
+        response:
+          - intro: "Responds with a `201 Created` and the new Single-Email Campaign if successful. The `Location` header contains the URL of the created record:"
+          - intro: "If the request is invalid, responds with a `422 Unprocessable Entity`:"
+            status: "422"
+        show-description: true
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [broadcasts]
+              properties:
+                broadcasts:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/NewBroadcast"
+            example:
+              broadcasts:
+                - name: December Newsletter
+                  subject: "Your December Newsletter is here!"
+                  preheader: "See what's new this month..."
+                  content:
+                    html:
+                      type: document
+                      value: "<html><body><h1>Hello!</h1></body></html>"
+                    text:
+                      type: document
+                      value: "Hello! Welcome to our newsletter."
+                  postal_address: "123 Main St, Minneapolis, MN 55401"
+      responses:
+        "201":
+          description: >-
+            Created. Responds with the new Single-Email Campaign. The
+            `Location` header contains the URL of the created record.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [broadcasts]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                    properties:
+                      "broadcasts.account":
+                        type: string
+                  broadcasts:
+                    type: array
+                    description: An array containing the new broadcast object.
+                    items:
+                      $ref: "#/components/schemas/Broadcast"
+              example:
+                links:
+                  broadcasts.account: "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+                broadcasts:
+                  - id: "123456"
+                    status: draft
+                    name: "4 Marketing Automation Trends for 2015"
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    localize_sending_time: true
+                    send_at: "2015-07-01T10:00:00Z"
+                    bcc: null
+                    created_at: "2015-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/broadcast/123456"
+                    preview_url: "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7"
+                    subject: "4 Marketing Automation Trends for 2015"
+                    html_body: HTML body
+                    text_body: Text body
+                    links:
+                      account: "9999999"
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "broadcasts": [{
+                  "name": "December Newsletter",
+                  "subject": "Your December Newsletter is here!",
+                  "preheader": "See what's new this month...",
+                  "content": {
+                    "html": {
+                      "type": "document",
+                      "value": "<html><body><h1>Hello!</h1></body></html>"
+                    },
+                    "text": {
+                      "type": "document",
+                      "value": "Hello! Welcome to our newsletter."
+                    }
+                  },
+                  "postal_address": "123 Main St, Minneapolis, MN 55401"
+                }]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require "net/http"
+            require "json"
+
+            uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts")
+
+            request = Net::HTTP::Post.new(uri)
+            request.basic_auth("YOUR_API_KEY", "")
+            request["User-Agent"] = "Your App Name (www.yourapp.com)"
+            request["Content-Type"] = "application/json"
+            request.body = {
+              broadcasts: [{
+                name: "December Newsletter",
+                subject: "Your December Newsletter is here!",
+                preheader: "See what's new this month...",
+                content: {
+                  html: {
+                    type: "document",
+                    value: "<html><body><h1>Hello!</h1></body></html>"
+                  },
+                  text: {
+                    type: "document",
+                    value: "Hello! Welcome to our newsletter."
+                  }
+                },
+                postal_address: "123 Main St, Minneapolis, MN 55401"
+              }]
+            }.to_json
+
+            response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+              http.request(request)
+            end
+
+            puts response.body
+        - lang: javascript
+          label: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "User-Agent": "Your App Name (www.yourapp.com)",
+                  "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+                },
+                body: JSON.stringify({
+                  broadcasts: [{
+                    name: "December Newsletter",
+                    subject: "Your December Newsletter is here!",
+                    preheader: "See what's new this month...",
+                    content: {
+                      html: {
+                        type: "document",
+                        value: "<html><body><h1>Hello!</h1></body></html>"
+                      },
+                      text: {
+                        type: "document",
+                        value: "Hello! Welcome to our newsletter."
+                      }
+                    },
+                    postal_address: "123 Main St, Minneapolis, MN 55401"
+                  }]
+                })
+              }
+            );
+
+            const body = await response.json();
+
+  /{account_id}/broadcasts/{broadcast_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: broadcast_id
+        in: path
+        required: true
+        description: The ID of the Single-Email Campaign.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchBroadcast
+      tags: [Broadcasts]
+      summary: Fetch a Single-Email Campaign
+      x-slate:
+        intro: "To fetch a specific Single-Email Campaign:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: >-
+            The requested Single-Email Campaign. The `broadcasts` property is
+            an array of one broadcast object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [broadcasts]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                    properties:
+                      "broadcasts.account":
+                        type: string
+                  broadcasts:
+                    type: array
+                    description: An array of one broadcast object.
+                    items:
+                      $ref: "#/components/schemas/Broadcast"
+              example:
+                links:
+                  broadcasts.account: "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+                broadcasts:
+                  - id: "123456"
+                    status: sent
+                    name: "4 Marketing Automation Trends for 2015"
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    localize_sending_time: true
+                    send_at: "2015-07-01T10:00:00Z"
+                    bcc: null
+                    created_at: "2015-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/broadcast/123456"
+                    preview_url: "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7"
+                    subject: "4 Marketing Automation Trends for 2015"
+                    html_body: HTML body
+                    text_body: Text body
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            broadcast_id = "BROADCAST_ID"
+            response = client.broadcast(broadcast_id)
+
+            if response.success?
+              puts response.body
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const broadcastId = "BROADCAST_ID";
+
+            client.fetchBroadcast(broadcastId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    patch:
+      operationId: updateBroadcast
+      tags: [Broadcasts]
+      summary: Update a Single-Email Campaign
+      description: >-
+        Only Single-Email Campaigns in the `draft` status can be updated via
+        the API; all other statuses are read-only. Updates are partial: only
+        the fields you include are changed.
+
+
+        Status, scheduling (`send_at`, `localize_sending_time`), and recipient
+        segmentation cannot be updated via the API — they are managed through
+        the Drip UI.
+      x-slate:
+        intro: "To update a Single-Email Campaign:"
+        response:
+          - intro: "Responds with a `200 OK` and the updated Single-Email Campaign if successful:"
+          - intro: "If the Single-Email Campaign is not a draft, responds with a `409 Conflict`:"
+            status: "409"
+        show-description: true
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [broadcasts]
+              properties:
+                broadcasts:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/BroadcastUpdate"
+            example:
+              broadcasts:
+                - subject: "Updated: December Newsletter!"
+                  preheader: "New content inside..."
+                  content:
+                    html:
+                      type: document
+                      value: "<html><body><h1>Updated content!</h1></body></html>"
+      responses:
+        "200":
+          description: OK. The updated Single-Email Campaign.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [broadcasts]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                    properties:
+                      "broadcasts.account":
+                        type: string
+                  broadcasts:
+                    type: array
+                    description: An array of one broadcast object.
+                    items:
+                      $ref: "#/components/schemas/Broadcast"
+              example:
+                links:
+                  broadcasts.account: "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+                broadcasts:
+                  - id: "123456"
+                    status: draft
+                    name: "4 Marketing Automation Trends for 2015"
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    localize_sending_time: true
+                    send_at: "2015-07-01T10:00:00Z"
+                    bcc: null
+                    created_at: "2015-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/broadcast/123456"
+                    preview_url: "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7"
+                    subject: "Updated: December Newsletter!"
+                    html_body: HTML body
+                    text_body: Text body
+                    links:
+                      account: "9999999"
+        "409":
+          description: Conflict. The Single-Email Campaign is not a draft.
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ErrorResponse"
+              example:
+                errors:
+                  - code: conflict_error
+                    message: Cannot update a broadcast with status 'sent'
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X PATCH "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "broadcasts": [{
+                  "subject": "Updated: December Newsletter!",
+                  "preheader": "New content inside...",
+                  "content": {
+                    "html": {
+                      "type": "document",
+                      "value": "<html><body><h1>Updated content!</h1></body></html>"
+                    }
+                  }
+                }]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require "net/http"
+            require "json"
+
+            uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID")
+
+            request = Net::HTTP::Patch.new(uri)
+            request.basic_auth("YOUR_API_KEY", "")
+            request["User-Agent"] = "Your App Name (www.yourapp.com)"
+            request["Content-Type"] = "application/json"
+            request.body = {
+              broadcasts: [{
+                subject: "Updated: December Newsletter!",
+                preheader: "New content inside...",
+                content: {
+                  html: {
+                    type: "document",
+                    value: "<html><body><h1>Updated content!</h1></body></html>"
+                  }
+                }
+              }]
+            }.to_json
+
+            response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+              http.request(request)
+            end
+
+            puts response.body
+        - lang: javascript
+          label: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID",
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  "User-Agent": "Your App Name (www.yourapp.com)",
+                  "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+                },
+                body: JSON.stringify({
+                  broadcasts: [{
+                    subject: "Updated: December Newsletter!",
+                    preheader: "New content inside...",
+                    content: {
+                      html: {
+                        type: "document",
+                        value: "<html><body><h1>Updated content!</h1></body></html>"
+                      }
+                    }
+                  }]
+                })
+              }
+            );
+
+            const body = await response.json();
+
+    delete:
+      operationId: deleteBroadcast
+      tags: [Broadcasts]
+      summary: Delete a Single-Email Campaign
+      description: >-
+        Deleting is a soft delete: the Single-Email Campaign transitions to the
+        `deleted` status and is hidden from default listings, but historical
+        data is preserved. Single-Email Campaigns in the `sending` status
+        cannot be deleted.
+      x-slate:
+        intro: "To delete a Single-Email Campaign:"
+        response:
+          - intro: "Responds with a `200 OK` and the Single-Email Campaign in the `deleted` status:"
+          - intro: "If the Single-Email Campaign is currently sending, responds with a `409 Conflict`:"
+            status: "409"
+        show-description: true
+        arguments: none
+      responses:
+        "200":
+          description: OK. The Single-Email Campaign in the `deleted` status.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [broadcasts]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                    properties:
+                      "broadcasts.account":
+                        type: string
+                  broadcasts:
+                    type: array
+                    description: An array of one broadcast object.
+                    items:
+                      $ref: "#/components/schemas/Broadcast"
+              example:
+                links:
+                  broadcasts.account: "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+                broadcasts:
+                  - id: "123456"
+                    status: deleted
+                    name: "4 Marketing Automation Trends for 2015"
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    localize_sending_time: true
+                    send_at: "2015-07-01T10:00:00Z"
+                    bcc: null
+                    created_at: "2015-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/broadcast/123456"
+                    preview_url: null
+                    subject: "4 Marketing Automation Trends for 2015"
+                    html_body: HTML body
+                    text_body: Text body
+                    links:
+                      account: "9999999"
+        "409":
+          description: Conflict. The Single-Email Campaign is currently sending.
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ErrorResponse"
+              example:
+                errors:
+                  - code: conflict_error
+                    message: Cannot delete a broadcast that is currently sending
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X DELETE "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require "net/http"
+
+            uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID")
+
+            request = Net::HTTP::Delete.new(uri)
+            request.basic_auth("YOUR_API_KEY", "")
+            request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+            response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+              http.request(request)
+            end
+
+            puts response.body
+        - lang: javascript
+          label: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID",
+              {
+                method: "DELETE",
+                headers: {
+                  "User-Agent": "Your App Name (www.yourapp.com)",
+                  "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+                }
+              }
+            );
+
+            const body = await response.json();
+
+  /{account_id}/broadcasts/{broadcast_id}/send_test:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: broadcast_id
+        in: path
+        required: true
+        description: The ID of the Single-Email Campaign.
+        schema:
+          type: string
+
+    post:
+      operationId: sendBroadcastTestEmail
+      tags: [Broadcasts]
+      summary: Send a test email
+      description: |-
+        Sends a test email so you can preview how the Single-Email Campaign will appear to
+        recipients. Test emails are marked with a "[TEST]" prefix in the from name, and any
+        links that would trigger automations are stripped for safety. If sending is blocked
+        on the account (for example, during a trial), tests are only delivered to the
+        authenticated user.
+
+        ### Recipient validation
+
+        Each recipient email address must satisfy **one** of the following requirements:
+
+        1. **Verified domain**: the email's domain is a verified sending domain in the account
+           (e.g., if `example.com` is verified, `anyone@example.com` is allowed).
+        2. **Active account member**: the email belongs to an active member of the account.
+
+        Recipients that do not meet either requirement are rejected with a `422` validation error.
+
+        ### Rate limits
+
+        Rate limits are applied per user.
+
+        | Limit | Window |
+        | --- | --- |
+        | 5 recipients | Per request |
+        | 20 requests | Per hour |
+        | 40 requests | Per day |
+      x-slate:
+        intro: "To send a test email for a Single-Email Campaign:"
+        response:
+          - intro: "Responds with a `204 No Content` if successful."
+          - intro: "If a recipient is not allowed, responds with a `422 Unprocessable Entity`:"
+            status: "422"
+          - intro: "If a rate limit is exceeded, responds with a `429 Too Many Requests` and a `Retry-After` header indicating when the limit resets:"
+            status: "429"
+        sections: |
+          Sends a test email so you can preview how the Single-Email Campaign will appear to
+          recipients. Test emails are marked with a "[TEST]" prefix in the from name, and any
+          links that would trigger automations are stripped for safety. If sending is blocked
+          on the account (for example, during a trial), tests are only delivered to the
+          authenticated user.
+
+          ### Recipient validation
+
+          Each recipient email address must satisfy **one** of the following requirements:
+
+          1. **Verified domain**: the email's domain is a verified sending domain in the account
+             (e.g., if `example.com` is verified, `anyone@example.com` is allowed).
+          2. **Active account member**: the email belongs to an active member of the account.
+
+          Recipients that do not meet either requirement are rejected with a `422` validation error.
+
+          ### Rate limits
+
+          Rate limits are applied per user.
+
+          <table>
+            <thead>
+              <tr>
+                <th>Limit</th>
+                <th>Window</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>5 recipients</td>
+                <td>Per request</td>
+              </tr>
+              <tr>
+                <td>20 requests</td>
+                <td>Per hour</td>
+              </tr>
+              <tr>
+                <td>40 requests</td>
+                <td>Per day</td>
+              </tr>
+            </tbody>
+          </table>
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_emails]
+              properties:
+                to_emails:
+                  type: array
+                  description: >-
+                    An array of 1 to 5 email addresses to send the test to.
+                    See recipient validation above.
+                  minItems: 1
+                  maxItems: 5
+                  items:
+                    type: string
+                    format: email
+                preview_as:
+                  type: string
+                  format: email
+                  description: >-
+                    The email address of an existing subscriber to use for
+                    Liquid template rendering. The test email is personalized
+                    as if sent to this subscriber, using their custom fields
+                    and tags. If omitted, Liquid variables use placeholder
+                    values.
+            example:
+              to_emails:
+                - team@yourverifieddomain.com
+              preview_as: subscriber@example.com
+      responses:
+        "204":
+          description: No Content. The test email was sent.
+        "422":
+          description: >-
+            Unprocessable Entity. A recipient is not a verified domain or
+            active account member.
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ErrorResponse"
+              example:
+                errors:
+                  - code: validation_error
+                    attribute: to_emails
+                    message: test@unknown-domain.com is not a verified domain or active account member
+        "429":
+          description: >-
+            Too Many Requests. A rate limit was exceeded; the `Retry-After`
+            header indicates when the limit resets.
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ErrorResponse"
+              example:
+                errors:
+                  - code: rate_limit_error
+                    message: Hourly test email limit exceeded. Maximum 20 requests per hour.
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/send_test" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "to_emails": ["team@yourverifieddomain.com"],
+                "preview_as": "subscriber@example.com"
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require "net/http"
+            require "json"
+
+            uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/send_test")
+
+            request = Net::HTTP::Post.new(uri)
+            request.basic_auth("YOUR_API_KEY", "")
+            request["User-Agent"] = "Your App Name (www.yourapp.com)"
+            request["Content-Type"] = "application/json"
+            request.body = {
+              to_emails: ["team@yourverifieddomain.com"],
+              preview_as: "subscriber@example.com"
+            }.to_json
+
+            response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+              http.request(request)
+            end
+
+            puts response.code
+        - lang: javascript
+          label: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/send_test",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "User-Agent": "Your App Name (www.yourapp.com)",
+                  "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+                },
+                body: JSON.stringify({
+                  to_emails: ["team@yourverifieddomain.com"],
+                  preview_as: "subscriber@example.com"
+                })
+              }
+            );
+
+            // 204 No Content on success
+
+components:
+  schemas:
+    Broadcast:
+      type: object
+      description: >-
+        A Single-Email Campaign (Broadcast) — a one-time email sent to a
+        segment of your subscribers. Scheduling (`send_at`,
+        `localize_sending_time`) and recipient segmentation are managed
+        through the Drip UI only; these fields are returned as read-only
+        values in API responses and cannot be set via the API.
+      example:
+        id: "123456"
+        status: sent
+        name: "4 Marketing Automation Trends for 2015"
+        from_name: John Doe
+        from_email: john@example.com
+        postal_address: "123 Anywhere St\nFresno, CA 99999"
+        localize_sending_time: true
+        send_at: "2015-07-01T10:00:00Z"
+        bcc: null
+        created_at: "2015-06-21T10:31:58Z"
+        href: "https://api.getdrip.com/v2/9999999/broadcast/123456"
+        preview_url: "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7"
+        subject: "4 Marketing Automation Trends for 2015"
+        html_body: HTML body
+        text_body: Text body
+        links:
+          account: "9999999"
+      properties:
+        id:
+          type: string
+          description: >-
+            A read-only Drip generated unique id used to identify each
+            Single-Email Campaign record.
+        status:
+          type: string
+          enum: [draft, scheduled, sending, sent, canceled, deleted]
+          description: >-
+            Returns whether the Single-Email Campaign is draft, canceled,
+            scheduled, sent or sending. Read-only via the API and managed
+            through the Drip UI. Drafts are the only Single-Email Campaigns
+            that can be edited via the API; `sending` campaigns cannot be
+            deleted; `deleted` campaigns are hidden from default listings.
+        name:
+          type: string
+          description: The private name given to the Single-Email Campaign.
+        from_name:
+          type: string
+          description: >-
+            A "from name" that appears in your sent emails and can be changed
+            on a per email basis. This setting overrides the account's default
+            from name.
+        from_email:
+          type: string
+          description: >-
+            A "from email" that appears in your sent emails and can be changed
+            on a per email basis. This setting overrides the account's default
+            from email.
+        postal_address:
+          type: string
+          description: >-
+            As required by the [CAN-SPAM Act](http://1.usa.gov/YgrzFP), this
+            is a postal address used for all sent emails and can be changed on
+            a per email basis.
+        localize_sending_time:
+          type: boolean
+          description: >-
+            The scheduled send_at time if set to be sent in the subscriber's
+            time zone.
+        send_at:
+          type: ["string", "null"]
+          format: date-time
+          description: >-
+            The timestamp representing when the Single-Email Campaign will be
+            delivered.
+        bcc:
+          type: ["array", "null"]
+          items:
+            type: string
+          description: >-
+            A list of emails designated to receive a blind copy of the
+            Single-Email Campaign.
+        created_at:
+          type: string
+          format: date-time
+          description: >-
+            A read-only Drip generated timestamp for when the Single-Email
+            Campaign was first created.
+        href:
+          type: string
+          description: >-
+            The url designated for retrieving the record via the REST API.
+        preview_url:
+          type: ["string", "null"]
+          description: >-
+            A read-only public URL for previewing the email content. Does not
+            require authentication. Returns `null` for deleted Single-Email
+            Campaigns.
+        subject:
+          type: string
+          description: The Single-Email Campaign's subject.
+        html_body:
+          type: string
+          description: The HTML content used in the email's body.
+        text_body:
+          type: string
+          description: The plain text content used in the email's body.
+        links:
+          type: object
+          description: An object containing the account's REST API URL.
+          properties:
+            account:
+              type: string
+
+    EmailContent:
+      type: object
+      description: >-
+        Email content, containing content type keys. Each key maps to an
+        object with a `type` (the content variant) and a `value` (the content
+        itself). HTML content is validated and sanitized for security:
+        JavaScript is not allowed, and dangerous CSS patterns are blocked.
+      properties:
+        html:
+          type: object
+          description: >-
+            Required when creating. The HTML email content. Currently the only
+            supported `type` is `document`: a full HTML document with a
+            complete `<html>` structure. Supports Liquid templating.
+          required: [type, value]
+          properties:
+            type:
+              type: string
+              enum: [document]
+              description: The content variant.
+            value:
+              type: string
+              description: The content itself.
+        text:
+          type: object
+          description: >-
+            Optional. The plain text version of the email. Currently the only
+            supported `type` is `document`: a full plain text document.
+            Supports Liquid templating. If omitted, the plain text version is
+            generated automatically from the HTML.
+          required: [type, value]
+          properties:
+            type:
+              type: string
+              enum: [document]
+              description: The content variant.
+            value:
+              type: string
+              description: The content itself.
+
+    NewBroadcast:
+      type: object
+      required: [name, subject, content]
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          description: >-
+            The private name given to the Single-Email Campaign (255
+            characters maximum).
+        subject:
+          type: string
+          description: The email subject line. Supports Liquid templating.
+        content:
+          $ref: "#/components/schemas/EmailContent"
+          description: >-
+            An Email Content object. At minimum, include an `html` key.
+            Optionally include a `text` key for the plain text version; if
+            omitted, the plain text version is generated from the HTML.
+        preheader:
+          type: string
+          description: >-
+            Preview text shown in email clients before the email is opened.
+            Supports Liquid templating.
+        postal_address:
+          type: string
+          description: >-
+            A physical mailing address for CAN-SPAM compliance. Defaults to
+            the account's postal address.
+
+    BroadcastUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The private name given to the Single-Email Campaign.
+        subject:
+          type: string
+          description: The email subject line. Supports Liquid templating.
+        content:
+          $ref: "#/components/schemas/EmailContent"
+          description: >-
+            An Email Content object with `html` and/or `text` keys.
+        preheader:
+          type: string
+          description: >-
+            Preview text shown in email clients before the email is opened.
+            Supports Liquid templating.
+        postal_address:
+          type: string
+          description: A physical mailing address for CAN-SPAM compliance.

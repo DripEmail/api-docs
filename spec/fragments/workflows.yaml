@@ -1,0 +1,1058 @@
+tags:
+  - name: Workflows
+    description: Automation workflows in an account, with draft, active, or paused statuses.
+    x-slate:
+      represent:
+        - intro: "Workflows are represented as follows:"
+          schema: Workflow
+        - intro: "All responses containing workflow data also include the following top-level link data:"
+          json: |
+            {
+              "links": {
+                "workflows.account": "https://api.getdrip.com/v2/accounts/{workflows.account}"
+              }
+            }
+      properties: Workflow
+
+paths:
+  /{account_id}/workflows:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listWorkflows
+      tags: [Workflows]
+      summary: List all workflows
+      x-slate:
+        intro: "To list all workflows:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: >-
+            Filter by one of the following statuses: `draft`, `active`, or
+            `paused`. Defaults to `all`.
+          schema:
+            type: string
+            enum: [all, draft, active, paused]
+            default: all
+        - name: sort
+          in: query
+          required: false
+          description: >-
+            Sort results by one of these fields: `created_at` or `name`.
+            Defaults to `created_at`.
+          schema:
+            type: string
+            enum: [created_at, name]
+            default: created_at
+        - name: direction
+          in: query
+          required: false
+          description: >-
+            Filter sort direction with: `asc` or `desc`. Defaults to `asc`.
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        "200":
+          description: All workflows in the account.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                  meta:
+                    type: object
+                    description: Pagination metadata.
+                    properties:
+                      page:
+                        type: integer
+                      sort:
+                        type: string
+                      direction:
+                        type: string
+                      count:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      status:
+                        type: string
+                  workflows:
+                    type: array
+                    description: An array of workflow objects.
+                    items:
+                      $ref: "#/components/schemas/Workflow"
+              example:
+                links:
+                  workflows.account: "https://api.getdrip.com/v2/accounts/{workflows.account}"
+                meta:
+                  page: 1
+                  sort: sort_order
+                  direction: desc
+                  count: 5
+                  total_pages: 1
+                  total_count: 5
+                  status: all
+                workflows:
+                  - id: "123456"
+                    href: "https://api.getdrip.com/v2/9999999/workflows/123456"
+                    name: Main Funnel
+                    status: active
+                    created_at: "2016-07-01T10:00:00Z"
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.workflows
+
+            if response.success?
+              puts response.body["workflows"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const options = { status: "active" };
+
+            client.listAllWorkflows(options)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchWorkflow
+      tags: [Workflows]
+      summary: Fetch a workflow
+      x-slate:
+        intro: "To fetch a workflow:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: The workflows property is an array of one workflow object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                  workflows:
+                    type: array
+                    description: An array of one workflow object.
+                    items:
+                      $ref: "#/components/schemas/Workflow"
+              example:
+                links:
+                  workflows.account: "https://api.getdrip.com/v2/accounts/{workflows.account}"
+                workflows:
+                  - id: "123456"
+                    href: "https://api.getdrip.com/v2/9999999/workflows/123456"
+                    name: Main Funnel
+                    status: active
+                    created_at: "2016-07-01T10:00:00Z"
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            response = client.workflow(workflow_id)
+
+            if response.success?
+              puts response.body["workflows"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+
+            client.fetchWorkflow(workflowId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}/activate:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+
+    post:
+      operationId: activateWorkflow
+      tags: [Workflows]
+      summary: Activate a workflow
+      x-slate:
+        intro: "To activate a workflow:"
+        response:
+          intro: "Responds with a `204 No Content` if successful."
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The workflow was activated.
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/activate" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            response = client.activate_workflow(workflow_id)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+
+            client.activateWorkflow(workflowId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}/pause:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+
+    post:
+      operationId: pauseWorkflow
+      tags: [Workflows]
+      summary: Pause a workflow
+      x-slate:
+        intro: "To pause a workflow:"
+        response:
+          intro: "Responds with a `204 No Content` if successful."
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The workflow was paused.
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/pause" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            response = client.pause_workflow(workflow_id)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+
+            client.pauseWorkflow(workflowId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}/subscribers:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+
+    post:
+      operationId: startSubscriberOnWorkflow
+      tags: [Workflows]
+      summary: Start someone on a workflow
+      description: >-
+        If the workflow is not active, the subscriber will not be added to
+        the workflow.
+      x-slate:
+        intro: "To start someone on a workflow:"
+        response:
+          intro: "The response looks like this:"
+        show-description: true
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subscribers]
+              properties:
+                subscribers:
+                  type: array
+                  description: An array containing one subscriber object.
+                  items:
+                    $ref: "#/components/schemas/WorkflowSubscriber"
+            example:
+              subscribers:
+                - email: john@acme.com
+                  time_zone: America/Los_Angeles
+                  custom_fields:
+                    shirt_size: Medium
+      responses:
+        "200":
+          description: The subscribers property is an array of one object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data.
+                  subscribers:
+                    type: array
+                    description: >-
+                      An array of one subscriber object (documented under the
+                      Subscribers resource; not defined here).
+                    items:
+                      type: object
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/subscribers" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "subscribers": [{
+                  "email": "john@acme.com",
+                  "time_zone": "America/Los_Angeles",
+                  "custom_fields": {
+                    "shirt_size": "Medium"
+                  }
+                }]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            options = {
+              email: "john@acme.com",
+              time_zone: "America/Los_Angeles",
+              custom_fields: {
+                shirt_size: "Medium"
+              }
+            }
+            response = client.start_subscriber_workflow(workflow_id, options)
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+            const payload = {
+              subscribers: [{
+                email: "john@acme.com",
+                time_zone: "America/Los_Angeles",
+                custom_fields: {
+                  shirt_size: "Medium"
+                }
+              }]
+            }
+
+            client.startOnWorkflow(workflowId, payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}/subscribers/{id_or_email}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+      - name: id_or_email
+        in: path
+        required: true
+        description: The subscriber's ID or email address.
+        schema:
+          type: string
+
+    delete:
+      operationId: removeSubscriberFromWorkflow
+      tags: [Workflows]
+      summary: Remove a subscriber from a workflow
+      description: >-
+        If the subscriber is not already on the workflow, nothing will happen.
+      x-slate:
+        intro: "To remove someone from a workflow:"
+        response:
+          intro: "Responds with a `204 No Content` if successful."
+        show-description: true
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The subscriber was removed from the workflow.
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X DELETE "https://v2/api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/subscribers/ID_OR_EMAIL" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            subscriber_email = "john@acme.com"
+
+            response = client.remove_subscriber_workflow(workflow_id, subscriber_email)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+            const idOrEmail = "someone@example.com"
+
+            client.removeFromWorkflow(workflowId, idOrEmail)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}/triggers:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+
+    get:
+      operationId: listWorkflowTriggers
+      tags: [Workflows]
+      summary: List all workflow triggers
+      x-slate:
+        intro: "To list all triggers on a workflow:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: All triggers on the workflow.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  triggers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Trigger"
+              example:
+                triggers:
+                  - id: f7gysdf7gyd7
+                    type: trigger
+                    trigger_type: submitted_landing_page
+                    provider: leadpages
+                    properties:
+                      landing_page: My Landing Page
+                    actions_required:
+                      - code: configure_provider
+                        message: Configure your LeadPages connection
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/triggers" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            response = client.workflow_triggers(workflow_id)
+
+            if response.success?
+              puts response.body["triggers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+
+            client.listTriggers(workflowId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    post:
+      operationId: createWorkflowTrigger
+      tags: [Workflows]
+      summary: Create a workflow trigger
+      x-slate:
+        intro: "To create a workflow trigger:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [triggers]
+              properties:
+                triggers:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/TriggerRequest"
+            example:
+              triggers:
+                - provider: leadpages
+                  trigger_type: submitted_landing_page
+                  properties:
+                    landing_page: My Landing Page
+      responses:
+        "200":
+          description: The created trigger.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  triggers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Trigger"
+              example:
+                triggers:
+                  - id: f7gysdf7gyd7
+                    type: trigger
+                    provider: leadpages
+                    trigger_type: submitted_landing_page
+                    properties:
+                      landing_page: My Landing Page
+                    actions_required:
+                      - code: configure_provider
+                        message: Configure your LeadPages connection
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/triggers" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "triggers": [
+                  {
+                    "provider": "leadpages",
+                    "trigger_type": "submitted_landing_page",
+                    "properties": {
+                      "landing_page": "My Landing Page"
+                    }
+                  }
+                ]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            options = {
+              provider: "leadpages",
+              trigger_type: "submitted_landing_page",
+              properties: {
+                landing_page: "My Landing Page"
+              }
+            }
+            response = client.create_workflow_trigger(workflow_id, options)
+
+            if response.success?
+              puts response.body["triggers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+            const payload = {
+              provider: "leadpages",
+              trigger_type: "submitted_landing_page",
+              properties: {
+                landing_page: "My Landing Page"
+              }
+            }
+
+            client.createTrigger(workflowId, payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/workflows/{workflow_id}/triggers/{trigger_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: workflow_id
+        in: path
+        required: true
+        description: The ID of the workflow.
+        schema:
+          type: string
+      - name: trigger_id
+        in: path
+        required: true
+        description: The ID of the trigger.
+        schema:
+          type: string
+
+    put:
+      operationId: updateWorkflowTrigger
+      tags: [Workflows]
+      summary: Update a workflow trigger
+      x-slate:
+        intro: "To update a workflow trigger:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [triggers]
+              properties:
+                triggers:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/TriggerRequest"
+            example:
+              triggers:
+                - provider: leadpages
+                  trigger_type: submitted_landing_page
+                  properties:
+                    landing_page: My Landing Page
+      responses:
+        "200":
+          description: The updated trigger.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  triggers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Trigger"
+              example:
+                triggers:
+                  - id: f7gysdf7gyd7
+                    type: trigger
+                    provider: leadpages
+                    trigger_type: submitted_landing_page
+                    properties:
+                      landing_page: My Landing Page
+                    actions_required:
+                      - code: configure_provider
+                        message: Configure your LeadPages connection
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X PUT "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/triggers/TRIGGER_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "triggers": [
+                  {
+                    "provider": "leadpages",
+                    "trigger_type": "submitted_landing_page",
+                    "properties": {
+                      "landing_page": "My Landing Page"
+                    }
+                  }
+                ]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            workflow_id = 9999999
+            options = {
+              provider: "leadpages",
+              trigger_type: "submitted_landing_page",
+              properties: {
+                landing_page: "My Landing Page"
+              }
+            }
+            response = client.update_workflow_trigger(workflow_id, options)
+
+            if response.success?
+              puts response.body["triggers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const workflowId = 222333;
+            const triggerId = "abc123";
+            const payload = {
+              provider: "leadpages",
+              trigger_type: "submitted_landing_page",
+              properties: {
+                landing_page: "My Landing Page"
+              }
+            }
+
+            client.updateTrigger(workflowId, triggerId, payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Workflow:
+      type: object
+      example:
+        id: "123456"
+        href: "https://api.getdrip.com/v2/9999999/workflows/123456"
+        name: Main Funnel
+        status: active
+        created_at: "2016-07-01T10:00:00Z"
+        links:
+          account: "9999999"
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each workflow record.
+        href:
+          type: string
+          description: The url designated for retrieving the workflow record via the REST API.
+        name:
+          type: string
+          description: The name assigned to the workflow.
+        status:
+          type: string
+          description: The workflow's status whether `draft`, `active`, or `paused`.
+          enum: [draft, active, paused]
+        created_at:
+          type: string
+          format: date-time
+          description: A timestamp representing when the workflow record was first created.
+        links:
+          type: object
+          description: An object containing the REST API URL for the account.
+          properties:
+            account:
+              type: string
+
+    WorkflowSubscriber:
+      type: object
+      description: >-
+        A subscriber to start on the workflow. Either `email` or `id` must
+        be included.
+      properties:
+        email:
+          type: string
+          format: email
+          description: The subscriber's email address. Either `email` or `id` must be included.
+        id:
+          type: string
+          description: The subscriber's Drip `id`. Either `email` or `id` must be included.
+        first_name:
+          type: string
+          description: The subscriber's first name.
+        last_name:
+          type: string
+          description: The subscriber's last name.
+        address1:
+          type: string
+          description: The subscriber's mailing address.
+        address2:
+          type: string
+          description: An additional field for the subscriber's mailing address.
+        city:
+          type: string
+          description: The city, town, or village in which the subscriber resides.
+        state:
+          type: string
+          description: The region in which the subscriber resides. Typically a province, a state, or a prefecture.
+        zip:
+          type: string
+          description: The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.
+        country:
+          type: string
+          description: The country in which the subscriber resides.
+        phone:
+          type: string
+          description: The subscriber's primary phone number.
+        user_id:
+          type: string
+          description: A unique identifier for the user in your database, such as a primary key.
+        time_zone:
+          type: string
+          description: The subscriber's time zone (in Olson format). Defaults to `Etc/UTC`.
+          default: Etc/UTC
+        custom_fields:
+          type: object
+          description: 'An Object containing custom field data. E.g. `{ "shirt_size": "Medium" }`.'
+        tags:
+          type: array
+          description: 'An Array containing one or more tags. E.g. `["Customer", "SEO"]`.'
+          items:
+            type: string
+        prospect:
+          type: boolean
+          description: >-
+            A Boolean specifiying whether we should attach a lead score to
+            the subscriber (when lead scoring is enabled). Defaults to
+            `true`. **Note:** This flag used to be called `potential_lead`,
+            which we will continue to accept for backwards compatibility.
+          default: true
+        eu_consent:
+          type: string
+          description: A String specifying whether the subscriber `granted` or `denied` GDPR consent.
+        eu_consent_message:
+          type: string
+          description: A String containing the message the subscriber granted or denied their consent to.
+
+    Trigger:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        provider:
+          type: string
+          description: A String indicating a provider.
+        trigger_type:
+          type: string
+          description: A String indicating the automation trigger type.
+        properties:
+          type: object
+          description: An Object containing properties for the given trigger.
+        actions_required:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+
+    TriggerRequest:
+      type: object
+      required: [provider, trigger_type]
+      properties:
+        provider:
+          type: string
+          description: A String indicating a provider.
+        trigger_type:
+          type: string
+          description: A String indicating the automation trigger type.
+        properties:
+          type: object
+          description: An Object containing properties for the given trigger.

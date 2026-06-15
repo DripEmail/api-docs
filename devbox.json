@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.6/.schema/devbox.schema.json",
+  "packages": {
+    "ruby": "3.3.5",
+    "bundler": "2.5",
+    "nodejs": "24",
+    "libyaml": {
+      "version": "latest",
+      "outputs": ["out", "dev"]
+    },
+    "libffi": "latest",
+    "pkg-config": "latest"
+  },
+  "env": {
+    "BUNDLE_BUILD__SASSC": "--disable-lto"
+  },
+  "shell": {
+    "scripts": {
+      "install": "bundle install",
+      "server": "bundle exec middleman server",
+      "docs:generate": "ruby script/generate-docs",
+      "docs:verify": "ruby script/verify-docs",
+      "redoc:preview": "npx --yes @redocly/cli@latest preview-docs spec/rest-v2.yaml",
+      "redoc:lint": "npx --yes @redocly/cli@latest lint spec/rest-v2.yaml",
+      "redoc:bundle": "npx --yes @redocly/cli@latest bundle spec/rest-v2.yaml -o build/openapi/rest-v2.yaml"
+    }
+  }
+}

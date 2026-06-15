@@ -1,0 +1,1087 @@
+tags:
+  - name: Subscribers
+    description: People in an account. All subscriber API endpoints only work with your active people; attempting to modify or delete an inactive person will result in an error.
+    x-slate:
+      represent:
+        - intro: "Subscribers are represented as follows:"
+          schema: Subscriber
+        - intro: "All responses containing subscriber data also include the following top-level link data:"
+          json: |
+            {
+              "links": {
+                "subscribers.account": "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+              }
+            }
+      properties: Subscriber
+      lead_extra: |
+        **Note:** All subscriber API endpoints only work with your <a href="https://www.drip.com/learn/docs/manual/people/active" target="_blank">active</a> people. Attempting to modify or delete an <a href="https://www.drip.com/learn/docs/manual/people/inactive" target="_blank">inactive</a> person will result in an error.
+
+paths:
+  /{account_id}/subscribers:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    post:
+      operationId: createOrUpdateSubscriber
+      tags: [Subscribers]
+      summary: Create or update a subscriber
+      x-slate:
+        order: 0
+        intro: "To create or update a subscriber:"
+        response:
+          intro: "The response looks like this:"
+        show-description: true
+        arguments: auto
+      description: |
+        If you need to create or update a collection of subscribers at once,
+        use our [batch API](/) instead.
+
+        **Note:** Concurrently updating the same subscriber via multiple API
+        calls is not supported and will fail with a rate limit error and the
+        message "Too many concurrent requests for the same subscriber". You
+        should retry the call after a short wait period to let the other
+        requests to the same subscriber complete. Triggering this rate limit
+        does not mean you've consumed your overall API rate limited capacity.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subscribers]
+              properties:
+                subscribers:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/SubscriberRequest"
+            example:
+              subscribers:
+                - email: john@acme.com
+                  time_zone: America/Los_Angeles
+                  custom_fields:
+                    shirt_size: Medium
+      responses:
+        "200":
+          description: The created or updated subscriber. The `subscribers` property is an array of one object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subscribers]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing subscriber data.
+                    properties:
+                      "subscribers.account":
+                        type: string
+                  subscribers:
+                    type: array
+                    description: An array of one subscriber object.
+                    items:
+                      $ref: "#/components/schemas/Subscriber"
+              example:
+                links:
+                  subscribers.account: "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+                subscribers:
+                  - id: z1togz2hcjrkpp5treip
+                    status: active
+                    email: john@acme.com
+                    first_name: John
+                    last_name: Doe
+                    address1: 123 Main St.
+                    address2: Suite 200
+                    city: Los Angeles
+                    state: CA
+                    zip: "90210"
+                    country: US
+                    phone: 555-555-5555
+                    sms_number: "+16125551212"
+                    sms_consent: true
+                    eu_consent: granted
+                    time_zone: America/Los_Angeles
+                    utc_offset: -440
+                    visitor_uuid: sa8f7sdf78sdsdahf788d7asf8sd
+                    custom_fields:
+                      shirt_size: Medium
+                    tags: [Customer, SEO]
+                    ip_address: 111.111.111.11
+                    user_agent: Chrome/36.0.1985.143
+                    original_referrer: "http://www.getdrip.com"
+                    landing_url: "https://www.getdrip.com/docs/rest-api"
+                    prospect: true
+                    lead_score: 72
+                    lifetime_value: 10000
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/subscribers/12345"
+                    user_id: "12345"
+                    base_lead_score: 30
+                    links:
+                      account: "9999999"
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers" \
+            -H 'User-Agent: Your App Name (www.yourapp.com)' \
+            -H 'Content-Type: application/json' \
+            -u YOUR_API_KEY: \
+            -d @- << EOF
+            {
+              "subscribers": [{
+                "email": "john@acme.com",
+                "time_zone": "America/Los_Angeles",
+                "custom_fields": {
+                  "shirt_size": "Medium"
+                }
+              }]
+            }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            subscriber_email = "john@acme.com"
+            options = {
+              time_zone: "America/Los_Angeles",
+              custom_fields: {
+                shirt_size: "Medium"
+              }
+            }
+
+            response = client.create_or_update_subscriber(subscriber_email, options)
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const payload = {
+              email: "john@acme.com",
+              time_zone: "America/Los_Angeles",
+              custom_fields: {
+                shirt_size: "Medium"
+              }
+            };
+
+            client.createUpdateSubscriber(payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    get:
+      operationId: listSubscribers
+      tags: [Subscribers]
+      summary: List all subscribers
+      x-slate:
+        order: 1
+        intro: "To list subscribers:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: >-
+            Filter by one of the following statuses: `all`, `active`,
+            `unsubscribed`, `active_or_unsubscribed` or `undeliverable`.
+            Defaults to `active`.
+          schema:
+            type: string
+            enum: [all, active, unsubscribed, active_or_unsubscribed, undeliverable]
+            default: active
+        - name: tags
+          in: query
+          required: false
+          description: A comma separated list of tags. When included, returns only subscribers who have at least one of the listed tags.
+          schema:
+            type: string
+        - name: subscribed_before
+          in: query
+          required: false
+          description: A [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) datetime. When included, returns only subscribers who were created before the date. Eg. `"2017-01-01T00:00:00Z"`
+          schema:
+            type: string
+            format: date-time
+        - name: subscribed_after
+          in: query
+          required: false
+          description: A [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) datetime. When included, returns only subscribers who were created after the date. Eg. `"2016-01-01T00:00:00Z"`
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          required: false
+          description: The page number. Defaults to `1`.
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          required: false
+          description: The number of records to be returned on each page. Defaults to `100`. Maximum `1000`.
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        "200":
+          description: A list of subscribers. The `subscribers` property is an array of subscriber objects; the `meta` property contains pagination information.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subscribers]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing subscriber data.
+                    properties:
+                      "subscribers.account":
+                        type: string
+                  meta:
+                    type: object
+                    description: Pagination information.
+                    properties:
+                      page:
+                        type: integer
+                      count:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                  subscribers:
+                    type: array
+                    description: An array of subscriber objects.
+                    items:
+                      $ref: "#/components/schemas/Subscriber"
+              example:
+                links:
+                  subscribers.account: "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+                meta:
+                  page: 1
+                  count: 5
+                  total_pages: 1
+                  total_count: 5
+                subscribers:
+                  - id: z1togz2hcjrkpp5treip
+                    status: active
+                    email: john@acme.com
+                    first_name: John
+                    last_name: Doe
+                    address1: 123 Main St.
+                    address2: Suite 200
+                    city: Los Angeles
+                    state: CA
+                    zip: "90210"
+                    country: US
+                    phone: 555-555-5555
+                    sms_number: "+16125551212"
+                    sms_consent: true
+                    eu_consent: granted
+                    time_zone: America/Los_Angeles
+                    utc_offset: -440
+                    visitor_uuid: sa8f7sdf78sdsdahf788d7asf8sd
+                    custom_fields:
+                      shirt_size: Medium
+                    tags: [Customer, SEO]
+                    ip_address: 111.111.111.11
+                    user_agent: Chrome/36.0.1985.143
+                    original_referrer: "http://www.getdrip.com"
+                    landing_url: "https://www.getdrip.com/docs/rest-api"
+                    prospect: true
+                    lead_score: 72
+                    lifetime_value: 10000
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/subscribers/12345"
+                    user_id: "12345"
+                    base_lead_score: 30
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.subscribers
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const options = { status: "active", subscribed_before: "2017-01-01T00:00:00Z" };
+
+            client.listSubscribers(options)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/subscribers/{id_or_email}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: id_or_email
+        in: path
+        required: true
+        description: The subscriber's ID or email address. The fetch endpoint also accepts a visitor UUID.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchSubscriber
+      tags: [Subscribers]
+      summary: Fetch a subscriber
+      x-slate:
+        order: 2
+        intro: "To fetch a subscriber:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: The requested subscriber. The `subscribers` property is an array of one object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subscribers]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing subscriber data.
+                    properties:
+                      "subscribers.account":
+                        type: string
+                  subscribers:
+                    type: array
+                    description: An array of one subscriber object.
+                    items:
+                      $ref: "#/components/schemas/Subscriber"
+              example:
+                links:
+                  subscribers.account: "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+                subscribers:
+                  - id: z1togz2hcjrkpp5treip
+                    status: active
+                    email: john@acme.com
+                    first_name: John
+                    last_name: Doe
+                    address1: 123 Main St.
+                    address2: Suite 200
+                    city: Los Angeles
+                    state: CA
+                    zip: "90210"
+                    country: US
+                    phone: 555-555-5555
+                    sms_number: "+16125551212"
+                    sms_consent: true
+                    eu_consent: granted
+                    time_zone: America/Los_Angeles
+                    utc_offset: -440
+                    visitor_uuid: sa8f7sdf78sdsdahf788d7asf8sd
+                    custom_fields:
+                      shirt_size: Medium
+                    tags: [Customer, SEO]
+                    ip_address: 111.111.111.11
+                    user_agent: Chrome/36.0.1985.143
+                    original_referrer: "http://www.getdrip.com"
+                    landing_url: "https://www.getdrip.com/docs/rest-api"
+                    prospect: true
+                    lead_score: 72
+                    lifetime_value: 10000
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/subscribers/12345"
+                    user_id: "12345"
+                    base_lead_score: 30
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL_OR_VISITOR_UUID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            subscriber_email = "john@acme.com"
+
+            response = client.subscriber(subscriber_email)
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const idOrEmail = "someone@example.com";
+
+            client.fetchSubscriber(idOrEmail)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    delete:
+      operationId: deleteSubscriber
+      tags: [Subscribers]
+      summary: Delete a subscriber
+      x-slate:
+        order: 5
+        intro: "To delete a subscriber:"
+        response:
+          intro: "Responds with `204 No Content` if successful."
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The subscriber was deleted.
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X DELETE "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            subscriber_email = "john@acme.com"
+            response = client.delete_subscriber(subscriber_email)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const idOrEmail = "someone@example.com";
+
+            client.deleteSubscriber(idOrEmail)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/subscribers/{id_or_email}/remove:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: id_or_email
+        in: path
+        required: true
+        description: The subscriber's ID or email address.
+        schema:
+          type: string
+
+    post:
+      operationId: removeSubscriberFromCampaigns
+      tags: [Subscribers]
+      summary: Remove a subscriber from one or all Email Series Campaigns
+      description: |
+        This endpoint was previously labeled `unsubscribe`.
+      x-slate:
+        order: 3
+        intro: "To remove a subscriber from all Email Series Campaigns:"
+        response:
+          intro: "The response looks like this:"
+        show-description: true
+        arguments: auto
+      parameters:
+        - name: campaign_id
+          in: query
+          required: false
+          description: The Email Series Campaign from which to remove the subscriber. Defaults to all.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: The removed subscriber. The `subscribers` property is an array of one object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subscribers]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing subscriber data.
+                    properties:
+                      "subscribers.account":
+                        type: string
+                  subscribers:
+                    type: array
+                    description: An array of one subscriber object.
+                    items:
+                      $ref: "#/components/schemas/Subscriber"
+              example:
+                links:
+                  subscribers.account: "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+                subscribers:
+                  - id: z1togz2hcjrkpp5treip
+                    status: active
+                    email: john@acme.com
+                    first_name: John
+                    last_name: Doe
+                    address1: 123 Main St.
+                    address2: Suite 200
+                    city: Los Angeles
+                    state: CA
+                    zip: "90210"
+                    country: US
+                    phone: 555-555-5555
+                    sms_number: "+16125551212"
+                    sms_consent: true
+                    eu_consent: granted
+                    time_zone: America/Los_Angeles
+                    utc_offset: -440
+                    visitor_uuid: sa8f7sdf78sdsdahf788d7asf8sd
+                    custom_fields:
+                      shirt_size: Medium
+                    tags: [Customer, SEO]
+                    ip_address: 111.111.111.11
+                    user_agent: Chrome/36.0.1985.143
+                    original_referrer: "http://www.getdrip.com"
+                    landing_url: "https://www.getdrip.com/docs/rest-api"
+                    prospect: true
+                    lead_score: 72
+                    lifetime_value: 10000
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/subscribers/12345"
+                    user_id: "12345"
+                    base_lead_score: 30
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            # To remove a subscriber from all Email Series Campaigns:
+
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/remove" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+
+            # To remove a subscriber from a specific campaign:
+
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/remove?campaign_id=CAMPAIGN_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            ##
+            # To remove a subscriber from all Email Series Campaigns:
+            ##
+
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            subscriber_email = "john@acme.com"
+            response = client.unsubscribe(subscriber_email)
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+
+            ##
+            # To remove a subscriber from a specific campaign:
+            ##
+
+            subscriber_email = "john@acme.com"
+            options = {
+              campaign_id: 9999999
+            }
+
+            response = client.unsubscribe(subscriber_email, options)
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const idOrEmail = "someone@example.com";
+            const campaignId = 9998888;
+
+            client.unsubscribeFromCampaign(idOrEmail, campaignId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/subscribers/{id_or_email}/unsubscribe_all:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: id_or_email
+        in: path
+        required: true
+        description: The subscriber's ID or email address.
+        schema:
+          type: string
+
+    post:
+      operationId: unsubscribeFromAllMailings
+      tags: [Subscribers]
+      summary: Unsubscribe from all mailings
+      x-slate:
+        order: 4
+        intro: "To unsubscribe a subscriber from all mailings:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: The unsubscribed subscriber. The `subscribers` property is an array of one object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subscribers]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing subscriber data.
+                    properties:
+                      "subscribers.account":
+                        type: string
+                  subscribers:
+                    type: array
+                    description: An array of one subscriber object.
+                    items:
+                      $ref: "#/components/schemas/Subscriber"
+              example:
+                links:
+                  subscribers.account: "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+                subscribers:
+                  - id: z1togz2hcjrkpp5treip
+                    status: unsubscribed
+                    email: john@acme.com
+                    first_name: John
+                    last_name: Doe
+                    address1: 123 Main St.
+                    address2: Suite 200
+                    city: Los Angeles
+                    state: CA
+                    zip: "90210"
+                    country: US
+                    phone: 555-555-5555
+                    sms_number: "+16125551212"
+                    sms_consent: true
+                    eu_consent: granted
+                    time_zone: America/Los_Angeles
+                    utc_offset: -440
+                    visitor_uuid: sa8f7sdf78sdsdahf788d7asf8sd
+                    custom_fields:
+                      shirt_size: Medium
+                    tags: [Customer, SEO]
+                    ip_address: 111.111.111.11
+                    user_agent: Chrome/36.0.1985.143
+                    original_referrer: "http://www.getdrip.com"
+                    landing_url: "https://www.getdrip.com/docs/rest-api"
+                    prospect: true
+                    lead_score: 72
+                    lifetime_value: 10000
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/subscribers/12345"
+                    user_id: "12345"
+                    base_lead_score: 30
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/unsubscribe_all" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            subscriber_email = "john@acme.com"
+            response = client.unsubscribe_from_all(subscriber_email)
+
+            if response.success?
+              puts response.body["subscribers"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const idOrEmail = "someone@example.com";
+
+            client.unsubscribeFromAllMailings(idOrEmail)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Subscriber:
+      type: object
+      description: |
+        All subscriber API endpoints only work with your
+        [active](https://www.drip.com/learn/docs/manual/people/active) people.
+        Attempting to modify or delete an
+        [inactive](https://www.drip.com/learn/docs/manual/people/inactive)
+        person will result in an error.
+      example:
+        id: z1togz2hcjrkpp5treip
+        status: active
+        email: john@acme.com
+        first_name: John
+        last_name: Doe
+        address1: 123 Main St.
+        address2: Suite 200
+        city: Los Angeles
+        state: CA
+        zip: "90210"
+        country: US
+        phone: 555-555-5555
+        sms_number: "+16125551212"
+        sms_consent: true
+        eu_consent: granted
+        time_zone: America/Los_Angeles
+        utc_offset: -440
+        visitor_uuid: sa8f7sdf78sdsdahf788d7asf8sd
+        custom_fields:
+          shirt_size: Medium
+        tags: [Customer, SEO]
+        ip_address: 111.111.111.11
+        user_agent: Chrome/36.0.1985.143
+        original_referrer: "http://www.getdrip.com"
+        landing_url: "https://www.getdrip.com/docs/rest-api"
+        prospect: true
+        lead_score: 72
+        lifetime_value: 10000
+        created_at: "2013-06-21T10:31:58Z"
+        href: "https://api.getdrip.com/v2/9999999/subscribers/12345"
+        user_id: "12345"
+        base_lead_score: 30
+        links:
+          account: "9999999"
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each subscriber record.
+        status:
+          type: string
+          enum: [active, unsubscribed]
+          description: The subscriber's status whether `active` or `unsubscribed`.
+        initial_status:
+          type: string
+          enum: [active, unsubscribed]
+          description: The subscriber's known status whether `active` or `unsubscribed`. To be used instead of `status` if subscriber's status is unchanged.
+        email:
+          type: string
+          format: email
+          description: The subscriber's email address.
+        first_name:
+          type: string
+          description: The subscriber's first name.
+        last_name:
+          type: string
+          description: The subscriber's last name.
+        address1:
+          type: string
+          description: The subscriber's mailing address.
+        address2:
+          type: string
+          description: An additional field for the subscriber's mailing address.
+        city:
+          type: string
+          description: The city, town, or village in which the subscriber resides.
+        state:
+          type: string
+          description: The region in which the subscriber resides. Typically a province, a state, or a prefecture.
+        zip:
+          type: string
+          description: The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.
+        country:
+          type: string
+          description: The country in which the subscriber resides.
+        phone:
+          type: string
+          description: The subscriber's primary phone number.
+        sms_number:
+          type: string
+          description: Optional. String. The subscriber's mobile phone number in E.164 formatting. E.g. `"+16125551212"`. Only US-based numbers are supported at this time.
+        sms_consent:
+          type: boolean
+          default: false
+          description: >-
+            Optional. Boolean. `true` if the person has granted consent to
+            receive marketing and other communication via SMS; `false`
+            otherwise. Default: false. If you’re unsure whether or not you
+            have gained legal SMS consent, check out our
+            [TCPA requirements article](https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance).
+        eu_consent:
+          type: string
+          enum: [granted, denied, unknown]
+          description: A string describing whether the subscriber GDPR consent is `granted`, `denied`, or `unknown`.
+        time_zone:
+          type: string
+          description: The subscriber's time zone (in Olson format).
+        utc_offset:
+          type: integer
+          description: The UTC offset in minutes relative to UTC/GMT.
+        visitor_uuid:
+          type: string
+          description: A read-only Drip generated unique id used to identify each subscriber's visitor record if available.
+        custom_fields:
+          type: object
+          additionalProperties: true
+          description: >-
+            An Object containing custom field data. E.g. `{ "shirt_size": "Medium" }`.
+        tags:
+          type: array
+          items:
+            type: string
+          description: An Array containing one or more tags. E.g. `["Customer", "SEO"]`.
+        ip_address:
+          type: string
+          description: The subscriber's IP address if available.
+        user_agent:
+          type: string
+          description: The subscriber's browser User Agent if available.
+        original_referrer:
+          type: string
+          description: The initial referral URL when the subscriber first visited your site if available.
+        landing_url:
+          type: string
+          description: The first page visited by the subscriber if available.
+        prospect:
+          type: boolean
+          description: Returns true if the subscriber is marked as a lead.
+        lead_score:
+          type: integer
+          description: The subscriber's lead score.
+        lifetime_value:
+          type: integer
+          description: The subscriber's lifetime value in cents.
+        created_at:
+          type: string
+          format: date-time
+          description: A timestamp representing when the subscriber record was first created.
+        href:
+          type: string
+          description: The url designated for retrieving the subscriber record via the REST API.
+        user_id:
+          type: string
+          description: A unique identifier for the user in your database, such as a primary key.
+        base_lead_score:
+          type: integer
+          default: 30
+          description: An Integer specifying the starting value for lead score calculation for this subscriber. Defaults to `30`.
+        links:
+          type: object
+          description: An object containing the REST API URL for the account.
+          properties:
+            account:
+              type: string
+
+    SubscriberRequest:
+      type: object
+      description: Either `email` or `id` or `visitor_uuid` must be included.
+      properties:
+        email:
+          type: string
+          format: email
+          description: The subscriber's email address. Either `email` or `id` or `visitor_uuid` must be included.
+        id:
+          type: string
+          description: The subscriber's Drip `id`. Either `email` or `id` or `visitor_uuid` must be included.
+        visitor_uuid:
+          type: string
+          description: The `uuid` for a subscriber's visitor record. Either `email` or `id` or `visitor_uuid` must be included.
+        new_email:
+          type: string
+          format: email
+          description: A new email address for the subscriber. If provided and a subscriber with the `email` above does not exist, this address will be used to create a new subscriber.
+        first_name:
+          type: string
+          description: The subscriber's first name.
+        last_name:
+          type: string
+          description: The subscriber's last name.
+        address1:
+          type: string
+          description: The subscriber's mailing address.
+        address2:
+          type: string
+          description: An additional field for the subscriber's mailing address.
+        city:
+          type: string
+          description: The city, town, or village in which the subscriber resides.
+        state:
+          type: string
+          description: The region in which the subscriber resides. Typically a province, a state, or a prefecture.
+        zip:
+          type: string
+          description: The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.
+        country:
+          type: string
+          description: The country in which the subscriber resides.
+        phone:
+          type: string
+          description: The subscriber's primary phone number.
+        sms_number:
+          type: string
+          description: String. The subscriber's mobile phone number in E.164 formatting. E.g. `"+16125551212"`. Only US-based numbers are supported at this time.
+        sms_consent:
+          type: boolean
+          default: false
+          description: >-
+            Boolean. `true` if the person has granted consent to receive
+            marketing and other communication via SMS; `false` otherwise.
+            Default: false. If you’re unsure whether or not you have gained
+            legal SMS consent, check out our
+            [TCPA requirements article](https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance).
+        user_id:
+          type: string
+          description: A unique identifier for the user in your database, such as a primary key.
+        time_zone:
+          type: string
+          default: Etc/UTC
+          description: The subscriber's time zone (in Olson format). Defaults to `Etc/UTC`
+        lifetime_value:
+          type: integer
+          description: The lifetime value of the subscriber (in cents).
+        ip_address:
+          type: string
+          description: The subscriber's ip address E.g. `"111.111.111.11"`
+        custom_fields:
+          type: object
+          additionalProperties: true
+          description: >-
+            An Object containing custom field data. E.g. `{ "shirt_size": "Medium" }`.
+        tags:
+          type: array
+          items:
+            type: string
+          description: An Array containing one or more tags. E.g. `["Customer", "SEO"]`.
+        remove_tags:
+          type: array
+          items:
+            type: string
+          description: An Array containing one or more tags to be removed from the subscriber. E.g. `["Customer", "SEO"]`.
+        prospect:
+          type: boolean
+          default: true
+          description: A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to `true`. **Note:** This flag used to be called `potential_lead`, which we will continue to accept for backwards compatibility.
+        base_lead_score:
+          type: integer
+          default: 30
+          description: An Integer specifying the starting value for lead score calculation for this subscriber. Defaults to `30`.
+        eu_consent:
+          type: string
+          enum: [granted, denied]
+          description: A String specifying whether the subscriber `granted` or `denied` GDPR consent.
+        eu_consent_message:
+          type: string
+          description: A String containing the message the subscriber granted or denied their consent to.
+        status:
+          type: string
+          enum: [active, unsubscribed]
+          description: >-
+            A String specifying the subscriber's status: either `active` or
+            `unsubscribed`.
+        initial_status:
+          type: string
+          enum: [active, unsubscribed]
+          description: >-
+            A String specifying the subscriber's known status: either `active`
+            or `unsubscribed`. To be used if subscriber's status is unchanged.

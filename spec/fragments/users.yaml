@@ -1,0 +1,86 @@
+tags:
+  - name: Users
+    description: The user authenticated to the API.
+    x-slate:
+      lead: |
+        > Users are represented as follows:
+
+        ```json
+        {
+          "email": "john@acme.com",
+          "name": "John Doe",
+          "time_zone": "America/Los_Angeles"
+        }
+        ```
+paths:
+  /user:
+    get:
+      operationId: fetchUser
+      tags: [Users]
+      summary: Fetch the authenticated user
+      x-slate:
+        intro: "To fetch the current user:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            {
+              "users":[{
+                "email": "john@acme.com",
+                "name": "John Doe",
+                "time_zone": "America/Los_Angeles"
+              }]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The authenticated user, wrapped in a `users` array.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [users]
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+              example:
+                users:
+                  - email: john@acme.com
+                    name: John Doe
+                    time_zone: America/Los_Angeles
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/user" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+
+            client.fetchUser()
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        time_zone:
+          type: string

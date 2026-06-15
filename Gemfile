@@ -10,3 +10,6 @@ gem 'middleman-syntax', '~> 3.0.0'
 gem 'nokogiri', '~> 1.18.9'
 gem 'redcarpet', '~> 3.5.1'
 gem 'rouge', '~> 2.0.5'
+# Removed from the Ruby stdlib in 3.x; still required by middleman/middleman-deploy
+gem 'webrick'
+gem 'net-ftp'

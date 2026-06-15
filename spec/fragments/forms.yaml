@@ -1,0 +1,485 @@
+tags:
+  - name: Forms
+    description: Form widgets and embedded forms in an account.
+    x-slate:
+      lead: |
+        > Forms are represented as follows:
+
+        ```json
+        {
+          "id": "77777",
+          "href": "https://api.getdrip.com/v2/9999999/forms/77777",
+          "headline": "Long Tail SEO Course",
+          "description": "Get our FREE email course",
+          "button_text": "Sign Up!",
+          "confirmation_heading": "Thank you for subscribing",
+          "confirmation_text": "Please click the link in your email",
+          "send_ga_event": true,
+          "seconds_before_popup": 5,
+          "days_between_popup": 5,
+          "days_between_popup_after_close": 10,
+          "orientation": "bottom_right_tab",
+          "opacity": 0.8,
+          "show_labels": false,
+          "primary_color": "#333333",
+          "secondary_color": "#d8ab93",
+          "is_widget_enabled": true,
+          "whitelist": [ "/landing", "/public" ],
+          "blacklist": [],
+          "is_whitelist_enabled": true,
+          "is_blacklist_enabled": false,
+          "hide_on_mobile": false,
+          "is_embeddable": true,
+          "created_at": "2013-06-21T10:31:58Z",
+          "links": {
+            "account": "9999999"
+          }
+        }
+        ```
+
+        > All responses containing form data also include the following top-level link data:
+
+        ```json
+        {
+          "links": {
+            "forms.account": "https://api.getdrip.com/v2/accounts/{forms.account}"
+          }
+        }
+        ```
+
+        **Properties**
+
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A read-only Drip generated unique id used to identify each form record.</td>
+            </tr>
+            <tr>
+              <td><code>href</code></td>
+              <td>The url designated for retrieving the form record via the REST API.</td>
+            </tr>
+            <tr>
+              <td><code>headline</code></td>
+              <td>The visible headline on the form widget or embedded form.</td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>A description shown in the body of the form widget or in the embedded form.</td>
+            </tr>
+            <tr>
+              <td><code>button_text</code></td>
+              <td>The text shown on the submission button for the form.</td>
+            </tr>
+            <tr>
+              <td><code>confirmation_heading</code></td>
+              <td>A heading shown after a subscriber submits the form.</td>
+            </tr>
+            <tr>
+              <td><code>confirmation_text</code></td>
+              <td>The text shown after a subscriber submits the form.</td>
+            </tr>
+            <tr>
+              <td><code>send_ga_event</code></td>
+              <td>Returns true if an event is sent to Google Analytics upon submission.</td>
+            </tr>
+            <tr>
+              <td><code>seconds_before_popup</code></td>
+              <td>A delay in seconds before the form widget is displayed.</td>
+            </tr>
+            <tr>
+              <td><code>days_between_popup</code></td>
+              <td>A delay in days between each appearance of the form widget.</td>
+            </tr>
+            <tr>
+              <td><code>days_between_popup_after_close</code></td>
+              <td>A delay in days between each appearance of the form widget after a visitor closes the form.</td>
+            </tr>
+            <tr>
+              <td><code>orientation</code></td>
+              <td>The position on the page where the form widget is displayed. Possible values are <code>bottom_left_tab</code>, <code>bottom_right_tab</code>, <code>side_left_tab</code>, <code>side_right_tab</code>, <code>embedded</code> or <code>lightbox</code>.</td>
+            </tr>
+            <tr>
+              <td><code>opacity</code></td>
+              <td>The opacity set for form field labels.</td>
+            </tr>
+            <tr>
+              <td><code>show_labels</code></td>
+              <td>Returns true if form field labels are shown above text boxes.</td>
+            </tr>
+            <tr>
+              <td><code>primary_color</code></td>
+              <td>The tab color for the form.</td>
+            </tr>
+            <tr>
+              <td><code>secondary_color</code></td>
+              <td>The headline color for the form.</td>
+            </tr>
+            <tr>
+              <td><code>is_widget_enabled</code></td>
+              <td>Returns true if the form widget is enabled and shown.</td>
+            </tr>
+            <tr>
+              <td><code>whitelist</code></td>
+              <td>An array of URL paths where the form is shown.</td>
+            </tr>
+            <tr>
+              <td><code>blacklist</code></td>
+              <td>An array of URL paths where the form is hidden.</td>
+            </tr>
+            <tr>
+              <td><code>is_whitelist_enabled</code></td>
+              <td>Returns true if whitelisted URLs are set.</td>
+            </tr>
+            <tr>
+              <td><code>is_blacklist_enabled</code></td>
+              <td>Returns true if blacklisted URLs are set.</td>
+            </tr>
+            <tr>
+              <td><code>hide_on_mobile</code></td>
+              <td>Returns true if the form widget is disabled for mobile devices.</td>
+            </tr>
+            <tr>
+              <td><code>is_embeddable</code></td>
+              <td>Deprecated</td>
+            </tr>
+            <tr>
+              <td><code>created_at</code></td>
+              <td>A timestamp representing when the form was first created.</td>
+            </tr>
+            <tr>
+              <td><code>links</code></td>
+              <td>An object containing the REST API URL for the account.</td>
+            </tr>
+          </tbody>
+        </table>
+paths:
+  /{account_id}/forms:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listForms
+      tags: [Forms]
+      summary: List all forms
+      x-slate:
+        intro: "To list all forms in an account:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The forms property is an array of form objects.
+            {
+              "links": { ... },
+              "forms": [ ... ]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The `forms` property is an array of form objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included in all responses containing form data.
+                    properties:
+                      forms.account:
+                        type: string
+                        description: URL template for the account linked from each form.
+                  forms:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Form"
+              example:
+                links:
+                  forms.account: https://api.getdrip.com/v2/accounts/{forms.account}
+                forms:
+                  - id: "77777"
+                    href: https://api.getdrip.com/v2/9999999/forms/77777
+                    headline: Long Tail SEO Course
+                    description: Get our FREE email course
+                    button_text: Sign Up!
+                    confirmation_heading: Thank you for subscribing
+                    confirmation_text: Please click the link in your email
+                    send_ga_event: true
+                    seconds_before_popup: 5
+                    days_between_popup: 5
+                    days_between_popup_after_close: 10
+                    orientation: bottom_right_tab
+                    opacity: 0.8
+                    show_labels: false
+                    primary_color: "#333333"
+                    secondary_color: "#d8ab93"
+                    is_widget_enabled: true
+                    whitelist:
+                      - /landing
+                      - /public
+                    blacklist: []
+                    is_whitelist_enabled: true
+                    is_blacklist_enabled: false
+                    hide_on_mobile: false
+                    is_embeddable: true
+                    created_at: "2013-06-21T10:31:58Z"
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/forms" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.forms
+
+            if response.success?
+              puts response.body["forms"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+
+            client.listForms()
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/forms/{form_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: form_id
+        in: path
+        required: true
+        description: The ID of the form.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchForm
+      tags: [Forms]
+      summary: Fetch a form
+      x-slate:
+        intro: "To fetch a specific form:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The forms property is an array of one form object.
+            {
+              "links": { ... },
+              "forms": [{ ... }]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The `forms` property is an array of one form object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included in all responses containing form data.
+                    properties:
+                      forms.account:
+                        type: string
+                        description: URL template for the account linked from each form.
+                  forms:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Form"
+              example:
+                links:
+                  forms.account: https://api.getdrip.com/v2/accounts/{forms.account}
+                forms:
+                  - id: "77777"
+                    href: https://api.getdrip.com/v2/9999999/forms/77777
+                    headline: Long Tail SEO Course
+                    description: Get our FREE email course
+                    button_text: Sign Up!
+                    confirmation_heading: Thank you for subscribing
+                    confirmation_text: Please click the link in your email
+                    send_ga_event: true
+                    seconds_before_popup: 5
+                    days_between_popup: 5
+                    days_between_popup_after_close: 10
+                    orientation: bottom_right_tab
+                    opacity: 0.8
+                    show_labels: false
+                    primary_color: "#333333"
+                    secondary_color: "#d8ab93"
+                    is_widget_enabled: true
+                    whitelist:
+                      - /landing
+                      - /public
+                    blacklist: []
+                    is_whitelist_enabled: true
+                    is_blacklist_enabled: false
+                    hide_on_mobile: false
+                    is_embeddable: true
+                    created_at: "2013-06-21T10:31:58Z"
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/forms/FORM_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            form_id = 9999999
+            response = client.form(form_id)
+
+            if response.success?
+              puts response.body["forms"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const formId = 9998888;
+
+            client.fetchForm(formId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Form:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each form record.
+        href:
+          type: string
+          description: The url designated for retrieving the form record via the REST API.
+        headline:
+          type: string
+          description: The visible headline on the form widget or embedded form.
+        description:
+          type: string
+          description: A description shown in the body of the form widget or in the embedded form.
+        button_text:
+          type: string
+          description: The text shown on the submission button for the form.
+        confirmation_heading:
+          type: string
+          description: A heading shown after a subscriber submits the form.
+        confirmation_text:
+          type: string
+          description: The text shown after a subscriber submits the form.
+        send_ga_event:
+          type: boolean
+          description: Returns true if an event is sent to Google Analytics upon submission.
+        seconds_before_popup:
+          type: integer
+          description: A delay in seconds before the form widget is displayed.
+        days_between_popup:
+          type: integer
+          description: A delay in days between each appearance of the form widget.
+        days_between_popup_after_close:
+          type: integer
+          description: A delay in days between each appearance of the form widget after a visitor closes the form.
+        orientation:
+          type: string
+          description: The position on the page where the form widget is displayed.
+          enum:
+            - bottom_left_tab
+            - bottom_right_tab
+            - side_left_tab
+            - side_right_tab
+            - embedded
+            - lightbox
+        opacity:
+          type: number
+          description: The opacity set for form field labels.
+        show_labels:
+          type: boolean
+          description: Returns true if form field labels are shown above text boxes.
+        primary_color:
+          type: string
+          description: The tab color for the form.
+        secondary_color:
+          type: string
+          description: The headline color for the form.
+        is_widget_enabled:
+          type: boolean
+          description: Returns true if the form widget is enabled and shown.
+        whitelist:
+          type: array
+          description: An array of URL paths where the form is shown.
+          items:
+            type: string
+        blacklist:
+          type: array
+          description: An array of URL paths where the form is hidden.
+          items:
+            type: string
+        is_whitelist_enabled:
+          type: boolean
+          description: Returns true if whitelisted URLs are set.
+        is_blacklist_enabled:
+          type: boolean
+          description: Returns true if blacklisted URLs are set.
+        hide_on_mobile:
+          type: boolean
+          description: Returns true if the form widget is disabled for mobile devices.
+        is_embeddable:
+          type: boolean
+          description: Deprecated
+          deprecated: true
+        created_at:
+          type: string
+          format: date-time
+          description: A timestamp representing when the form was first created.
+        links:
+          type: object
+          description: An object containing the REST API URL for the account.
+          properties:
+            account:
+              type: string
+              description: The ID of the account the form belongs to.
