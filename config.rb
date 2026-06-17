@@ -1,3 +1,12 @@
+# Ruby 3.0 removed URI.escape, which middleman-core 4.3 still calls when
+# writing build output. Restore it on modern Rubies.
+# (config.rb is instance_eval'd by Middleman, so target ::URI explicitly.)
+unless ::URI.respond_to?(:escape)
+  ::URI.define_singleton_method(:escape) do |value|
+    ::URI::DEFAULT_PARSER.escape(value)
+  end
+end
+
 # Unique header generation
 require './lib/unique_head.rb'
 

@@ -1,0 +1,323 @@
+tags:
+  - name: Events
+    description: Custom events recorded for subscribers in an account.
+
+paths:
+  /{account_id}/events:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    post:
+      operationId: recordEvent
+      tags: [Events]
+      summary: Record an event
+      description: |
+        If you need to create or update a collection of events at once, use the
+        Batch API instead.
+      x-slate:
+        # Published page reuses the subscribers annotation here. Kept for parity.
+        intro: "To create or update a subscriber:"
+        response:
+          intro: "Responds with a `204 No Content` if successful."
+        show-description: true
+        # Carried verbatim: the published table has hand-authored wording
+        # (and a couple of historical typos) the clean schema does not reproduce.
+        arguments: |
+          <table>
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>email</code></td>
+                <td>Optional. The subscriber's email address. Either <code>email</code> or <code>id</code> must be included.</td>
+              </tr>
+              <tr>
+                <td><code>id</code></td>
+                <td>Optional. The subscriber's Drip <code>id</code>. Either <code>email</code> or <code>id</code> must be included.</td>
+              </tr>
+              <tr>
+                <td><code>action</code></td>
+                <td>Required. The name of the action taken. E.g. "Logged in"</td>
+              </tr>
+              <tr>
+                <td><code>prospect</code></td>
+                <td>Optional. A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to <code>true</code>.
+                  <strong>Note:</strong> This flag used to be called <code>potential_lead</code>, which we will continue to accept for backwards compatibility.</td>
+              </tr>
+              <tr>
+                <td><code>properties</code></td>
+                <td>Optional. An Object containing custom event properties. If this event is a conversion, include the value (in cents) in the in the properties with a <code>value</code> key.
+                Conversion values must be less than 2,147,483,647.
+                </td>
+              </tr>
+              <tr>
+                <td><code>occurred_at</code></td>
+                <td>Optional. The String time at which the event occurred in <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a> format. Defaults to the current time.</td>
+              </tr>
+            </tbody>
+          </table>
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [events]
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Event"
+            example:
+              events:
+                - email: john@acme.com
+                  action: Logged in
+                  properties:
+                    affiliate_code: XYZ
+                  occurred_at: "2014-03-22T03:00:00Z"
+      responses:
+        "204":
+          description: No Content. The event was recorded.
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/events" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "events": [{
+                  "email": "john@acme.com",
+                  "action": "Logged in",
+                  "properties": {
+                    "affiliate_code": "XYZ"
+                  },
+                  "occurred_at": "2014-03-22T03:00:00Z"
+                }]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            email = "someone@example.com"
+            action = "Docked with space station"
+            properties = {
+              station: "Mars Endeavor"
+            }
+
+            response = client.track_event(email, action, properties)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const payload = {
+              email: "john@acme.com",
+              action: "Logged in",
+              properties: {
+                affiliate_code: "XYZ"
+              }
+            };
+
+            client.recordEvent(payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/event_actions:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listEventActions
+      tags: [Events]
+      summary: List all custom events actions used in an account
+      x-slate:
+        intro: "To list custom event actions:"
+        response:
+          intro: "The response looks like this:"
+        # Carried verbatim: the published table has a blank line between rows.
+        arguments: |
+          <table>
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>page</code></td>
+                <td>Optional. The page number. Defaults to <code>1</code>.</td>
+              </tr>
+
+              <tr>
+                <td><code>per_page</code></td>
+                <td>Optional. The number of records to be returned on each page. Defaults to <code>100</code>. Maximum <code>1000</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page number. Defaults to `1`.
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          required: false
+          description: >-
+            The number of records to be returned on each page. Defaults to
+            `100`. Maximum `1000`.
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        "200":
+          description: The custom event actions used in the account.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [meta, event_actions]
+                properties:
+                  meta:
+                    type: object
+                    description: Pagination metadata.
+                    properties:
+                      count:
+                        type: integer
+                        description: The number of records on the current page.
+                      page:
+                        type: integer
+                        description: The current page number.
+                      total_count:
+                        type: integer
+                        description: The total number of records.
+                      total_pages:
+                        type: integer
+                        description: The total number of pages.
+                  event_actions:
+                    type: array
+                    description: The list of custom event actions used in the account.
+                    items:
+                      type: string
+              example:
+                meta:
+                  count: 2
+                  page: 1
+                  total_count: 2
+                  total_pages: 1
+                event_actions:
+                  - Ate a sandwich
+                  - Started a trial
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/event_actions" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.event_actions
+
+            if response.success?
+              puts response["event_actions"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const options = { per_page: 200 };
+
+            client.listEventActions(options)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Event:
+      type: object
+      required: [action]
+      properties:
+        email:
+          type: string
+          format: email
+          description: >-
+            Optional. The subscriber's email address. Either `email` or `id`
+            must be included.
+        id:
+          type: string
+          description: >-
+            Optional. The subscriber's Drip `id`. Either `email` or `id` must
+            be included.
+        action:
+          type: string
+          description: Required. The name of the action taken. E.g. "Logged in"
+        prospect:
+          type: boolean
+          default: true
+          description: >-
+            Optional. A Boolean specifiying whether we should attach a lead
+            score to the subscriber (when lead scoring is enabled). Defaults to
+            `true`. **Note:** This flag used to be called `potential_lead`,
+            which we will continue to accept for backwards compatibility.
+        properties:
+          type: object
+          description: >-
+            Optional. An Object containing custom event properties. If this
+            event is a conversion, include the value (in cents) in the
+            properties with a `value` key. Conversion values must be less than
+            2,147,483,647.
+        occurred_at:
+          type: string
+          format: date-time
+          description: >-
+            Optional. The String time at which the event occurred in
+            [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) format. Defaults
+            to the current time.

@@ -1,0 +1,519 @@
+tags:
+  - name: Webhooks
+    description: Webhook subscriptions for event notifications in an account.
+    x-slate:
+      lead: |
+        > Webhooks are represented as follows:
+
+        ```json
+        {
+          "id": "77777",
+          "href": "https://api.getdrip.com/v2/9999999/webhooks/77777",
+          "post_url": "http://www.mysite.com/my-webhook-endpoint",
+          "version": "1",
+          "include_received_email": false,
+          "events": [
+            "subscriber.created",
+            "subscriber.subscribed_to_campaign"
+          ],
+          "created_at": "2013-06-21T10:31:58Z",
+          "links": {
+            "account": "9999999",
+          }
+        }
+        ```
+
+        > All responses containing webhook data also include the following top-level link data:
+
+        ```json
+        {
+          "links": {
+            "webhooks.account": "https://api.getdrip.com/v2/accounts/{webhooks.account}"
+          }
+        }
+        ```
+
+        **Properties**
+
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A read-only Drip generated unique id used to identify each webhook record.</td>
+            </tr>
+            <tr>
+              <td><code>href</code></td>
+              <td>The url designated for retrieving the webhook record via the REST API.</td>
+            </tr>
+            <tr>
+              <td><code>post_url</code></td>
+              <td>The url that the webhook will post to.</td>
+            </tr>
+            <tr>
+              <td><code>version</code></td>
+              <td>The webhook version. The current stable version is 2.</td>
+            </tr>
+            <tr>
+              <td><code>include_received_email</code></td>
+              <td>Returns true if a notification is sent whenever a subscriber receives an email.</td>
+            </tr>
+            <tr>
+              <td><code>created_at</code></td>
+              <td>A timestamp representing when the webhook record was first created.</td>
+            </tr>
+             <tr>
+              <td><code>events</code></td>
+              <td>An array specifying which events are enabled for webhook notifications.</td>
+            </tr>
+             <tr>
+              <td><code>links</code></td>
+              <td>An object containing the REST API URL for the account.</td>
+            </tr>
+          </tbody>
+        </table>
+
+paths:
+  /{account_id}/webhooks:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listWebhooks
+      tags: [Webhooks]
+      summary: List all webhooks
+      x-slate:
+        order: 0
+        intro: "To list all webhooks in an account:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The webhooks property is an array of webhook objects.
+            {
+              "links": { ... },
+              "webhooks": [ ... ]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The webhooks property is an array of webhook objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [webhooks]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing webhook data.
+                  webhooks:
+                    type: array
+                    description: The list of webhooks in the account.
+                    items:
+                      $ref: "#/components/schemas/Webhook"
+              example:
+                links:
+                  webhooks.account: https://api.getdrip.com/v2/accounts/{webhooks.account}
+                webhooks:
+                  - id: "77777"
+                    href: https://api.getdrip.com/v2/9999999/webhooks/77777
+                    post_url: http://www.mysite.com/my-webhook-endpoint
+                    version: "1"
+                    include_received_email: false
+                    events:
+                      - subscriber.created
+                      - subscriber.subscribed_to_campaign
+                    created_at: "2013-06-21T10:31:58Z"
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/webhooks" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.webhooks
+
+            if response.success?
+              puts response.body["webhooks"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+
+            client.listWebhooks()
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    post:
+      operationId: createWebhook
+      tags: [Webhooks]
+      summary: Create a new webhook
+      x-slate:
+        order: 2
+        intro: "To create a webhook:"
+        response:
+          intro: "Responds with a `201 Created` like this:"
+          body: |
+            {
+              "links": { ... },
+              "webhooks": [{
+                "id": "77777",
+                "href": "https://api.getdrip.com/v2/9999999/webhooks/77777",
+                "post_url": "http://www.example.com/api/v2/form",
+                "version": "1",
+                "include_received_email": false,
+                "events": [
+                  "subscriber.created",
+                  "subscriber.subscribed_to_campaign"
+                ],
+                "created_at": "2013-06-21T10:31:58Z",
+                "links": {
+                  "account": "9999999",
+                }
+              }]
+            }
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [webhooks]
+              properties:
+                webhooks:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/NewWebhook"
+            example:
+              webhooks:
+                - post_url: http://www.mysite.com/my-webhook-endpoint
+                  events:
+                    - subscriber.created
+                    - subscriber.subscribed_to_campaign
+      responses:
+        "201":
+          description: Created. The webhooks property is an array of one webhook object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [webhooks]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing webhook data.
+                  webhooks:
+                    type: array
+                    description: An array containing the created webhook.
+                    items:
+                      $ref: "#/components/schemas/Webhook"
+              example:
+                links:
+                  webhooks.account: https://api.getdrip.com/v2/accounts/{webhooks.account}
+                webhooks:
+                  - id: "77777"
+                    href: https://api.getdrip.com/v2/9999999/webhooks/77777
+                    post_url: http://www.example.com/api/v2/form
+                    version: "1"
+                    include_received_email: false
+                    events:
+                      - subscriber.created
+                      - subscriber.subscribed_to_campaign
+                    created_at: "2013-06-21T10:31:58Z"
+                    links:
+                      account: "9999999"
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/webhooks" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "webhooks": [{
+                  "post_url": "http://www.mysite.com/my-webhook-endpoint",
+                  "events": [
+                    "subscriber.created",
+                    "subscriber.subscribed_to_campaign"
+                  ]
+                }]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            pot_url = "https://www.mylistener.com/receieve"
+            include_received_email = false
+            events = [
+              "subscriber.created",
+              "subscriber.subscribed_to_campaign"
+            ]
+
+            response = client.create_webhook(post_url, include_received_email, events)
+
+            if response.success?
+              puts response.body["webhooks"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const payload = {
+              webhooks: [{
+                post_url: "http://www.mysite.com/my-webhook-endpoint",
+                events: [
+                  "subscriber.created",
+                  "subscriber.subscribed_to_campaign"
+                ]
+              }]
+            }
+
+            client.createWebhook(payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/webhooks/{webhook_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: webhook_id
+        in: path
+        required: true
+        description: The ID of the webhook.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchWebhook
+      tags: [Webhooks]
+      summary: Fetch a webhook
+      x-slate:
+        order: 1
+        intro: "To fetch a specific webhook:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The webhooks property is an array of one webhook object.
+            {
+              "links": { ... },
+              "webhooks": [{ ... }]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The webhooks property is an array of one webhook object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [webhooks]
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing webhook data.
+                  webhooks:
+                    type: array
+                    description: An array of one webhook object.
+                    items:
+                      $ref: "#/components/schemas/Webhook"
+              example:
+                links:
+                  webhooks.account: https://api.getdrip.com/v2/accounts/{webhooks.account}
+                webhooks:
+                  - id: "77777"
+                    href: https://api.getdrip.com/v2/9999999/webhooks/77777
+                    post_url: http://www.mysite.com/my-webhook-endpoint
+                    version: "1"
+                    include_received_email: false
+                    events:
+                      - subscriber.created
+                      - subscriber.subscribed_to_campaign
+                    created_at: "2013-06-21T10:31:58Z"
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/webhooks/WEBHOOK_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            webhook_id = 999999
+            response = client.webhook(webhook_id)
+
+            if response.success?
+              puts response.body["webhooks"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const webhookId = 111222;
+
+            client.fetchWebhook(webhookId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    delete:
+      operationId: destroyWebhook
+      tags: [Webhooks]
+      summary: Destroy a webhook
+      x-slate:
+        order: 3
+        intro: "To destroy an existing webhook:"
+        response:
+          intro: "Responds with a `204 No Content` if successful."
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The webhook was destroyed.
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X DELETE "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/webhooks/WEBHOOK_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            webhook_id = 999999
+            response = client.delete_webhook(webhook_id)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const webhookId = 111222;
+
+            client.destroyWebhook(webhookId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each webhook record.
+        href:
+          type: string
+          description: The url designated for retrieving the webhook record via the REST API.
+        post_url:
+          type: string
+          description: The url that the webhook will post to.
+        version:
+          type: string
+          description: The webhook version. The current stable version is 2.
+        include_received_email:
+          type: boolean
+          description: Returns true if a notification is sent whenever a subscriber receives an email.
+        events:
+          type: array
+          description: An array specifying which events are enabled for webhook notifications.
+          items:
+            type: string
+        created_at:
+          type: string
+          description: A timestamp representing when the webhook record was first created.
+        links:
+          type: object
+          description: An object containing the REST API URL for the account.
+
+    NewWebhook:
+      type: object
+      required: [post_url]
+      properties:
+        post_url:
+          type: string
+          description: The url that the webhook will post to.
+        include_received_email:
+          type: boolean
+          description: Optional. A Boolean specifying whether we should send a notification whenever a subscriber receives an email. Defaults to `false`.
+        events:
+          type: array
+          description: Optional. An Array specifiying which events we should send notifications for. Eligible events can be found in the [webhooks documentation](#webhook-events). By default, we will send notifications for all events except `subscrber.received_email`.
+          items:
+            type: string

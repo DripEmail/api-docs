@@ -1,0 +1,13 @@
+apis:
+  rest-v2:
+    root: spec/rest-v2.yaml
+
+# Redoc is the default OpenAPI renderer for the spec. Preview locally with:
+#   npx @redocly/cli preview-docs spec/rest-v2.yaml
+# Bundle a single self-contained file with:
+#   npx @redocly/cli bundle spec/rest-v2.yaml -o build/openapi/rest-v2.yaml
+# Code-sample tabs (cURL / Ruby / JavaScript) come from each operation's
+# `x-codeSamples` entries in spec/fragments/.
+
+rules:
+  info-license: off # internal API reference; no license block needed

@@ -1,51 +1,5 @@
 # Single-Email Campaigns <br/>(aka Broadcasts)
 
-Single-Email Campaigns (Broadcasts) are one-time emails sent to a segment of your subscribers.
-The API allows you to list, fetch, create, update, and delete Single-Email Campaigns, as well as
-send test emails.
-
-A Single-Email Campaign's `status` is read-only via the API and is managed through the Drip UI.
-Possible statuses are:
-
-<table>
-  <thead>
-    <tr>
-      <th>Status</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>draft</code></td>
-      <td>Not yet scheduled. Drafts are the only Single-Email Campaigns that can be edited via the API.</td>
-    </tr>
-    <tr>
-      <td><code>scheduled</code></td>
-      <td>Scheduled for a future send. Read-only.</td>
-    </tr>
-    <tr>
-      <td><code>sending</code></td>
-      <td>Currently being sent. Read-only and cannot be deleted.</td>
-    </tr>
-    <tr>
-      <td><code>sent</code></td>
-      <td>Completed. Read-only.</td>
-    </tr>
-    <tr>
-      <td><code>canceled</code></td>
-      <td>Canceled before sending. Read-only.</td>
-    </tr>
-    <tr>
-      <td><code>deleted</code></td>
-      <td>Deleted. Hidden from default listings.</td>
-    </tr>
-  </tbody>
-</table>
-
-Scheduling (`send_at`, `localize_sending_time`) and recipient segmentation
-are managed through the Drip UI only. These fields are returned as read-only values in API
-responses and cannot be set via the API.
-
 > Single-Email Campaigns are represented as follows:
 
 ```json
@@ -76,7 +30,7 @@ responses and cannot be set via the API.
 ```json
 {
   "links": {
-    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}",
+    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
   }
 }
 ```
@@ -97,7 +51,7 @@ responses and cannot be set via the API.
     </tr>
     <tr>
       <td><code>status</code></td>
-      <td>Returns whether the Single-Email Campaign is draft, canceled, scheduled, sent or sending.</td>
+      <td>Returns whether the Single-Email Campaign is draft, canceled, scheduled, sent or sending. Read-only via the API and managed through the Drip UI. Drafts are the only Single-Email Campaigns that can be edited via the API; <code>sending</code> campaigns cannot be deleted; <code>deleted</code> campaigns are hidden from default listings.</td>
     </tr>
     <tr>
       <td><code>name</code></td>
@@ -113,7 +67,7 @@ responses and cannot be set via the API.
     </tr>
     <tr>
       <td><code>postal_address</code></td>
-      <td>As required by the <a href="http://1.usa.gov/YgrzFP" target="_blank">CAN-SPAM Act</a>, this is a postal address used for all sent emails and can be changed on a per email basis.</td>
+      <td>As required by the <a href="http://1.usa.gov/YgrzFP">CAN-SPAM Act</a>, this is a postal address used for all sent emails and can be changed on a per email basis.</td>
     </tr>
     <tr>
       <td><code>localize_sending_time</code></td>
@@ -133,7 +87,7 @@ responses and cannot be set via the API.
     </tr>
     <tr>
       <td><code>href</code></td>
-      <td>The url designated for retrieving the account record via the REST API.</td>
+      <td>The url designated for retrieving the record via the REST API.</td>
     </tr>
     <tr>
       <td><code>preview_url</code></td>
@@ -246,9 +200,10 @@ client.listBroadcasts(options)
 > The response looks like this:
 
 ```json
-# The broadcasts property is an array of broadcast objects.
 {
-  "links": { ... },
+  "links": {
+    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+  },
   "meta": {
     "page": 1,
     "sort": "created_at",
@@ -258,7 +213,28 @@ client.listBroadcasts(options)
     "total_count": 5,
     "status": "all"
   },
-  "broadcasts": [ ... ]
+  "broadcasts": [
+    {
+      "id": "123456",
+      "status": "sent",
+      "name": "4 Marketing Automation Trends for 2015",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "localize_sending_time": true,
+      "send_at": "2015-07-01T10:00:00Z",
+      "bcc": null,
+      "created_at": "2015-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/broadcast/123456",
+      "preview_url": "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7",
+      "subject": "4 Marketing Automation Trends for 2015",
+      "html_body": "HTML body",
+      "text_body": "Text body",
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
@@ -278,23 +254,23 @@ client.listBroadcasts(options)
   <tbody>
     <tr>
       <td><code>page</code></td>
-      <td>Optional. The page number (1-indexed). Defaults to <code>1</code>.</td>
+      <td>The page number (1-indexed). Defaults to <code>1</code>.</td>
     </tr>
     <tr>
       <td><code>per_page</code></td>
-      <td>Optional. The number of results per page, up to a maximum of <code>100</code>. Defaults to <code>100</code>.</td>
+      <td>The number of results per page, up to a maximum of <code>100</code>. Defaults to <code>100</code>.</td>
     </tr>
     <tr>
       <td><code>status</code></td>
-      <td>Optional. Filter by one of the following statuses: <code>draft</code>, <code>scheduled</code>, <code>sending</code>, <code>sent</code>, <code>canceled</code>, <code>deleted</code>, or <code>all</code>. By default, deleted Single-Email Campaigns are excluded; use <code>status=deleted</code> or <code>status=all</code> to include them.</td>
+      <td>Filter by one of the following statuses: <code>draft</code>, <code>scheduled</code>, <code>sending</code>, <code>sent</code>, <code>canceled</code>, <code>deleted</code>, or <code>all</code>. By default, deleted Single-Email Campaigns are excluded; use <code>status=deleted</code> or <code>status=all</code> to include them.</td>
     </tr>
     <tr>
       <td><code>sort</code></td>
-      <td>Optional. Sort results by one of these fields: <code>created_at</code>, <code>updated_at</code>, <code>send_at</code>, or <code>name</code>. Defaults to <code>created_at</code>.</td>
+      <td>Sort results by one of these fields: <code>created_at</code>, <code>updated_at</code>, <code>send_at</code>, or <code>name</code>. Defaults to <code>created_at</code>.</td>
     </tr>
     <tr>
       <td><code>direction</code></td>
-      <td>Optional. Filter sort direction with: <code>asc</code> or <code>desc</code>. Defaults to <code>asc</code>.</td>
+      <td>Filter sort direction with: <code>asc</code> or <code>desc</code>. Defaults to <code>asc</code>.</td>
     </tr>
   </tbody>
 </table>
@@ -400,30 +376,53 @@ const response = await fetch(
 const body = await response.json();
 ```
 
-> Responds with a <code>201 Created</code> and the new Single-Email Campaign if successful.
-> The <code>Location</code> header contains the URL of the created record:
+> Responds with a `201 Created` and the new Single-Email Campaign if successful. The `Location` header contains the URL of the created record:
 
 ```json
 {
-  "links": { ... },
-  "broadcasts": [{ ... }]
+  "links": {
+    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+  },
+  "broadcasts": [
+    {
+      "id": "123456",
+      "status": "draft",
+      "name": "4 Marketing Automation Trends for 2015",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "localize_sending_time": true,
+      "send_at": "2015-07-01T10:00:00Z",
+      "bcc": null,
+      "created_at": "2015-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/broadcast/123456",
+      "preview_url": "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7",
+      "subject": "4 Marketing Automation Trends for 2015",
+      "html_body": "HTML body",
+      "text_body": "Text body",
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
-> If the request is invalid, responds with a <code>422 Unprocessable Entity</code>:
+> If the request is invalid, responds with a `422 Unprocessable Entity`:
 
 ```json
 {
-  "errors": [{
-    "code": "validation_error",
-    "attribute": "subject",
-    "message": "Subject is required"
-  }]
+  "errors": [
+    {
+      "code": "presence_error",
+      "attribute": "email",
+      "message": "Email is required"
+    }
+  ]
 }
 ```
 
-Single-Email Campaigns created via the API start in the `draft` status. Scheduling and
-sending are then managed through the Drip UI.
+Single-Email Campaigns created via the API start in the `draft` status. Scheduling and sending are then managed through the Drip UI.
 
 ### HTTP Endpoint
 
@@ -441,23 +440,23 @@ sending are then managed through the Drip UI.
   <tbody>
     <tr>
       <td><code>name</code></td>
-      <td>Required. The private name given to the Single-Email Campaign (255 characters maximum).</td>
+      <td>The private name given to the Single-Email Campaign (255 characters maximum).</td>
     </tr>
     <tr>
       <td><code>subject</code></td>
-      <td>Required. The email subject line. Supports Liquid templating.</td>
+      <td>The email subject line. Supports Liquid templating.</td>
     </tr>
     <tr>
       <td><code>content</code></td>
-      <td>Required. An <a href="#email-content">Email Content</a> object. At minimum, include an <code>html</code> key. Optionally include a <code>text</code> key for the plain text version; if omitted, the plain text version is generated from the HTML.</td>
+      <td>An Email Content object. At minimum, include an <code>html</code> key. Optionally include a <code>text</code> key for the plain text version; if omitted, the plain text version is generated from the HTML.</td>
     </tr>
     <tr>
       <td><code>preheader</code></td>
-      <td>Optional. Preview text shown in email clients before the email is opened. Supports Liquid templating.</td>
+      <td>Preview text shown in email clients before the email is opened. Supports Liquid templating.</td>
     </tr>
     <tr>
       <td><code>postal_address</code></td>
-      <td>Optional. A physical mailing address for CAN-SPAM compliance. Defaults to the account's postal address.</td>
+      <td>A physical mailing address for CAN-SPAM compliance. Defaults to the account's postal address.</td>
     </tr>
   </tbody>
 </table>
@@ -507,10 +506,32 @@ client.fetchBroadcast(broadcastId)
 > The response looks like this:
 
 ```json
-# The broadcasts property is an array of one broadcast object.
 {
-  "links": { ... },
-  "broadcasts": [{ ... }]
+  "links": {
+    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+  },
+  "broadcasts": [
+    {
+      "id": "123456",
+      "status": "sent",
+      "name": "4 Marketing Automation Trends for 2015",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "localize_sending_time": true,
+      "send_at": "2015-07-01T10:00:00Z",
+      "bcc": null,
+      "created_at": "2015-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/broadcast/123456",
+      "preview_url": "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7",
+      "subject": "4 Marketing Automation Trends for 2015",
+      "html_body": "HTML body",
+      "text_body": "Text body",
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
@@ -605,31 +626,52 @@ const response = await fetch(
 const body = await response.json();
 ```
 
-> Responds with a <code>200 OK</code> and the updated Single-Email Campaign if successful:
+> Responds with a `200 OK` and the updated Single-Email Campaign if successful:
 
 ```json
 {
-  "links": { ... },
-  "broadcasts": [{ ... }]
+  "links": {
+    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+  },
+  "broadcasts": [
+    {
+      "id": "123456",
+      "status": "draft",
+      "name": "4 Marketing Automation Trends for 2015",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "localize_sending_time": true,
+      "send_at": "2015-07-01T10:00:00Z",
+      "bcc": null,
+      "created_at": "2015-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/broadcast/123456",
+      "preview_url": "https://www.getdrip.com/broadcasts/123456/2d83a64861f23b1c35a3b8d6ee3b54f7",
+      "subject": "Updated: December Newsletter!",
+      "html_body": "HTML body",
+      "text_body": "Text body",
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
-> If the Single-Email Campaign is not a draft, responds with a <code>409 Conflict</code>:
+> If the Single-Email Campaign is not a draft, responds with a `409 Conflict`:
 
 ```json
 {
-  "errors": [{
-    "code": "conflict_error",
-    "message": "Cannot update a broadcast with status 'sent'"
-  }]
+  "errors": [
+    {
+      "code": "conflict_error",
+      "message": "Cannot update a broadcast with status 'sent'"
+    }
+  ]
 }
 ```
 
-Only Single-Email Campaigns in the `draft` status can be updated via the API; all other
-statuses are read-only. Updates are partial: only the fields you include are changed.
-
-Status, scheduling (`send_at`, `localize_sending_time`), and recipient segmentation cannot
-be updated via the API — they are managed through the Drip UI.
+Only Single-Email Campaigns in the `draft` status can be updated via the API; all other statuses are read-only. Updates are partial: only the fields you include are changed. Status, scheduling (`send_at`, `localize_sending_time`), and recipient segmentation cannot be updated via the API — they are managed through the Drip UI.
 
 ### HTTP Endpoint
 
@@ -647,23 +689,23 @@ be updated via the API — they are managed through the Drip UI.
   <tbody>
     <tr>
       <td><code>name</code></td>
-      <td>Optional. The private name given to the Single-Email Campaign.</td>
+      <td>The private name given to the Single-Email Campaign.</td>
     </tr>
     <tr>
       <td><code>subject</code></td>
-      <td>Optional. The email subject line. Supports Liquid templating.</td>
+      <td>The email subject line. Supports Liquid templating.</td>
     </tr>
     <tr>
       <td><code>content</code></td>
-      <td>Optional. An <a href="#email-content">Email Content</a> object with <code>html</code> and/or <code>text</code> keys.</td>
+      <td>An Email Content object with <code>html</code> and/or <code>text</code> keys.</td>
     </tr>
     <tr>
       <td><code>preheader</code></td>
-      <td>Optional. Preview text shown in email clients before the email is opened. Supports Liquid templating.</td>
+      <td>Preview text shown in email clients before the email is opened. Supports Liquid templating.</td>
     </tr>
     <tr>
       <td><code>postal_address</code></td>
-      <td>Optional. A physical mailing address for CAN-SPAM compliance.</td>
+      <td>A physical mailing address for CAN-SPAM compliance.</td>
     </tr>
   </tbody>
 </table>
@@ -710,29 +752,52 @@ const response = await fetch(
 const body = await response.json();
 ```
 
-> Responds with a <code>200 OK</code> and the Single-Email Campaign in the <code>deleted</code> status:
+> Responds with a `200 OK` and the Single-Email Campaign in the `deleted` status:
 
 ```json
 {
-  "links": { ... },
-  "broadcasts": [{ ... }]
+  "links": {
+    "broadcasts.account": "https://api.getdrip.com/v2/accounts/{broadcasts.account}"
+  },
+  "broadcasts": [
+    {
+      "id": "123456",
+      "status": "deleted",
+      "name": "4 Marketing Automation Trends for 2015",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "localize_sending_time": true,
+      "send_at": "2015-07-01T10:00:00Z",
+      "bcc": null,
+      "created_at": "2015-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/broadcast/123456",
+      "preview_url": null,
+      "subject": "4 Marketing Automation Trends for 2015",
+      "html_body": "HTML body",
+      "text_body": "Text body",
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
-> If the Single-Email Campaign is currently sending, responds with a <code>409 Conflict</code>:
+> If the Single-Email Campaign is currently sending, responds with a `409 Conflict`:
 
 ```json
 {
-  "errors": [{
-    "code": "conflict_error",
-    "message": "Cannot delete a broadcast that is currently sending"
-  }]
+  "errors": [
+    {
+      "code": "conflict_error",
+      "message": "Cannot delete a broadcast that is currently sending"
+    }
+  ]
 }
 ```
 
-Deleting is a soft delete: the Single-Email Campaign transitions to the `deleted` status and
-is hidden from default listings, but historical data is preserved. Single-Email Campaigns in
-the `sending` status cannot be deleted.
+Deleting is a soft delete: the Single-Email Campaign transitions to the `deleted` status and is hidden from default listings, but historical data is preserved. Single-Email Campaigns in the `sending` status cannot be deleted.
 
 ### HTTP Endpoint
 
@@ -801,29 +866,32 @@ const response = await fetch(
 // 204 No Content on success
 ```
 
-> Responds with a <code>204 No Content</code> if successful.
+> Responds with a `204 No Content` if successful.
 
-> If a recipient is not allowed, responds with a <code>422 Unprocessable Entity</code>:
+> If a recipient is not allowed, responds with a `422 Unprocessable Entity`:
 
 ```json
 {
-  "errors": [{
-    "code": "validation_error",
-    "attribute": "to_emails",
-    "message": "test@unknown-domain.com is not a verified domain or active account member"
-  }]
+  "errors": [
+    {
+      "code": "validation_error",
+      "attribute": "to_emails",
+      "message": "test@unknown-domain.com is not a verified domain or active account member"
+    }
+  ]
 }
 ```
 
-> If a rate limit is exceeded, responds with a <code>429 Too Many Requests</code> and a
-> <code>Retry-After</code> header indicating when the limit resets:
+> If a rate limit is exceeded, responds with a `429 Too Many Requests` and a `Retry-After` header indicating when the limit resets:
 
 ```json
 {
-  "errors": [{
-    "code": "rate_limit_error",
-    "message": "Hourly test email limit exceeded. Maximum 20 requests per hour."
-  }]
+  "errors": [
+    {
+      "code": "rate_limit_error",
+      "message": "Hourly test email limit exceeded. Maximum 20 requests per hour."
+    }
+  ]
 }
 ```
 
@@ -886,11 +954,11 @@ Rate limits are applied per user.
   <tbody>
     <tr>
       <td><code>to_emails</code></td>
-      <td>Required. An array of 1 to 5 email addresses to send the test to. See recipient validation above.</td>
+      <td>An array of 1 to 5 email addresses to send the test to. See recipient validation above.</td>
     </tr>
     <tr>
       <td><code>preview_as</code></td>
-      <td>Optional. The email address of an existing subscriber to use for Liquid template rendering. The test email is personalized as if sent to this subscriber, using their custom fields and tags. If omitted, Liquid variables use placeholder values.</td>
+      <td>The email address of an existing subscriber to use for Liquid template rendering. The test email is personalized as if sent to this subscriber, using their custom fields and tags. If omitted, Liquid variables use placeholder values.</td>
     </tr>
   </tbody>
 </table>

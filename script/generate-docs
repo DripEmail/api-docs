@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Generate Slate markdown partials from the OpenAPI resource fragments.
+#
+#   script/generate-docs            # regenerate every fragment
+#   script/generate-docs tags users # regenerate only the named resources
+#
+# Each spec/fragments/<resource>.yaml renders to
+# source/includes/rest/_<resource>.md.
+
+require_relative "../lib/openapi_slate"
+
+ROOT = File.expand_path("..", __dir__)
+FRAGMENTS = File.join(ROOT, "spec", "fragments")
+OUT_DIR = File.join(ROOT, "source", "includes", "rest")
+
+selected = ARGV.map { |a| File.basename(a, ".*").sub(/\A_/, "") }
+
+fragments = Dir.children(FRAGMENTS).grep(/\.ya?ml\z/).map { |f| File.basename(f, ".*") }.sort
+fragments &= selected unless selected.empty?
+
+if fragments.empty?
+  warn "No matching fragments in #{FRAGMENTS}"
+  exit 1
+end
+
+fragments.each do |name|
+  source = File.join(FRAGMENTS, "#{name}.yaml")
+  target = File.join(OUT_DIR, "_#{name}.md")
+  File.write(target, OpenapiSlate.render_file(source))
+  puts "generated #{File.basename(target)}"
+end

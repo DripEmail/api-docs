@@ -28,7 +28,9 @@
   "href": "https://api.getdrip.com/v2/9999999/campaigns/123456",
   "links": {
     "account": "9999999",
-    "forms": ["888"]
+    "forms": [
+      "888"
+    ]
   }
 }
 ```
@@ -77,7 +79,7 @@
     </tr>
     <tr>
       <td><code>postal_address</code></td>
-      <td>As required by the <a href="http://1.usa.gov/YgrzFP" target="_blank">CAN-SPAM Act</a>, this is a postal address used for all sent emails.</td>
+      <td>As required by the <a href="http://1.usa.gov/YgrzFP">CAN-SPAM Act</a>, this is a postal address used for all sent emails.</td>
     </tr>
     <tr>
       <td><code>minutes_from_midnight</code></td>
@@ -108,7 +110,7 @@
       <td>Deprecated</td>
     </tr>
     <tr>
-      <td><code>post_confirmation_url</code></td>
+      <td><code>confirmation_url</code></td>
       <td>Deprecated</td>
     </tr>
     <tr>
@@ -146,10 +148,6 @@
     <tr>
       <td><code>links</code></td>
       <td>An object containing the REST API URL for the account, any associated Email Series Campaign forms and subscribers subscribed to the Email Series Campaign.</td>
-    </tr>
-    <tr>
-      <td><code>forms</code></td>
-      <td>An object containing the associated form created for the Email Series Campaign. This is only populated if a form is created for the Email Series Campaign. <a href="#forms">Refer to Forms</a> for an overview of the properties returned here.</td>
     </tr>
   </tbody>
 </table>
@@ -197,9 +195,12 @@ client.listCampaigns(options)
 > The response looks like this:
 
 ```json
-# The campaigns property is an array of campaign objects.
 {
-  "links": { ... },
+  "links": {
+    "campaigns.account": "https://api.getdrip.com/v2/accounts/{campaigns.account}",
+    "campaigns.form": "https://api.getdrip.com/v2/{campaigns.account}/forms/{campaigns.forms}",
+    "campaigns.subscribers": "https://api.getdrip.com/v2/{campaigns.account}/campaigns/{campaigns.id}/subscribers"
+  },
   "meta": {
     "page": 1,
     "sort": "created_at",
@@ -209,7 +210,38 @@ client.listCampaigns(options)
     "total_count": 5,
     "status": "all"
   },
-  "campaigns": [ ... ]
+  "campaigns": [
+    {
+      "id": "123456",
+      "status": "active",
+      "name": "SEO Email Course",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "minutes_from_midnight": 440,
+      "localize_sending_time": true,
+      "days_of_the_week_mask": "0111110",
+      "start_immediately": true,
+      "double_optin": true,
+      "send_to_confirmation_page": false,
+      "use_custom_confirmation_page": false,
+      "confirmation_url": null,
+      "notify_subscribe_email": "derrick@getdrip.com",
+      "notify_unsubscribe_email": "derrick@getdrip.com",
+      "bcc": null,
+      "email_count": 10,
+      "active_subscriber_count": 320,
+      "unsubscribed_subscriber_count": 5,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/campaigns/123456",
+      "links": {
+        "account": "9999999",
+        "forms": [
+          "888"
+        ]
+      }
+    }
+  ]
 }
 ```
 
@@ -286,13 +318,46 @@ client.fetchCampaign(campaignId)
 > The response looks like this:
 
 ```json
-# The campaigns property is an array of campaign objects.
-# The forms property is an array of forms that feed directly into to the campaign.
 {
-  "links": { ... },
-  "campaigns": [{ ... }],
+  "links": {
+    "campaigns.account": "https://api.getdrip.com/v2/accounts/{campaigns.account}",
+    "campaigns.form": "https://api.getdrip.com/v2/{campaigns.account}/forms/{campaigns.forms}",
+    "campaigns.subscribers": "https://api.getdrip.com/v2/{campaigns.account}/campaigns/{campaigns.id}/subscribers"
+  },
+  "campaigns": [
+    {
+      "id": "123456",
+      "status": "active",
+      "name": "SEO Email Course",
+      "from_name": "John Doe",
+      "from_email": "john@example.com",
+      "postal_address": "123 Anywhere St\nFresno, CA 99999",
+      "minutes_from_midnight": 440,
+      "localize_sending_time": true,
+      "days_of_the_week_mask": "0111110",
+      "start_immediately": true,
+      "double_optin": true,
+      "send_to_confirmation_page": false,
+      "use_custom_confirmation_page": false,
+      "confirmation_url": null,
+      "notify_subscribe_email": "derrick@getdrip.com",
+      "notify_unsubscribe_email": "derrick@getdrip.com",
+      "bcc": null,
+      "email_count": 10,
+      "active_subscriber_count": 320,
+      "unsubscribed_subscriber_count": 5,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/campaigns/123456",
+      "links": {
+        "account": "9999999",
+        "forms": [
+          "888"
+        ]
+      }
+    }
+  ],
   "linked": {
-    "forms": [{ ... }]
+    "forms": []
   }
 }
 ```
@@ -451,9 +516,8 @@ client.listAllSubscribesToCampaign(campaignId)
 > The response looks like this:
 
 ```json
-# The subscribers property is an array of subscriber objects.
 {
-  "links": { ... },
+  "links": {},
   "meta": {
     "page": 1,
     "direction": "desc",
@@ -461,7 +525,7 @@ client.listAllSubscribesToCampaign(campaignId)
     "total_pages": 1,
     "total_count": 20
   },
-  "subscribers": [ ... ]
+  "subscribers": []
 }
 ```
 
@@ -574,10 +638,11 @@ client.subscribeToCampaign(campaignId, payload)
 > The response looks like this:
 
 ```json
-# The subscribers property is an array of one object.
 {
-  "links": { ... },
-  "subscribers": [{ ... }]
+  "links": {},
+  "subscribers": [
+    {}
+  ]
 }
 ```
 
@@ -629,8 +694,7 @@ client.subscribeToCampaign(campaignId, payload)
     </tr>
     <tr>
       <td><code>prospect</code></td>
-      <td>Optional. A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to <code>true</code>.
-        <strong>Note:</strong> This flag used to be called <code>potential_lead</code>, which we will continue to accept for backwards compatibility.</td>
+      <td>Optional. A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to <code>true</code>. **Note:** This flag used to be called <code>potential_lead</code>, which we will continue to accept for backwards compatibility.</td>
     </tr>
     <tr>
       <td><code>base_lead_score</code></td>
@@ -693,7 +757,6 @@ client.subscriberCampaignSubscriptions(subscriberId)
 > The response looks like this:
 
 ```json
-# The Email Series Campaign subscriptions property is an array of campaign subscription objects.
 {
   "links": {
     "campaign_subscriptions.account": "https://api.getdrip.com/v2/accounts/{campaign_subscriptions.account}",
@@ -705,25 +768,27 @@ client.subscriberCampaignSubscriptions(subscriberId)
     "total_pages": 1,
     "total_count": 5
   },
-  "campaign_subscriptions": [{
-    "id": "123456",
-    "campaign_id": "999999",
-    "status": "active",
-    "is_complete": false,
-    "lap": 1,
-    "last_sent_email_index": 0,
-    "last_sent_email_at": "2016-03-25T11:00:00Z",
-    "links": {
-      "account": "9999999",
-      "subscriber": "z1togz2hcjrkpp5treip"
+  "campaign_subscriptions": [
+    {
+      "id": "123456",
+      "campaign_id": "999999",
+      "status": "active",
+      "is_complete": false,
+      "lap": 1,
+      "last_sent_email_index": 0,
+      "last_sent_email_at": "2016-03-25T11:00:00Z",
+      "links": {
+        "account": "9999999",
+        "subscriber": "z1togz2hcjrkpp5treip"
+      }
     }
-  }]
+  ]
 }
 ```
 
 ### HTTP Endpoint
 
-`GET /v2/:account_id/subscribers/:subscriber_id/campaign_subscriptions`
+`GET /v2/:account_id/subscribers/:subscriber_id/campaign_subscription`
 
 ### Arguments
 

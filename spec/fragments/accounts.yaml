@@ -1,0 +1,323 @@
+tags:
+  - name: Accounts
+    description: The Drip accounts the authenticated user has access to.
+    x-slate:
+      lead: |
+        > Accounts are represented as follows:
+
+        ```json
+        {
+          "id": "9999999",
+          "name": "Acme, Inc.",
+          "url": "www.acme.com",
+          "default_from_name": "John Doe",
+          "default_from_email": "john@acme.com",
+          "default_postal_address": "123 Anywhere St\nFresno, CA 99999",
+          "primary_email": "john@acme.com",
+          "enable_third_party_cookies": false,
+          "phone_number": "999-999-9999",
+          "created_at": "2013-06-21T10:31:58Z",
+          "href": "https://api.getdrip.com/v2/accounts/9999999"
+        }
+        ```
+
+        > All responses containing account data also include the following top-level link data:
+
+        ```json
+        {
+          "links": {
+            "accounts.broadcasts": "https://api.getdrip.com/v2/{accounts.id}/broadcasts",
+            "accounts.campaigns": "https://api.getdrip.com/v2/{accounts.id}/campaigns",
+            "accounts.goals": "https://api.getdrip.com/v2/{accounts.id}/goals"
+          }
+        }
+        ```
+
+        **Properties**
+
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A read-only Drip generated unique id used to identify each subscriber record.</td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>The name assigned to each account. Defaults to the account's website URL.</td>
+            </tr>
+            <tr>
+              <td><code>url</code></td>
+              <td>The account's website URL.</td>
+            </tr>
+            <tr>
+              <td><code>default_from_name</code></td>
+              <td>A default "from name" that appears in your sent emails and can be changed on a per email basis.</td>
+            </tr>
+            <tr>
+              <td><code>default_from_email</code></td>
+              <td>A default "from email" that appears in your sent emails and can be changed on a per email basis.</td>
+            </tr>
+            <tr>
+              <td><code>default_postal_address</code></td>
+              <td>As required by the <a href="http://1.usa.gov/YgrzFP" target="_blank">CAN-SPAM Act</a>, this is a default postal address used for all sent emails and can be changed on a per email basis.</td>
+            </tr>
+            <tr>
+              <td><code>primary_email</code></td>
+              <td>The account owner's email address.</td>
+            </tr>
+            <tr>
+              <td><code>enable_third_party_cookies</code></td>
+              <td>When enabled allows tracking visitors across multiple domains (e.g. you use a shopping cart system hosted on a different site).</td>
+            </tr>
+            <tr>
+              <td><code>phone_number</code></td>
+              <td>The account's primary contact number.</td>
+            </tr>
+            <tr>
+              <td><code>created_at</code></td>
+              <td>A read-only Drip generated timestamp for when the account was first created.</td>
+            </tr>
+            <tr>
+              <td><code>href</code></td>
+              <td>The url designated for retrieving the account record via the REST API.</td>
+            </tr>
+            <tr>
+              <td><code>links</code></td>
+              <td>An object containing URLs for campaign and conversion resources. Note, conversions are represented as "Goals".</td>
+            </tr>
+          </tbody>
+        </table>
+paths:
+  /accounts:
+    get:
+      operationId: listAccounts
+      tags: [Accounts]
+      summary: List all accounts
+      x-slate:
+        intro: "To list all accounts the authenticated user has access to:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The accounts property is an array of account objects.
+            {
+              "links": { ... },
+              "accounts": [ ... ]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: All accounts the authenticated user has access to. The `accounts` property is an array of account objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [links, accounts]
+                properties:
+                  links:
+                    type: object
+                    description: An object containing URLs for campaign and conversion resources. Note, conversions are represented as "Goals".
+                  accounts:
+                    type: array
+                    description: An array of account objects.
+                    items:
+                      $ref: "#/components/schemas/Account"
+              example:
+                links:
+                  accounts.broadcasts: "https://api.getdrip.com/v2/{accounts.id}/broadcasts"
+                  accounts.campaigns: "https://api.getdrip.com/v2/{accounts.id}/campaigns"
+                  accounts.goals: "https://api.getdrip.com/v2/{accounts.id}/goals"
+                accounts:
+                  - id: "9999999"
+                    name: "Acme, Inc."
+                    url: www.acme.com
+                    default_from_name: John Doe
+                    default_from_email: john@acme.com
+                    default_postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    primary_email: john@acme.com
+                    enable_third_party_cookies: false
+                    phone_number: 999-999-9999
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: https://api.getdrip.com/v2/accounts/9999999
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/accounts" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.accounts
+
+            if response.success?
+              puts response.body["accounts"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+
+            client.listAccounts()
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /accounts/{account_id}:
+    parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: The ID of the account to fetch.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchAccount
+      tags: [Accounts]
+      summary: Fetch an account
+      x-slate:
+        intro: "To fetch a specific account:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The accounts property is an array of one account object.
+            {
+              "links": { ... },
+              "accounts": [{ ... }]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The requested account. The `accounts` property is an array of one account object.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [links, accounts]
+                properties:
+                  links:
+                    type: object
+                    description: An object containing URLs for campaign and conversion resources. Note, conversions are represented as "Goals".
+                  accounts:
+                    type: array
+                    description: An array of one account object.
+                    items:
+                      $ref: "#/components/schemas/Account"
+              example:
+                links:
+                  accounts.broadcasts: "https://api.getdrip.com/v2/{accounts.id}/broadcasts"
+                  accounts.campaigns: "https://api.getdrip.com/v2/{accounts.id}/campaigns"
+                  accounts.goals: "https://api.getdrip.com/v2/{accounts.id}/goals"
+                accounts:
+                  - id: "9999999"
+                    name: "Acme, Inc."
+                    url: www.acme.com
+                    default_from_name: John Doe
+                    default_from_email: john@acme.com
+                    default_postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    primary_email: john@acme.com
+                    enable_third_party_cookies: false
+                    phone_number: 999-999-9999
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: https://api.getdrip.com/v2/accounts/9999999
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/accounts/ACCOUNT_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            account_id = 9999999
+            response = client.account(account_id)
+
+            if response.success?
+              puts response.body
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+
+            client.fetchAccount(accountId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each subscriber record.
+        name:
+          type: string
+          description: The name assigned to each account. Defaults to the account's website URL.
+        url:
+          type: string
+          description: The account's website URL.
+        default_from_name:
+          type: string
+          description: A default "from name" that appears in your sent emails and can be changed on a per email basis.
+        default_from_email:
+          type: string
+          format: email
+          description: A default "from email" that appears in your sent emails and can be changed on a per email basis.
+        default_postal_address:
+          type: string
+          description: As required by the [CAN-SPAM Act](http://1.usa.gov/YgrzFP), this is a default postal address used for all sent emails and can be changed on a per email basis.
+        primary_email:
+          type: string
+          format: email
+          description: The account owner's email address.
+        enable_third_party_cookies:
+          type: boolean
+          description: When enabled allows tracking visitors across multiple domains (e.g. you use a shopping cart system hosted on a different site).
+        phone_number:
+          type: string
+          description: The account's primary contact number.
+        created_at:
+          type: string
+          format: date-time
+          description: A read-only Drip generated timestamp for when the account was first created.
+        href:
+          type: string
+          description: The url designated for retrieving the account record via the REST API.

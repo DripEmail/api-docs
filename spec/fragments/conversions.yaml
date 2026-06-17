@@ -1,0 +1,358 @@
+tags:
+  - name: Conversions
+    description: Conversion goals tracked in an account. See the Events API for recording conversion events.
+    x-slate:
+      lead: |
+        > Conversions are represented as follows:
+
+        ```json
+        {
+          "id": "99999",
+          "status": "active",
+          "name": "Trial Signup",
+          "url": "/receipt",
+          "default_value": 2000,
+          "counting_method": "one_per_visitor",
+          "created_at": "2013-06-21T10:31:58Z",
+          "href": "https://api.getdrip.com/v2/9999999/goals/99999",
+          "links": {
+            "account": "9999999"
+          }
+        }
+        ```
+
+        > All responses containing conversion data also include the following top-level link data:
+
+        ```json
+        {
+          "links": {
+            "goals.account": "https://api.getdrip.com/v2/accounts/{goals.account}"
+          }
+        }
+        ```
+
+        **Properties**
+
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td>A read-only Drip generated unique id used to identify each conversion record.</td>
+            </tr>
+            <tr>
+              <td><code>status</code></td>
+              <td>Returns whether the conversion is enabled or disabled.</td>
+            </tr>
+            <tr>
+              <td><code>name</code></td>
+              <td>The private name given to the conversion.</td>
+            </tr>
+            <tr>
+              <td><code>url</code></td>
+              <td>A URL used for detecting and recording conversions.</td>
+            </tr>
+            <tr>
+              <td><code>default_value</code></td>
+              <td>A default value assigned to a tracked conversion.
+              Conversion values must be less than 2,147,483,647.
+              </td>
+            </tr>
+            <tr>
+              <td><code>counting_method</code></td>
+              <td>Set either as <code>one_per_visitor</code> or <code>all</code> and determines whether a maximum of one conversion is counted per person or all.</td>
+            </tr>
+            <tr>
+              <td><code>created_at</code></td>
+              <td>A timestamp representing when the conversion was first created.</td>
+            </tr>
+            <tr>
+              <td><code>href</code></td>
+              <td>The url designated for retrieving the conversion record via the REST API.</td>
+            </tr>
+            <tr>
+              <td><code>links</code></td>
+              <td>An object containing the REST API URL for the account.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        See the Events API for recording conversion events.
+
+paths:
+  /{account_id}/goals:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listConversions
+      tags: [Conversions]
+      summary: List all conversions
+      x-slate:
+        intro: "To list all conversions in an account:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The goals property is an array of conversion goal objects.
+            {
+              "links": { ... },
+              "goals": [ ... ]
+            }
+        arguments: auto
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: "Optional. The status to filter by: `active`, `disabled`, or `all`. Defaults to `all`."
+          schema:
+            type: string
+            enum: [active, disabled, all]
+            default: all
+        - name: sort
+          in: query
+          required: false
+          description: "Optional. Sort results by one of these fields: `created_at` or `name`. Defaults to `created_at`."
+          schema:
+            type: string
+            enum: [created_at, name]
+            default: created_at
+        - name: direction
+          in: query
+          required: false
+          description: "Optional. Filter sort direction with: `asc` or `desc`. Defaults to `asc`."
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        "200":
+          description: The `goals` property is an array of conversion goal objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included in all responses containing conversion data.
+                    properties:
+                      goals.account:
+                        type: string
+                        description: URL template for the REST API account resource.
+                  goals:
+                    type: array
+                    description: The list of conversion goal objects.
+                    items:
+                      $ref: "#/components/schemas/Conversion"
+              example:
+                links:
+                  goals.account: "https://api.getdrip.com/v2/accounts/{goals.account}"
+                goals:
+                  - id: "99999"
+                    status: active
+                    name: Trial Signup
+                    url: /receipt
+                    default_value: 2000
+                    counting_method: one_per_visitor
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: https://api.getdrip.com/v2/9999999/goals/99999
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/goals" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.conversions
+
+            if response.success?
+              puts response.body["goals"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const options = { status: "active" };
+
+            client.listConversions(options)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/goals/{conversion_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: conversion_id
+        in: path
+        required: true
+        description: The ID of the conversion.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchConversion
+      tags: [Conversions]
+      summary: Fetch a conversion
+      x-slate:
+        intro: "To fetch a conversion:"
+        response:
+          intro: "The response looks like this:"
+          body: |
+            # The goals property is an array of one conversion goal object.
+            {
+              "links": { ... },
+              "goals": [{ ... }]
+            }
+        arguments: none
+      responses:
+        "200":
+          description: The `goals` property is an array of one conversion goal object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included in all responses containing conversion data.
+                    properties:
+                      goals.account:
+                        type: string
+                        description: URL template for the REST API account resource.
+                  goals:
+                    type: array
+                    description: An array containing the requested conversion goal object.
+                    items:
+                      $ref: "#/components/schemas/Conversion"
+              example:
+                links:
+                  goals.account: "https://api.getdrip.com/v2/accounts/{goals.account}"
+                goals:
+                  - id: "99999"
+                    status: active
+                    name: Trial Signup
+                    url: /receipt
+                    default_value: 2000
+                    counting_method: one_per_visitor
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: https://api.getdrip.com/v2/9999999/goals/99999
+                    links:
+                      account: "9999999"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/goals/CONVERSION_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            conversion_id = 9999999
+            response = client.conversion(conversion_id)
+
+            if response.success?
+              puts response.body["goals"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const conversionId = 8889999;
+
+            client.fetchConversion(conversionId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Conversion:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each conversion record.
+        status:
+          type: string
+          description: Returns whether the conversion is enabled or disabled.
+        name:
+          type: string
+          description: The private name given to the conversion.
+        url:
+          type: string
+          description: A URL used for detecting and recording conversions.
+        default_value:
+          type: integer
+          description: >-
+            A default value assigned to a tracked conversion. Conversion values
+            must be less than 2,147,483,647.
+        counting_method:
+          type: string
+          enum: [one_per_visitor, all]
+          description: >-
+            Set either as `one_per_visitor` or `all` and determines whether a
+            maximum of one conversion is counted per person or all.
+        created_at:
+          type: string
+          format: date-time
+          description: A timestamp representing when the conversion was first created.
+        href:
+          type: string
+          description: The url designated for retrieving the conversion record via the REST API.
+        links:
+          type: object
+          description: An object containing the REST API URL for the account.
+          properties:
+            account:
+              type: string
+              description: The ID of the account.
+      example:
+        id: "99999"
+        status: active
+        name: Trial Signup
+        url: /receipt
+        default_value: 2000
+        counting_method: one_per_visitor
+        created_at: "2013-06-21T10:31:58Z"
+        href: https://api.getdrip.com/v2/9999999/goals/99999
+        links:
+          account: "9999999"

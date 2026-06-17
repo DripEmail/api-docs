@@ -1,0 +1,959 @@
+tags:
+  - name: Campaigns
+    description: Email Series Campaigns in an account.
+    x-slate:
+      title: Email Series Campaigns
+      represent:
+        - intro: "Email Series Campaigns are represented as follows:"
+          schema: Campaign
+        - intro: "All responses containing Email Series Campaign data also include the following top-level link data:"
+          json: |
+            {
+              "links": {
+                "campaigns.account": "https://api.getdrip.com/v2/accounts/{campaigns.account}",
+                "campaigns.form": "https://api.getdrip.com/v2/{campaigns.account}/forms/{campaigns.forms}",
+                "campaigns.subscribers": "https://api.getdrip.com/v2/{campaigns.account}/campaigns/{campaigns.id}/subscribers"
+              }
+            }
+      properties: Campaign
+
+paths:
+  /{account_id}/campaigns:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+
+    get:
+      operationId: listCampaigns
+      tags: [Campaigns]
+      summary: List all Email Series Campaigns
+      x-slate:
+        intro: "To list all Email Series Campaigns:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      parameters:
+        - name: status
+          in: query
+          description: "Optional. Filter by one of the following statuses: `draft`, `active`, or `paused`. Defaults to `all`."
+          schema:
+            type: string
+            enum: [all, draft, active, paused]
+            default: all
+        - name: sort
+          in: query
+          description: "Optional. Sort results by one of these fields: `created_at` or `name`. Defaults to `created_at`."
+          schema:
+            type: string
+            enum: [created_at, name]
+            default: created_at
+        - name: direction
+          in: query
+          description: "Optional. Filter sort direction with: `asc` or `desc`. Defaults to `asc`."
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        "200":
+          description: A list of Email Series Campaigns. The `campaigns` property is an array of campaign objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing Email Series Campaign data.
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      sort:
+                        type: string
+                      direction:
+                        type: string
+                      count:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      status:
+                        type: string
+                  campaigns:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Campaign"
+              example:
+                links:
+                  campaigns.account: "https://api.getdrip.com/v2/accounts/{campaigns.account}"
+                  campaigns.form: "https://api.getdrip.com/v2/{campaigns.account}/forms/{campaigns.forms}"
+                  campaigns.subscribers: "https://api.getdrip.com/v2/{campaigns.account}/campaigns/{campaigns.id}/subscribers"
+                meta:
+                  page: 1
+                  sort: created_at
+                  direction: asc
+                  count: 5
+                  total_pages: 1
+                  total_count: 5
+                  status: all
+                campaigns:
+                  - id: "123456"
+                    status: active
+                    name: SEO Email Course
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    minutes_from_midnight: 440
+                    localize_sending_time: true
+                    days_of_the_week_mask: "0111110"
+                    start_immediately: true
+                    double_optin: true
+                    send_to_confirmation_page: false
+                    use_custom_confirmation_page: false
+                    confirmation_url: null
+                    notify_subscribe_email: derrick@getdrip.com
+                    notify_unsubscribe_email: derrick@getdrip.com
+                    bcc: null
+                    email_count: 10
+                    active_subscriber_count: 320
+                    unsubscribed_subscriber_count: 5
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/campaigns/123456"
+                    links:
+                      account: "9999999"
+                      forms: ["888"]
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            response = client.campaigns
+
+            if response.success?
+              puts response.body["campaigns"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const options = { status: "active" };
+
+            client.listCampaigns(options)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/campaigns/{campaign_id}:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: campaign_id
+        in: path
+        required: true
+        description: The ID of the Email Series Campaign.
+        schema:
+          type: string
+
+    get:
+      operationId: fetchCampaign
+      tags: [Campaigns]
+      summary: Fetch an Email Series Campaign
+      x-slate:
+        intro: "To fetch a specific Email Series Campaign:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: >-
+            The requested Email Series Campaign. The `campaigns` property is an
+            array of campaign objects. The `forms` property is an array of forms
+            that feed directly into the campaign.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                    description: Top-level link data included with all responses containing Email Series Campaign data.
+                  campaigns:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Campaign"
+                  linked:
+                    type: object
+                    properties:
+                      forms:
+                        type: array
+                        description: >-
+                          The associated forms created for the Email Series
+                          Campaign. This is only populated if a form is created
+                          for the Email Series Campaign. Refer to Forms for an
+                          overview of the properties returned here.
+                        items:
+                          type: object
+              example:
+                links:
+                  campaigns.account: "https://api.getdrip.com/v2/accounts/{campaigns.account}"
+                  campaigns.form: "https://api.getdrip.com/v2/{campaigns.account}/forms/{campaigns.forms}"
+                  campaigns.subscribers: "https://api.getdrip.com/v2/{campaigns.account}/campaigns/{campaigns.id}/subscribers"
+                campaigns:
+                  - id: "123456"
+                    status: active
+                    name: SEO Email Course
+                    from_name: John Doe
+                    from_email: john@example.com
+                    postal_address: "123 Anywhere St\nFresno, CA 99999"
+                    minutes_from_midnight: 440
+                    localize_sending_time: true
+                    days_of_the_week_mask: "0111110"
+                    start_immediately: true
+                    double_optin: true
+                    send_to_confirmation_page: false
+                    use_custom_confirmation_page: false
+                    confirmation_url: null
+                    notify_subscribe_email: derrick@getdrip.com
+                    notify_unsubscribe_email: derrick@getdrip.com
+                    bcc: null
+                    email_count: 10
+                    active_subscriber_count: 320
+                    unsubscribed_subscriber_count: 5
+                    created_at: "2013-06-21T10:31:58Z"
+                    href: "https://api.getdrip.com/v2/9999999/campaigns/123456"
+                    links:
+                      account: "9999999"
+                      forms: ["888"]
+                linked:
+                  forms: []
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            campaign_id = 9999999
+            response = client.campaign(campaign_id)
+
+            if response.success?
+              puts response.body
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const campaignId = 9998888;
+
+            client.fetchCampaign(campaignId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/campaigns/{campaign_id}/activate:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: campaign_id
+        in: path
+        required: true
+        description: The ID of the Email Series Campaign.
+        schema:
+          type: string
+
+    post:
+      operationId: activateCampaign
+      tags: [Campaigns]
+      summary: Activate an Email Series Campaign
+      x-slate:
+        intro: "To activate an Email Series Campaign:"
+        response:
+          intro: "Responds with a `204 No Content` if successful. If the Email Series Campaign cannot be activated, returns a `422 Unprocessable Entity`."
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The Email Series Campaign was activated.
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/activate" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            campaign_id = 9999999
+            response = client.activate_campaign(campaign_id)
+
+            if response.success?
+              puts response.body
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const campaignId = 9998888;
+
+            client.activateCampaign(campaignId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/campaigns/{campaign_id}/pause:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: campaign_id
+        in: path
+        required: true
+        description: The ID of the Email Series Campaign.
+        schema:
+          type: string
+
+    post:
+      operationId: pauseCampaign
+      tags: [Campaigns]
+      summary: Pause an Email Series Campaign
+      x-slate:
+        intro: "To pause an Email Series Campaign:"
+        response:
+          intro: "Responds with a `204 No Content` if successful. If the Email Series Campaign cannot be paused, returns a `422 Unprocessable Entity`."
+        arguments: none
+      responses:
+        "204":
+          description: No Content. The Email Series Campaign was paused.
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/pause" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            campaign_id = 9999999
+            response = client.pause_campaign(campaign_id)
+
+            if response.success?
+              puts response.body
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const campaignId = 9998888;
+
+            client.pauseCampaign(campaignId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/campaigns/{campaign_id}/subscribers:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: campaign_id
+        in: path
+        required: true
+        description: The ID of the Email Series Campaign.
+        schema:
+          type: string
+
+    get:
+      operationId: listCampaignSubscribers
+      tags: [Campaigns]
+      summary: List all subscribers subscribed to an Email Series Campaign
+      x-slate:
+        intro: "To list subscribers on an Email Series Campaign:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      parameters:
+        - name: status
+          in: query
+          description: "Optional. The status to filter by: `active`, `unsubscribed`, or `removed`. Defaults to `active`."
+          schema:
+            type: string
+            enum: [active, unsubscribed, removed]
+            default: active
+        - name: page
+          in: query
+          description: Optional. The page number. Defaults to `1`.
+          schema:
+            type: integer
+            default: 1
+        - name: direction
+          in: query
+          description: "Optional. The direction to sort the results for `created_at`: `asc` or `desc`. Defaults to `desc`."
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: per_page
+          in: query
+          description: Optional. The number of records to be returned on each page. Defaults to `100`. Maximum `1000`.
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        "200":
+          description: Subscribers on the Email Series Campaign. The `subscribers` property is an array of subscriber objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      direction:
+                        type: string
+                      count:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                  subscribers:
+                    type: array
+                    description: An array of subscriber objects (documented under the Subscribers resource).
+                    items:
+                      type: object
+              example:
+                links: {}
+                meta:
+                  page: 1
+                  direction: desc
+                  count: 20
+                  total_pages: 1
+                  total_count: 20
+                subscribers: []
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/subscribers" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            campaign_id = 9999999
+            response = client.campaign_subscribers(campaign_id)
+
+            if response.success?
+              puts response.body["subscribers]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const campaignId = 9998888;
+
+            client.listAllSubscribesToCampaign(campaignId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+    post:
+      operationId: subscribeToCampaign
+      tags: [Campaigns]
+      summary: Subscribe someone to an Email Series Campaign
+      x-slate:
+        intro: "To start a subscriber on an Email Series Campaign:"
+        response:
+          intro: "The response looks like this:"
+        arguments: auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subscribers]
+              properties:
+                subscribers:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/CampaignSubscriber"
+            example:
+              subscribers:
+                - email: john@acme.com
+                  utc_offset: 660
+                  double_optin: true
+                  starting_email_index: 0
+                  reactivate_if_removed: true
+                  custom_fields:
+                    shirt_size: Medium
+      responses:
+        "200":
+          description: The `subscribers` property is an array of one object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                  subscribers:
+                    type: array
+                    description: An array of one subscriber object (documented under the Subscribers resource).
+                    items:
+                      type: object
+              example:
+                links: {}
+                subscribers:
+                  - {}
+        "422":
+          $ref: "../components.yaml#/components/responses/ValidationError"
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/subscribers" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY: \
+              -d @- << EOF
+              {
+                "subscribers": [{
+                  "email": "john@acme.com",
+                  "utc_offset": 660,
+                  "double_optin": true,
+                  "starting_email_index": 0,
+                  "reactivate_if_removed": true,
+                  "custom_fields": {
+                    "shirt_size": "Medium"
+                  }
+                }]
+              }
+            EOF
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            campaign_id = 9999999
+            email = "someone@example.com"
+            options = {
+              time_zone: "America/Los_Angeles",
+              custom_fields: {
+                name: "Jane Doe"
+              }
+            }
+
+            response = client.subscribe(email, campaign_id, options)
+
+            if response.success?
+              # ...
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const campaignId = 9998888;
+            const payload = {
+              subscribers: [{
+                email: "someone@example.com",
+                time_zone: "Asia/Kuala_Lumpur",
+                custom_fields: {
+                  name: "Jane Doe"
+                }
+              }]
+            }
+
+            client.subscribeToCampaign(campaignId, payload)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+  /{account_id}/subscribers/{subscriber_id}/campaign_subscription:
+    parameters:
+      - $ref: "../components.yaml#/components/parameters/accountId"
+      - name: subscriber_id
+        in: path
+        required: true
+        description: The ID of the subscriber.
+        schema:
+          type: string
+
+    get:
+      operationId: listCampaignSubscriptions
+      tags: [Campaigns]
+      summary: List all of a subscriber's Email Series Campaign subscriptions
+      x-slate:
+        intro: "To list Email Series Campaign subscriptions for a subscriber:"
+        response:
+          intro: "The response looks like this:"
+        arguments: none
+      responses:
+        "200":
+          description: >-
+            The subscriber's Email Series Campaign subscriptions. The
+            `campaign_subscriptions` property is an array of campaign
+            subscription objects.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: object
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      count:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                  campaign_subscriptions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CampaignSubscription"
+              example:
+                links:
+                  campaign_subscriptions.account: "https://api.getdrip.com/v2/accounts/{campaign_subscriptions.account}"
+                  campaign_subscriptions.subscriber: "https://api.getdrip.com/v2/subscribers/{campaign_subscriptions.subscriber}"
+                meta:
+                  page: 1
+                  count: 5
+                  total_pages: 1
+                  total_count: 5
+                campaign_subscriptions:
+                  - id: "123456"
+                    campaign_id: "999999"
+                    status: active
+                    is_complete: false
+                    lap: 1
+                    last_sent_email_index: 0
+                    last_sent_email_at: "2016-03-25T11:00:00Z"
+                    links:
+                      account: "9999999"
+                      subscriber: z1togz2hcjrkpp5treip
+        "4XX":
+          $ref: "../components.yaml#/components/responses/Error"
+      x-codeSamples:
+        - lang: shell
+          label: cURL
+          source: |
+            curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/SUBSCRIBER_ID/campaign_subscription" \
+              -H "Content-Type: application/json" \
+              -H 'User-Agent: Your App Name (www.yourapp.com)' \
+              -u YOUR_API_KEY:
+        - lang: ruby
+          label: Ruby
+          source: |
+            require 'drip'
+
+            client = Drip::Client.new do |c|
+              c.api_key = "YOUR API KEY"
+              c.account_id = "YOUR_ACCOUNT_ID"
+            end
+
+            subscriber_id = "bihfwo84teh35dgt99"
+
+            response = client.campaign_subscriptions(subscriber_id)
+
+            if response.success?
+              puts response.body["campaign_subscriptions"]
+            end
+        - lang: javascript
+          label: JavaScript
+          source: |
+            // npm install drip-nodejs --save
+
+            const client = require('drip-nodejs')({ token: YOUR_API_KEY, accountId: YOUR_ACCOUNT_ID });
+            const subscriberId = "iuyfgfweufgr9hvrugegff";
+
+            client.subscriberCampaignSubscriptions(subscriberId)
+              .then((response) => {
+                // Handle `response.body`
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+
+components:
+  schemas:
+    Campaign:
+      type: object
+      example:
+        id: "123456"
+        status: active
+        name: SEO Email Course
+        from_name: John Doe
+        from_email: john@example.com
+        postal_address: "123 Anywhere St\nFresno, CA 99999"
+        minutes_from_midnight: 440
+        localize_sending_time: true
+        days_of_the_week_mask: "0111110"
+        start_immediately: true
+        double_optin: true
+        send_to_confirmation_page: false
+        use_custom_confirmation_page: false
+        confirmation_url: null
+        notify_subscribe_email: derrick@getdrip.com
+        notify_unsubscribe_email: derrick@getdrip.com
+        bcc: null
+        email_count: 10
+        active_subscriber_count: 320
+        unsubscribed_subscriber_count: 5
+        created_at: "2013-06-21T10:31:58Z"
+        href: "https://api.getdrip.com/v2/9999999/campaigns/123456"
+        links:
+          account: "9999999"
+          forms: ["888"]
+      properties:
+        id:
+          type: string
+          description: A read-only Drip generated unique id used to identify each Email Series Campaign record.
+        status:
+          type: string
+          description: Returns whether the Email Series Campaign is active, paused or in draft.
+        name:
+          type: string
+          description: The private name given to the Email Series Campaign.
+        from_name:
+          type: string
+          description: A "from name" that appears in your sent emails. This setting overrides the account's default from name.
+        from_email:
+          type: string
+          description: A "from email" that appears in your sent emails. This setting overrides the account's default from email.
+        postal_address:
+          type: string
+          description: As required by the [CAN-SPAM Act](http://1.usa.gov/YgrzFP), this is a postal address used for all sent emails.
+        minutes_from_midnight:
+          type: integer
+          description: The number of minutes after midnight for the time of day set for email sending.
+        localize_sending_time:
+          type: boolean
+          description: The scheduled send_at time if set to be sent in the subscriber's time zone.
+        days_of_the_week_mask:
+          type: string
+          description: A representation of the days of week when emails are set to be sent. For example, `1111100` represents sending enabled only for Mondays to Fridays while `1111111` represents sending enabled for all days of the week.
+        start_immediately:
+          type: boolean
+          description: Returns true if the first email in the Email Series Campaign is set to be delivered immediately after a Email Series Campaign subscription.
+        double_optin:
+          type: boolean
+          description: Returns true if double opt-in is enabled for the Email Series Campaign.
+        send_to_confirmation_page:
+          type: boolean
+          description: Deprecated
+          deprecated: true
+        use_custom_confirmation_page:
+          type: boolean
+          description: Deprecated
+          deprecated: true
+        confirmation_url:
+          type: ["string", "null"]
+          description: Deprecated
+          deprecated: true
+        notify_subscribe_email:
+          type: string
+          description: An email address set that receives a notification whenever a subscriber subscribes via a form submission.
+        notify_unsubscribe_email:
+          type: string
+          description: An email address set that receives a notification whenever a subscriber unsubscribes via their subscription management page.
+        bcc:
+          type: ["string", "null"]
+          description: A blind copy email address set for all Email Series Campaign email deliveries.
+        email_count:
+          type: integer
+          description: Returns a count of all emails associated with the Email Series Campaign. Includes all email statuses.
+        active_subscriber_count:
+          type: integer
+          description: Returns a count of all subscribers who are actively subscribed to the Email Series Campaign.
+        unsubscribed_subscriber_count:
+          type: integer
+          description: Returns a count of all subscribers who unsubscribed from the Email Series Campaign via a delivered email.
+        created_at:
+          type: string
+          format: date-time
+          description: A timestamp representing when the Email Series Campaign was first created.
+        href:
+          type: string
+          description: The url designated for retrieving the Email Series Campaign record via the REST API.
+        links:
+          type: object
+          description: An object containing the REST API URL for the account, any associated Email Series Campaign forms and subscribers subscribed to the Email Series Campaign.
+          properties:
+            account:
+              type: string
+            forms:
+              type: array
+              items:
+                type: string
+
+    CampaignSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+        campaign_id:
+          type: string
+        status:
+          type: string
+        is_complete:
+          type: boolean
+        lap:
+          type: integer
+        last_sent_email_index:
+          type: integer
+        last_sent_email_at:
+          type: string
+          format: date-time
+        links:
+          type: object
+          properties:
+            account:
+              type: string
+            subscriber:
+              type: string
+
+    CampaignSubscriber:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+          description: Required. The subscriber's email address.
+        user_id:
+          type: string
+          description: Optional. A unique identifier for the user in your database, such as a primary key.
+        time_zone:
+          type: string
+          description: Optional. The subscriber's time zone (in Olson format). Defaults to `Etc/UTC`
+        double_optin:
+          type: boolean
+          description: Optional. If `true`, the double opt-in confirmation email is sent; if `false`, the confirmation email is skipped. Defaults to the value set on the Email Series Campaign.
+        starting_email_index:
+          type: integer
+          description: Optional. The index (zero-based) of the email to send first. Defaults to `0`.
+        custom_fields:
+          type: object
+          description: 'Optional. An Object containing custom field data. E.g. `{ "shirt_size": "Medium" }`.'
+        tags:
+          type: array
+          items:
+            type: string
+          description: 'Optional. An Array containing one or more tags. E.g. `["Customer", "SEO"]`.'
+        reactivate_if_removed:
+          type: boolean
+          description: Optional. If `true`, re-subscribe the subscriber to the Email Series Campaign if there is a removed subscriber in Drip with the same email address; otherwise, respond with `422 Unprocessable Entity`. Defaults to `true`.
+        prospect:
+          type: boolean
+          description: "Optional. A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to `true`. **Note:** This flag used to be called `potential_lead`, which we will continue to accept for backwards compatibility."
+        base_lead_score:
+          type: integer
+          description: Optional. An Integer specifying the starting value for lead score calculation for this subscriber. Defaults to `30`.
+        eu_consent:
+          type: string
+          description: Optional. A String specifying whether the subscriber `granted` or `denied` GDPR consent.
+        eu_consent_message:
+          type: string
+          description: Optional. A String containing the message the subscriber granted or denied their consent to.

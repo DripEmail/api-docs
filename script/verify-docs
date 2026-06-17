@@ -1,0 +1,87 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Verify that the generator reproduces the committed Slate partials.
+#
+#   script/verify-docs              # check every fragment
+#   script/verify-docs tags         # check only the named resources
+#   script/verify-docs --diff       # print a unified diff for each mismatch
+#
+# For each resource it reports two results:
+#   BYTE  — generated output is byte-identical to the committed _<resource>.md
+#   NORM  — output matches after collapsing insignificant whitespace
+#
+# Exit status is non-zero if any resource fails the NORM check (the gate);
+# BYTE failures are reported but do not fail the run, since some published
+# pages are intentionally hand-formatted.
+
+require "tempfile"
+require_relative "../lib/openapi_slate"
+
+ROOT = File.expand_path("..", __dir__)
+FRAGMENTS = File.join(ROOT, "spec", "fragments")
+OUT_DIR = File.join(ROOT, "source", "includes", "rest")
+
+show_diff = ARGV.delete("--diff")
+selected = ARGV.map { |a| File.basename(a, ".*").sub(/\A_/, "") }
+
+fragments = Dir.children(FRAGMENTS).grep(/\.ya?ml\z/).map { |f| File.basename(f, ".*") }.sort
+fragments &= selected unless selected.empty?
+
+def normalize(text)
+  text.gsub(/[ \t]+$/, "").gsub(/\n{2,}/, "\n\n").strip
+end
+
+def unified_diff(expected, actual)
+  a = Tempfile.new("expected")
+  b = Tempfile.new("actual")
+  a.write(expected); a.flush
+  b.write(actual);   b.flush
+  `diff -u #{a.path} #{b.path}`
+ensure
+  a&.close!
+  b&.close!
+end
+
+norm_failures = 0
+byte_failures = 0
+pending = 0
+
+fragments.each do |name|
+  source = File.join(FRAGMENTS, "#{name}.yaml")
+  target = File.join(OUT_DIR, "_#{name}.md")
+
+  unless File.exist?(target)
+    puts format("%-16s  SKIP  (no committed _%s.md)", name, name)
+    next
+  end
+
+  # A fragment without any x-slate presentation layer has not been migrated
+  # yet: report it as PENDING so it doesn't fail the gate during the rollout.
+  unless File.read(source).include?("x-slate")
+    pending += 1
+    puts format("%-16s  PENDING  (no x-slate layer yet)", name)
+    next
+  end
+
+  actual = OpenapiSlate.render_file(source)
+  expected = File.read(target)
+
+  byte_ok = actual == expected
+  norm_ok = normalize(actual) == normalize(expected)
+
+  byte_failures += 1 unless byte_ok
+  norm_failures += 1 unless norm_ok
+
+  byte = byte_ok ? "ok" : "DIFF"
+  norm = norm_ok ? "ok" : "DIFF"
+  puts format("%-16s  BYTE %-4s  NORM %-4s", name, byte, norm)
+
+  if show_diff && !byte_ok
+    puts unified_diff(expected, actual)
+  end
+end
+
+puts
+puts "#{fragments.length} checked  |  #{pending} pending  |  byte mismatches: #{byte_failures}  |  normalized mismatches: #{norm_failures}"
+exit(norm_failures.zero? ? 0 : 1)

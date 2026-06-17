@@ -1,0 +1,92 @@
+# Shared OpenAPI components referenced across every resource fragment.
+#
+# Fragments reference these with a relative external pointer, e.g.
+#   $ref: "../components.yaml#/components/responses/Error"
+# so that each fragment is self-contained when run through the markdown
+# generator on its own, and Redocly resolves the same refs when bundling
+# spec/rest-v2.yaml for the Redoc preview.
+openapi: 3.1.0
+info:
+  title: Drip REST API — shared components
+  version: "2"
+paths: {}
+components:
+  parameters:
+    accountId:
+      name: account_id
+      in: path
+      required: true
+      description: The ID of the Drip account.
+      schema:
+        type: string
+
+  responses:
+    Error:
+      description: |
+        `401 Unauthorized` for anonymous requests to authenticated resources,
+        `403 Forbidden` for insufficient permissions or disallowed state
+        transitions, `404 Not Found` if the resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            errors:
+              - code: authorization_error
+                message: You are not authorized to access this resource
+    ValidationError:
+      description: |
+        `422 Unprocessable Entity` with an errors object detailing which
+        attributes are invalid (e.g. `presence_error`, `length_error`,
+        `email_error`).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            errors:
+              - code: presence_error
+                attribute: email
+                message: Email is required
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required: [code]
+            properties:
+              code:
+                type: string
+                description: Machine-readable error code, e.g. `presence_error`.
+              attribute:
+                type: string
+                description: The invalid attribute, for validation errors.
+              message:
+                type: string
+                description: Human-readable error message.
+
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: basic
+      description: |
+        For private integrations. Your personal API Token
+        ([found here](https://www.getdrip.com/user/edit)) is the username portion
+        of the Basic Authentication scheme, with an empty password.
+    oauth2:
+      type: oauth2
+      description: |
+        For public integrations — e.g. allowing your customers to authorize
+        access to their Drip accounts from your application. Register your
+        application at <https://www.getdrip.com/user/applications>. Tokens do
+        not expire.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://www.getdrip.com/oauth/authorize
+          tokenUrl: https://www.getdrip.com/oauth/token
+          scopes:
+            public: Default scope.

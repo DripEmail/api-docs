@@ -25,7 +25,10 @@
   "custom_fields": {
     "shirt_size": "Medium"
   },
-  "tags": ["Customer", "SEO"],
+  "tags": [
+    "Customer",
+    "SEO"
+  ],
   "ip_address": "111.111.111.11",
   "user_agent": "Chrome/36.0.1985.143",
   "original_referrer": "http://www.getdrip.com",
@@ -52,8 +55,6 @@
   }
 }
 ```
-
-**Note:** All subscriber API endpoints only work with your <a href="https://www.drip.com/learn/docs/manual/people/active" target="_blank">active</a> people. Attempting to modify or delete an <a href="https://www.drip.com/learn/docs/manual/people/inactive" target="_blank">inactive</a> person will result in an error.
 
 **Properties**
 
@@ -200,6 +201,7 @@
   </tbody>
 </table>
 
+**Note:** All subscriber API endpoints only work with your <a href="https://www.drip.com/learn/docs/manual/people/active" target="_blank">active</a> people. Attempting to modify or delete an <a href="https://www.drip.com/learn/docs/manual/people/inactive" target="_blank">inactive</a> person will result in an error.
 
 ## Create or update a subscriber
 
@@ -270,20 +272,61 @@ client.createUpdateSubscriber(payload)
 > The response looks like this:
 
 ```json
-# The subscribers property is an array of one object.
 {
-  "links": { ... },
-  "subscribers": [{ ... }]
+  "links": {
+    "subscribers.account": "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+  },
+  "subscribers": [
+    {
+      "id": "z1togz2hcjrkpp5treip",
+      "status": "active",
+      "email": "john@acme.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address1": "123 Main St.",
+      "address2": "Suite 200",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90210",
+      "country": "US",
+      "phone": "555-555-5555",
+      "sms_number": "+16125551212",
+      "sms_consent": true,
+      "eu_consent": "granted",
+      "time_zone": "America/Los_Angeles",
+      "utc_offset": -440,
+      "visitor_uuid": "sa8f7sdf78sdsdahf788d7asf8sd",
+      "custom_fields": {
+        "shirt_size": "Medium"
+      },
+      "tags": [
+        "Customer",
+        "SEO"
+      ],
+      "ip_address": "111.111.111.11",
+      "user_agent": "Chrome/36.0.1985.143",
+      "original_referrer": "http://www.getdrip.com",
+      "landing_url": "https://www.getdrip.com/docs/rest-api",
+      "prospect": true,
+      "lead_score": 72,
+      "lifetime_value": 10000,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/subscribers/12345",
+      "user_id": "12345",
+      "base_lead_score": 30,
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
+
+If you need to create or update a collection of subscribers at once, use our [batch API](/) instead. **Note:** Concurrently updating the same subscriber via multiple API calls is not supported and will fail with a rate limit error and the message "Too many concurrent requests for the same subscriber". You should retry the call after a short wait period to let the other requests to the same subscriber complete. Triggering this rate limit does not mean you've consumed your overall API rate limited capacity.
 
 ### HTTP Endpoint
 
 `POST /v2/:account_id/subscribers`
-
-If you need to create or update a collection of subscribers at once, use our [batch API](/) instead.
-
-**Note:** Concurrently updating the same subscriber via multiple API calls is not supported and will fail with a rate limit error and the message "Too many concurrent requests for the same subscriber". You should retry the call after a short wait period to let the other requests to the same subscriber complete. Triggering this rate limit does not mean you've consumed your overall API rate limited capacity.
 
 ### Arguments
 
@@ -297,120 +340,118 @@ If you need to create or update a collection of subscribers at once, use our [ba
   <tbody>
     <tr>
       <td><code>email</code></td>
-      <td>Optional. The subscriber's email address. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
+      <td>The subscriber's email address. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
     </tr>
     <tr>
       <td><code>id</code></td>
-      <td>Optional. The subscriber's Drip <code>id</code>. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
+      <td>The subscriber's Drip <code>id</code>. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
     </tr>
     <tr>
       <td><code>visitor_uuid</code></td>
-      <td>Optional. The <code>uuid</code> for a subscriber's visitor record. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
+      <td>The <code>uuid</code> for a subscriber's visitor record. Either <code>email</code> or <code>id</code> or <code>visitor_uuid</code> must be included.</td>
     </tr>
     <tr>
       <td><code>new_email</code></td>
-      <td>Optional. A new email address for the subscriber. If provided and a subscriber with the <code>email</code> above does not exist, this address will be used to create a new subscriber.</td>
+      <td>A new email address for the subscriber. If provided and a subscriber with the <code>email</code> above does not exist, this address will be used to create a new subscriber.</td>
     </tr>
     <tr>
       <td><code>first_name</code></td>
-      <td>Optional. The subscriber's first name.</td>
+      <td>The subscriber's first name.</td>
     </tr>
     <tr>
       <td><code>last_name</code></td>
-      <td>Optional. The subscriber's last name.</td>
+      <td>The subscriber's last name.</td>
     </tr>
     <tr>
       <td><code>address1</code></td>
-      <td>Optional. The subscriber's mailing address.</td>
+      <td>The subscriber's mailing address.</td>
     </tr>
     <tr>
       <td><code>address2</code></td>
-      <td>Optional. An additional field for the subscriber's mailing address.</td>
+      <td>An additional field for the subscriber's mailing address.</td>
     </tr>
     <tr>
       <td><code>city</code></td>
-      <td>Optional. The city, town, or village in which the subscriber resides.</td>
+      <td>The city, town, or village in which the subscriber resides.</td>
     </tr>
     <tr>
       <td><code>state</code></td>
-      <td>Optional. The region in which the subscriber resides. Typically a province, a state, or a prefecture.</td>
+      <td>The region in which the subscriber resides. Typically a province, a state, or a prefecture.</td>
     </tr>
     <tr>
       <td><code>zip</code></td>
-      <td>Optional. The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.</td>
+      <td>The postal code in which the subscriber resides, also known as zip, postcode, Eircode, etc.</td>
     </tr>
     <tr>
       <td><code>country</code></td>
-      <td>Optional. The country in which the subscriber resides.</td>
+      <td>The country in which the subscriber resides.</td>
     </tr>
     <tr>
       <td><code>phone</code></td>
-      <td>Optional. The subscriber's primary phone number.</td>
+      <td>The subscriber's primary phone number.</td>
     </tr>
     <tr>
       <td><code>sms_number</code></td>
-      <td>Optional. String. The subscriber's mobile phone number in E.164 formatting. E.g. <code>"+16125551212"</code>. Only US-based numbers are supported at this time.</td>
+      <td>String. The subscriber's mobile phone number in E.164 formatting. E.g. <code>"+16125551212"</code>. Only US-based numbers are supported at this time.</td>
     </tr>
     <tr>
       <td><code>sms_consent</code></td>
-      <td>Optional. Boolean. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. Default: false. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
+      <td>Boolean. <code>true</code> if the person has granted consent to receive marketing and other communication via SMS; <code>false</code> otherwise. Default: false. If you’re unsure whether or not you have gained legal SMS consent, check out our <a href="https://my.drip.com/docs/manual/sms/compliance-manage-sms-compliance">TCPA requirements article</a>.</td>
     </tr>
     <tr>
       <td><code>user_id</code></td>
-      <td>Optional. A unique identifier for the user in your database, such as a primary key.</td>
+      <td>A unique identifier for the user in your database, such as a primary key.</td>
     </tr>
     <tr>
       <td><code>time_zone</code></td>
-      <td>Optional. The subscriber's time zone (in Olson format). Defaults to <code>Etc/UTC</code></td>
+      <td>The subscriber's time zone (in Olson format). Defaults to <code>Etc/UTC</code></td>
     </tr>
     <tr>
       <td><code>lifetime_value</code></td>
-      <td>Optional. The lifetime value of the subscriber (in cents).</td>
+      <td>The lifetime value of the subscriber (in cents).</td>
     </tr>
     <tr>
       <td><code>ip_address</code></td>
-      <td>Optional. The subscriber's ip address E.g. <code>"111.111.111.11"</code></td>
+      <td>The subscriber's ip address E.g. <code>"111.111.111.11"</code></td>
     </tr>
     <tr>
       <td><code>custom_fields</code></td>
-      <td>Optional. An Object containing custom field data. E.g. <code>{ "shirt_size": "Medium" }</code>.</td>
+      <td>An Object containing custom field data. E.g. <code>{ "shirt_size": "Medium" }</code>.</td>
     </tr>
     <tr>
       <td><code>tags</code></td>
-      <td>Optional. An Array containing one or more tags. E.g. <code>["Customer", "SEO"]</code>.</td>
+      <td>An Array containing one or more tags. E.g. <code>["Customer", "SEO"]</code>.</td>
     </tr>
     <tr>
       <td><code>remove_tags</code></td>
-      <td>Optional. An Array containing one or more tags to be removed from the subscriber. E.g. <code>["Customer", "SEO"]</code>.</td>
+      <td>An Array containing one or more tags to be removed from the subscriber. E.g. <code>["Customer", "SEO"]</code>.</td>
     </tr>
     <tr>
       <td><code>prospect</code></td>
-      <td>Optional. A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to <code>true</code>.
-        <strong>Note:</strong> This flag used to be called <code>potential_lead</code>, which we will continue to accept for backwards compatibility.</td>
+      <td>A Boolean specifiying whether we should attach a lead score to the subscriber (when lead scoring is enabled). Defaults to <code>true</code>. **Note:** This flag used to be called <code>potential_lead</code>, which we will continue to accept for backwards compatibility.</td>
     </tr>
     <tr>
       <td><code>base_lead_score</code></td>
-      <td>Optional. An Integer specifying the starting value for lead score calculation for this subscriber. Defaults to <code>30</code>.</td>
+      <td>An Integer specifying the starting value for lead score calculation for this subscriber. Defaults to <code>30</code>.</td>
     </tr>
     <tr>
       <td><code>eu_consent</code></td>
-      <td>Optional. A String specifying whether the subscriber <code>granted</code> or <code>denied</code> GDPR consent.</td>
+      <td>A String specifying whether the subscriber <code>granted</code> or <code>denied</code> GDPR consent.</td>
     </tr>
     <tr>
       <td><code>eu_consent_message</code></td>
-      <td>Optional. A String containing the message the subscriber granted or denied their consent to.</td>
+      <td>A String containing the message the subscriber granted or denied their consent to.</td>
     </tr>
     <tr>
       <td><code>status</code></td>
-      <td>Optional. A String specifying the subscriber's status: either <code>active</code> or <code>unsubscribed</code>.</td>
+      <td>A String specifying the subscriber's status: either <code>active</code> or <code>unsubscribed</code>.</td>
     </tr>
     <tr>
       <td><code>initial_status</code></td>
-      <td>Optional. A String specifying the subscriber's known status: either <code>active</code> or <code>unsubscribed</code>. To be used if subscriber's status is unchanged.</td>
+      <td>A String specifying the subscriber's known status: either <code>active</code> or <code>unsubscribed</code>. To be used if subscriber's status is unchanged.</td>
     </tr>
   </tbody>
 </table>
-
 
 ## List all subscribers
 
@@ -455,17 +496,59 @@ client.listSubscribers(options)
 > The response looks like this:
 
 ```json
-# The subscribers property is an array subscriber objects.
-# The meta property contains pagination information.
 {
-  "links": { ... },
+  "links": {
+    "subscribers.account": "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+  },
   "meta": {
     "page": 1,
     "count": 5,
     "total_pages": 1,
     "total_count": 5
   },
-  "subscribers": [{ ... }]
+  "subscribers": [
+    {
+      "id": "z1togz2hcjrkpp5treip",
+      "status": "active",
+      "email": "john@acme.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address1": "123 Main St.",
+      "address2": "Suite 200",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90210",
+      "country": "US",
+      "phone": "555-555-5555",
+      "sms_number": "+16125551212",
+      "sms_consent": true,
+      "eu_consent": "granted",
+      "time_zone": "America/Los_Angeles",
+      "utc_offset": -440,
+      "visitor_uuid": "sa8f7sdf78sdsdahf788d7asf8sd",
+      "custom_fields": {
+        "shirt_size": "Medium"
+      },
+      "tags": [
+        "Customer",
+        "SEO"
+      ],
+      "ip_address": "111.111.111.11",
+      "user_agent": "Chrome/36.0.1985.143",
+      "original_referrer": "http://www.getdrip.com",
+      "landing_url": "https://www.getdrip.com/docs/rest-api",
+      "prospect": true,
+      "lead_score": 72,
+      "lifetime_value": 10000,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/subscribers/12345",
+      "user_id": "12345",
+      "base_lead_score": 30,
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
@@ -485,32 +568,27 @@ client.listSubscribers(options)
   <tbody>
     <tr>
       <td><code>status</code></td>
-      <td>Optional. Filter by one of the following statuses: <code>all</code>, <code>active</code>, <code>unsubscribed</code>, <code>active_or_unsubscribed</code> or <code>undeliverable</code>. Defaults to <code>active</code>.</td>
+      <td>Filter by one of the following statuses: <code>all</code>, <code>active</code>, <code>unsubscribed</code>, <code>active_or_unsubscribed</code> or <code>undeliverable</code>. Defaults to <code>active</code>.</td>
     </tr>
-
     <tr>
       <td><code>tags</code></td>
-      <td>Optional. A comma separated list of tags. When included, returns only subscribers who have at least one of the listed tags.</td>
+      <td>A comma separated list of tags. When included, returns only subscribers who have at least one of the listed tags.</td>
     </tr>
-
     <tr>
       <td><code>subscribed_before</code></td>
-      <td>Optional. A <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a> datetime. When included, returns only subscribers who were created before the date. Eg. <code>"2017-01-01T00:00:00Z"</code></td>
+      <td>A <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a> datetime. When included, returns only subscribers who were created before the date. Eg. <code>"2017-01-01T00:00:00Z"</code></td>
     </tr>
-
     <tr>
       <td><code>subscribed_after</code></td>
-      <td>Optional. A <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a> datetime. When included, returns only subscribers who were created after the date. Eg. <code>"2016-01-01T00:00:00Z"</code></td>
+      <td>A <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a> datetime. When included, returns only subscribers who were created after the date. Eg. <code>"2016-01-01T00:00:00Z"</code></td>
     </tr>
-
     <tr>
       <td><code>page</code></td>
-      <td>Optional. The page number. Defaults to <code>1</code>.</td>
+      <td>The page number. Defaults to <code>1</code>.</td>
     </tr>
-
     <tr>
       <td><code>per_page</code></td>
-      <td>Optional. The number of records to be returned on each page. Defaults to <code>100</code>. Maximum <code>1000</code>.</td>
+      <td>The number of records to be returned on each page. Defaults to <code>100</code>. Maximum <code>1000</code>.</td>
     </tr>
   </tbody>
 </table>
@@ -560,16 +638,59 @@ client.fetchSubscriber(idOrEmail)
 > The response looks like this:
 
 ```json
-# The subscribers property is an array of one object.
 {
-  "links": { ... },
-  "subscribers": [{ ... }]
+  "links": {
+    "subscribers.account": "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+  },
+  "subscribers": [
+    {
+      "id": "z1togz2hcjrkpp5treip",
+      "status": "active",
+      "email": "john@acme.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address1": "123 Main St.",
+      "address2": "Suite 200",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90210",
+      "country": "US",
+      "phone": "555-555-5555",
+      "sms_number": "+16125551212",
+      "sms_consent": true,
+      "eu_consent": "granted",
+      "time_zone": "America/Los_Angeles",
+      "utc_offset": -440,
+      "visitor_uuid": "sa8f7sdf78sdsdahf788d7asf8sd",
+      "custom_fields": {
+        "shirt_size": "Medium"
+      },
+      "tags": [
+        "Customer",
+        "SEO"
+      ],
+      "ip_address": "111.111.111.11",
+      "user_agent": "Chrome/36.0.1985.143",
+      "original_referrer": "http://www.getdrip.com",
+      "landing_url": "https://www.getdrip.com/docs/rest-api",
+      "prospect": true,
+      "lead_score": 72,
+      "lifetime_value": 10000,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/subscribers/12345",
+      "user_id": "12345",
+      "base_lead_score": 30,
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 
 ### HTTP Endpoint
 
-`GET /v2/:account_id/subscribers/:id_or_email_or_visitor_uuid`
+`GET /v2/:account_id/subscribers/:id_or_email`
 
 ### Arguments
 
@@ -577,10 +698,18 @@ None.
 
 ## Remove a subscriber from one or all Email Series Campaigns
 
-> To remove a subscriber from all Email Series s:
+> To remove a subscriber from all Email Series Campaigns:
 
 ```shell
+# To remove a subscriber from all Email Series Campaigns:
+
 curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/remove" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+
+# To remove a subscriber from a specific campaign:
+
+curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/remove?campaign_id=CAMPAIGN_ID" \
   -H 'User-Agent: Your App Name (www.yourapp.com)' \
   -u YOUR_API_KEY:
 ```
@@ -636,29 +765,64 @@ client.unsubscribeFromCampaign(idOrEmail, campaignId)
   });
 ```
 
-> To remove a subscriber from a specific campaign:
-
-```shell
-curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/remove?campaign_id=CAMPAIGN_ID" \
-  -H 'User-Agent: Your App Name (www.yourapp.com)' \
-  -u YOUR_API_KEY:
-```
-
 > The response looks like this:
 
 ```json
-# The subscribers property is an array of one object.
 {
-  "links": { ... },
-  "subscribers": [{ ... }]
+  "links": {
+    "subscribers.account": "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+  },
+  "subscribers": [
+    {
+      "id": "z1togz2hcjrkpp5treip",
+      "status": "active",
+      "email": "john@acme.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address1": "123 Main St.",
+      "address2": "Suite 200",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90210",
+      "country": "US",
+      "phone": "555-555-5555",
+      "sms_number": "+16125551212",
+      "sms_consent": true,
+      "eu_consent": "granted",
+      "time_zone": "America/Los_Angeles",
+      "utc_offset": -440,
+      "visitor_uuid": "sa8f7sdf78sdsdahf788d7asf8sd",
+      "custom_fields": {
+        "shirt_size": "Medium"
+      },
+      "tags": [
+        "Customer",
+        "SEO"
+      ],
+      "ip_address": "111.111.111.11",
+      "user_agent": "Chrome/36.0.1985.143",
+      "original_referrer": "http://www.getdrip.com",
+      "landing_url": "https://www.getdrip.com/docs/rest-api",
+      "prospect": true,
+      "lead_score": 72,
+      "lifetime_value": 10000,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/subscribers/12345",
+      "user_id": "12345",
+      "base_lead_score": 30,
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
+
+This endpoint was previously labeled `unsubscribe`.
 
 ### HTTP Endpoint
 
 `POST /v2/:account_id/subscribers/:id_or_email/remove`
-
-This endpoint was previously labeled `unsubscribe`.
 
 ### Arguments
 
@@ -672,7 +836,7 @@ This endpoint was previously labeled `unsubscribe`.
   <tbody>
     <tr>
       <td><code>campaign_id</code></td>
-      <td>Optional. The Email Series Campaign from which to remove the subscriber. Defaults to all.</td>
+      <td>The Email Series Campaign from which to remove the subscriber. Defaults to all.</td>
     </tr>
   </tbody>
 </table>
@@ -721,10 +885,53 @@ client.unsubscribeFromAllMailings(idOrEmail)
 > The response looks like this:
 
 ```json
-# The subscribers property is an array of one object.
 {
-  "links": { ... },
-  "subscribers": [{ ... }]
+  "links": {
+    "subscribers.account": "https://api.getdrip.com/v2/accounts/{subscribers.account}"
+  },
+  "subscribers": [
+    {
+      "id": "z1togz2hcjrkpp5treip",
+      "status": "unsubscribed",
+      "email": "john@acme.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address1": "123 Main St.",
+      "address2": "Suite 200",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90210",
+      "country": "US",
+      "phone": "555-555-5555",
+      "sms_number": "+16125551212",
+      "sms_consent": true,
+      "eu_consent": "granted",
+      "time_zone": "America/Los_Angeles",
+      "utc_offset": -440,
+      "visitor_uuid": "sa8f7sdf78sdsdahf788d7asf8sd",
+      "custom_fields": {
+        "shirt_size": "Medium"
+      },
+      "tags": [
+        "Customer",
+        "SEO"
+      ],
+      "ip_address": "111.111.111.11",
+      "user_agent": "Chrome/36.0.1985.143",
+      "original_referrer": "http://www.getdrip.com",
+      "landing_url": "https://www.getdrip.com/docs/rest-api",
+      "prospect": true,
+      "lead_score": 72,
+      "lifetime_value": 10000,
+      "created_at": "2013-06-21T10:31:58Z",
+      "href": "https://api.getdrip.com/v2/9999999/subscribers/12345",
+      "user_id": "12345",
+      "base_lead_score": 30,
+      "links": {
+        "account": "9999999"
+      }
+    }
+  ]
 }
 ```
 

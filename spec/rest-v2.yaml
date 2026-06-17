@@ -1,0 +1,161 @@
+openapi: 3.1.0
+
+# Aggregator / root document for the Drip REST API.
+#
+# This file stitches the per-resource fragments in spec/fragments/ into a
+# single OpenAPI document for the Redoc preview (`redocly preview-docs` /
+# `redocly bundle`). Each path is a $ref into its fragment; shared components
+# live in spec/components.yaml.
+#
+# The public Slate docs (source/includes/rest/_*.md) are generated per fragment
+# by script/generate-docs. See spec/README.md for the full workflow.
+
+info:
+  title: Drip REST API
+  version: "2"
+  description: |
+    The REST API communicates exclusively in JSON over SSL (HTTPS). All endpoint
+    URLs begin with `https://api.getdrip.com/`. The REST API requires the use of
+    a client which supports [SNI](https://en.wikipedia.org/wiki/Server_Name_Indication).
+
+    Parameters must be serialized in JSON and passed in the request body (not in
+    the query string or form parameters), with a media type of `application/json`.
+
+    All requests should include a `User-Agent` header identifying your
+    application, e.g. `Your App Name (www.yourapp.com)`.
+  contact:
+    url: https://developer.drip.com
+
+servers:
+  - url: https://api.getdrip.com/v2
+
+security:
+  - apiKey: []
+  - oauth2: []
+
+# Tag order mirrors the resource order on developer.drip.com
+# (source/index.html.md `includes_rest_api`).
+tags:
+  - name: Batch API
+    description: |
+      Batch endpoints for creating or updating collections of records in a single
+      request. Each batch accepts between 1 and 1000 objects. Since the batch APIs
+      process requests in the background, there may be a delay between the time you
+      submit your request and the time your data appears in the user interface.
+  - name: Accounts
+    description: The Drip accounts the authenticated user has access to.
+  - name: Broadcasts
+    description: Single-Email Campaigns (Broadcasts) are one-time emails sent to a segment of your subscribers.
+  - name: Campaigns
+    description: Email Series Campaigns in an account.
+  - name: Custom Fields
+    description: Custom field identifiers used in an account.
+  - name: Conversions
+    description: Conversion goals tracked in an account. See the Events API for recording conversion events.
+  - name: Events
+    description: Custom events recorded for subscribers in an account.
+  - name: Forms
+    description: Form widgets and embedded forms in an account.
+  - name: Orders
+    description: Legacy endpoint for recording orders. Superseded by the Order Activity endpoint, but it will continue to function, with fair notice before retirement.
+  - name: Subscribers
+    description: People in an account. All subscriber API endpoints only work with your active people; attempting to modify or delete an inactive person will result in an error.
+  - name: Tags
+    description: Tags applied to subscribers in an account.
+  - name: Users
+    description: The user authenticated to the API.
+  - name: Workflows
+    description: Automation workflows in an account, with draft, active, or paused statuses.
+  - name: Webhooks
+    description: Webhook subscriptions for event notifications in an account.
+
+components:
+  securitySchemes:
+    apiKey:
+      $ref: "./components.yaml#/components/securitySchemes/apiKey"
+    oauth2:
+      $ref: "./components.yaml#/components/securitySchemes/oauth2"
+
+paths:
+  "/{account_id}/subscribers/batches":
+    $ref: "./fragments/batch_api.yaml#/paths/~1{account_id}~1subscribers~1batches"
+  "/{account_id}/unsubscribes/batches":
+    $ref: "./fragments/batch_api.yaml#/paths/~1{account_id}~1unsubscribes~1batches"
+  "/{account_id}/events/batches":
+    $ref: "./fragments/batch_api.yaml#/paths/~1{account_id}~1events~1batches"
+  "/{account_id}/orders/batches":
+    $ref: "./fragments/batch_api.yaml#/paths/~1{account_id}~1orders~1batches"
+  /accounts:
+    $ref: "./fragments/accounts.yaml#/paths/~1accounts"
+  "/accounts/{account_id}":
+    $ref: "./fragments/accounts.yaml#/paths/~1accounts~1{account_id}"
+  "/{account_id}/broadcasts":
+    $ref: "./fragments/broadcasts.yaml#/paths/~1{account_id}~1broadcasts"
+  "/{account_id}/broadcasts/{broadcast_id}":
+    $ref: "./fragments/broadcasts.yaml#/paths/~1{account_id}~1broadcasts~1{broadcast_id}"
+  "/{account_id}/broadcasts/{broadcast_id}/send_test":
+    $ref: "./fragments/broadcasts.yaml#/paths/~1{account_id}~1broadcasts~1{broadcast_id}~1send_test"
+  "/{account_id}/campaigns":
+    $ref: "./fragments/campaigns.yaml#/paths/~1{account_id}~1campaigns"
+  "/{account_id}/campaigns/{campaign_id}":
+    $ref: "./fragments/campaigns.yaml#/paths/~1{account_id}~1campaigns~1{campaign_id}"
+  "/{account_id}/campaigns/{campaign_id}/activate":
+    $ref: "./fragments/campaigns.yaml#/paths/~1{account_id}~1campaigns~1{campaign_id}~1activate"
+  "/{account_id}/campaigns/{campaign_id}/pause":
+    $ref: "./fragments/campaigns.yaml#/paths/~1{account_id}~1campaigns~1{campaign_id}~1pause"
+  "/{account_id}/campaigns/{campaign_id}/subscribers":
+    $ref: "./fragments/campaigns.yaml#/paths/~1{account_id}~1campaigns~1{campaign_id}~1subscribers"
+  "/{account_id}/subscribers/{subscriber_id}/campaign_subscription":
+    $ref: "./fragments/campaigns.yaml#/paths/~1{account_id}~1subscribers~1{subscriber_id}~1campaign_subscription"
+  "/{account_id}/custom_field_identifiers":
+    $ref: "./fragments/custom_fields.yaml#/paths/~1{account_id}~1custom_field_identifiers"
+  "/{account_id}/goals":
+    $ref: "./fragments/conversions.yaml#/paths/~1{account_id}~1goals"
+  "/{account_id}/goals/{conversion_id}":
+    $ref: "./fragments/conversions.yaml#/paths/~1{account_id}~1goals~1{conversion_id}"
+  "/{account_id}/events":
+    $ref: "./fragments/events.yaml#/paths/~1{account_id}~1events"
+  "/{account_id}/event_actions":
+    $ref: "./fragments/events.yaml#/paths/~1{account_id}~1event_actions"
+  "/{account_id}/forms":
+    $ref: "./fragments/forms.yaml#/paths/~1{account_id}~1forms"
+  "/{account_id}/forms/{form_id}":
+    $ref: "./fragments/forms.yaml#/paths/~1{account_id}~1forms~1{form_id}"
+  "/{account_id}/orders":
+    $ref: "./fragments/orders.yaml#/paths/~1{account_id}~1orders"
+  "/{account_id}/refunds":
+    $ref: "./fragments/orders.yaml#/paths/~1{account_id}~1refunds"
+  "/{account_id}/subscribers":
+    $ref: "./fragments/subscribers.yaml#/paths/~1{account_id}~1subscribers"
+  "/{account_id}/subscribers/{id_or_email}":
+    $ref: "./fragments/subscribers.yaml#/paths/~1{account_id}~1subscribers~1{id_or_email}"
+  "/{account_id}/subscribers/{id_or_email}/remove":
+    $ref: "./fragments/subscribers.yaml#/paths/~1{account_id}~1subscribers~1{id_or_email}~1remove"
+  "/{account_id}/subscribers/{id_or_email}/unsubscribe_all":
+    $ref: "./fragments/subscribers.yaml#/paths/~1{account_id}~1subscribers~1{id_or_email}~1unsubscribe_all"
+  "/{account_id}/tags":
+    $ref: "./fragments/tags.yaml#/paths/~1{account_id}~1tags"
+  "/{account_id}/subscribers/{id_or_email}/tags/{tag}":
+    $ref: "./fragments/tags.yaml#/paths/~1{account_id}~1subscribers~1{id_or_email}~1tags~1{tag}"
+  /user:
+    $ref: "./fragments/users.yaml#/paths/~1user"
+  "/{account_id}/workflows":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows"
+  "/{account_id}/workflows/{workflow_id}":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}"
+  "/{account_id}/workflows/{workflow_id}/activate":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}~1activate"
+  "/{account_id}/workflows/{workflow_id}/pause":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}~1pause"
+  "/{account_id}/workflows/{workflow_id}/subscribers":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}~1subscribers"
+  "/{account_id}/workflows/{workflow_id}/subscribers/{id_or_email}":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}~1subscribers~1{id_or_email}"
+  "/{account_id}/workflows/{workflow_id}/triggers":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}~1triggers"
+  "/{account_id}/workflows/{workflow_id}/triggers/{trigger_id}":
+    $ref: "./fragments/workflows.yaml#/paths/~1{account_id}~1workflows~1{workflow_id}~1triggers~1{trigger_id}"
+  "/{account_id}/webhooks":
+    $ref: "./fragments/webhooks.yaml#/paths/~1{account_id}~1webhooks"
+  "/{account_id}/webhooks/{webhook_id}":
+    $ref: "./fragments/webhooks.yaml#/paths/~1{account_id}~1webhooks~1{webhook_id}"

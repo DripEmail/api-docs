@@ -17,6 +17,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.9)
     contracts (0.13.0)
+    date (3.5.1)
     dotenv (2.7.6)
     erubis (2.7.0)
     execjs (2.8.1)
@@ -83,6 +84,11 @@ GEM
       rouge (~> 2.0)
     mini_portile2 (2.8.9)
     minitest (5.15.0)
+    net-ftp (0.3.9)
+      net-protocol
+      time
+    net-protocol (0.2.2)
+      timeout
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
@@ -116,10 +122,14 @@ GEM
     thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    time (0.4.2)
+      date
+    timeout (0.6.1)
     tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
+    webrick (1.9.2)
 
 PLATFORMS
   ruby
@@ -130,9 +140,11 @@ DEPENDENCIES
   middleman-deploy (~> 2.0.0.pre.alpha)
   middleman-sprockets (~> 4.1.0)
   middleman-syntax (~> 3.0.0)
+  net-ftp
   nokogiri (~> 1.18.9)
   redcarpet (~> 3.5.1)
   rouge (~> 2.0.5)
+  webrick
 
 RUBY VERSION
    ruby 2.3.3p222
