@@ -18,6 +18,7 @@ includes_rest_api:
   - rest/accounts
   - rest/broadcasts
   - rest/campaigns
+  - rest/email_metrics
   - rest/custom_fields
   - rest/conversions
   - rest/events
