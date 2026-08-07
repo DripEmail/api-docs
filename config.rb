@@ -37,24 +37,18 @@ end
 activate :relative_assets
 set :relative_links, true
 
-# Build Configuration
 configure :build do
-  # If you're having trouble with Middleman hanging, commenting
-  # out the following two lines has been known to help
   activate :minify_css
   activate :minify_javascript
-  # activate :relative_assets
-  # activate :asset_hash
-  # activate :gzip
 end
 
+# Deploy Configuration
 activate :deploy do |config|
   config.deploy_method = :git
   config.build_before = true
 end
 
-# Deploy Configuration
-# If you want Middleman to listen on a different port, you can set that below
+# Server Configuration
 set :port, 4567
 
 helpers do
