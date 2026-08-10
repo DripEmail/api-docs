@@ -22,6 +22,7 @@ includes_rest_api:
   - rest/conversions
   - rest/events
   - rest/forms
+  - rest/metrics
   - rest/orders
   - rest/subscribers
   - rest/tags
