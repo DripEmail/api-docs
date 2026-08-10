@@ -3,9 +3,9 @@
 The Metrics API returns aggregate email performance for an account: sends, deliveries, opens,
 clicks, bot clicks, unsubscribes, hard bounces, complaints, orders, and revenue.
 
-Results cover Single-Email Campaigns (including their variations), Email Series Campaigns, and
-automation emails sent by Workflows, rules, and forms. Confirmation emails (double opt-in) are
-excluded. Order and revenue values are reported in cents.
+Results cover Single-Email Campaigns, and automation emails sent by Workflows.
+Confirmation emails (double opt-in) are excluded. Order and revenue values are
+reported in cents.
 
 Dates are interpreted in the account owner's time zone.
 
@@ -57,7 +57,7 @@ Dates are interpreted in the account owner's time zone.
   </tbody>
 </table>
 
-## Email Metric
+## Email Metrics
 
 > The email metric object structure:
 
