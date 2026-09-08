@@ -44,7 +44,7 @@ Dates are interpreted in the account owner's time zone.
     </tr>
     <tr>
       <td><code>workflow_placement</code></td>
-      <td>An object containing the <code>workflow_id</code> of the workflow that sends the email and the <code>node_id</code> of the send-email step within it. Only present when the request includes a <code>workflow_ids</code> filter and the email is sent by one of those workflows.</td>
+      <td>An object containing the <code>workflow_id</code> of the workflow that sends the email and the <code>node_id</code> of the send-email step within it. Only present when the request includes a <code>workflow_ids</code> filter and the email is sent by one of those workflows. <code>node_id</code> holds the same value <a href="#fetch-a-workflow-39-s-details">Fetch a workflow's details</a> returns as a node's <code>id</code>.</td>
     </tr>
     <tr>
       <td><code>title</code></td>

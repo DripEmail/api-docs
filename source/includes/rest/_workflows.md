@@ -209,6 +209,372 @@ client.fetchWorkflow(workflowId)
 
 None.
 
+## Fetch a workflow's details
+
+The details endpoint returns the structure of a single workflow: its entry triggers, its ordered
+steps, and everything nested beneath its decisions, goals, forks, and split tests. It is read-only.
+
+Workflows in every visible status are returned, including drafts.
+
+> To fetch a workflow's details:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/details" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/details")
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/details",
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> The response looks like this (abridged):
+
+```json
+# The workflows property is an array of one workflow object.
+{
+  "links": {
+    "workflows.account": "https://api.getdrip.com/v2/accounts/{workflows.account}"
+  },
+  "workflows": [
+    {
+      "id": "12345",
+      "href": "https://api.getdrip.com/v2/9999999/workflows/12345",
+      "name": "Welcome series",
+      "description": "Onboarding for new trial signups",
+      "status": "active",
+      "created_at": "2026-01-04T17:22:03Z",
+      "updated_at": "2026-07-28T14:02:11Z",
+      "node_count": 9,
+      "details": {
+        "id": "root_1",
+        "type": "path",
+        "triggers": [
+          {
+            "id": "0a1b2c3d",
+            "type": "trigger",
+            "trigger_type": "submitted_form",
+            "provider_id": "drip",
+            "entry_point": true,
+            "status": "active",
+            "properties": { "form_id": "185216953", "source": "drip" },
+            "incomplete": false,
+            "actions_required": [],
+            "derived": {
+              "type_name": "Submitted a form or Onsite campaign.",
+              "summary": "Submitted the \"Trial signup\" form",
+              "type_description": "This event is fired when the person submits a form or Onsite campaign.",
+              "segment_description": "people who are tagged with \"trial\""
+            }
+          }
+        ],
+        "steps": [
+          {
+            "id": "4e5f6a7b",
+            "type": "action",
+            "action_type": "send_email",
+            "provider_id": "drip",
+            "status": "active",
+            "properties": { "automation_email_id": "957660884" },
+            "incomplete": false,
+            "actions_required": [],
+            "derived": {
+              "type_name": "Send an email to a person",
+              "summary": "Send \"Welcome!\"",
+              "email_title": "Welcome!"
+            }
+          },
+          {
+            "id": "8c9d0e1f",
+            "type": "delay",
+            "delay_type": "wait_for_relative_date",
+            "properties": {
+              "duration": 2,
+              "units": "days",
+              "days_of_the_week_mask": "0111110",
+              "minutes_from_midnight": 540,
+              "time_zone": "owner"
+            },
+            "incomplete": false,
+            "derived": { "summary": "Wait 2 days, then resume on the next weekday at 9:00 am" }
+          },
+          {
+            "id": "2a3b4c5d",
+            "type": "decision",
+            "true_path": {
+              "id": "6e7f8a9b",
+              "type": "path",
+              "triggers": [],
+              "steps": [
+                {
+                  "id": "0c1d2e3f",
+                  "type": "action",
+                  "action_type": "apply_tag",
+                  "provider_id": "drip",
+                  "status": "active",
+                  "properties": { "tag": "vip" },
+                  "incomplete": false,
+                  "actions_required": [],
+                  "derived": { "type_name": "Apply a tag", "summary": "Apply the \"vip\" tag" }
+                }
+              ]
+            },
+            "false_path": { "id": "4a5b6c7d", "type": "path", "triggers": [], "steps": [] },
+            "incomplete": false,
+            "actions_required": [],
+            "derived": { "summary": "Person is tagged \"engaged\"?" }
+          },
+          {
+            "id": "8e9f0a1b",
+            "type": "interrupt",
+            "triggers": [ { "id": "2c3d4e5f", "type": "trigger", "...": "..." } ],
+            "derived": { "summary": "Waiting for goals" }
+          },
+          {
+            "id": "6a7b8c9d",
+            "type": "split_test",
+            "properties": { "workflow_split_test_id": "9z8y7x6w" },
+            "paths": [
+              { "id": "0e1f2a3b", "type": "split_test_path", "triggers": [], "steps": [] },
+              { "id": "4c5d6e7f", "type": "split_test_path", "triggers": [], "steps": [] }
+            ],
+            "derived": { "summary": "Began a split test" }
+          },
+          {
+            "id": "3c4d5e6f",
+            "type": "exit",
+            "derived": { "summary": "Exit the workflow" }
+          }
+        ]
+      },
+      "links": { "account": "9999999" }
+    }
+  ]
+}
+```
+
+**Properties**
+
+In addition to the properties every workflow record carries, the details payload includes:
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>The description assigned to the workflow. May be empty.</td>
+    </tr>
+    <tr>
+      <td><code>node_count</code></td>
+      <td>The number of nodes in the workflow, counting containers.</td>
+    </tr>
+    <tr>
+      <td><code>details</code></td>
+      <td>The root <code>path</code> node, holding the workflow's entry <code>triggers</code> and its ordered <code>steps</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+### Nodes
+
+Every node in the tree carries an `id` and a `type`, so one key tells you how to read the rest of
+the node. Container nodes hold their children under `triggers`, `steps`, `paths`, `true_path`, or
+`false_path`, depending on their type. Branches are objects rather than bare arrays, so an empty
+branch still has an id.
+
+<table>
+  <thead>
+    <tr>
+      <th>Node <code>type</code></th>
+      <th>Fields</th>
+      <th><code>derived</code> keys</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>path</code>, <code>split_test_path</code></td>
+      <td><code>id</code>, <code>type</code>, <code>triggers</code>, <code>steps</code></td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td><code>trigger</code></td>
+      <td><code>id</code>, <code>type</code>, <code>trigger_type</code>, <code>provider_id</code>, <code>entry_point</code>, <code>status</code>, <code>properties</code>, <code>incomplete</code>, <code>actions_required</code></td>
+      <td><code>type_name</code>, <code>summary</code>, <code>type_description</code>, <code>segment_description</code></td>
+    </tr>
+    <tr>
+      <td><code>action</code></td>
+      <td><code>id</code>, <code>type</code>, <code>action_type</code>, <code>provider_id</code>, <code>status</code>, <code>properties</code>, <code>incomplete</code>, <code>actions_required</code></td>
+      <td><code>type_name</code>, <code>summary</code>, <code>email_title</code></td>
+    </tr>
+    <tr>
+      <td><code>delay</code></td>
+      <td><code>id</code>, <code>type</code>, <code>delay_type</code>, <code>properties</code>, <code>incomplete</code></td>
+      <td><code>summary</code></td>
+    </tr>
+    <tr>
+      <td><code>decision</code></td>
+      <td><code>id</code>, <code>type</code>, <code>true_path</code>, <code>false_path</code>, <code>incomplete</code>, <code>actions_required</code></td>
+      <td><code>summary</code></td>
+    </tr>
+    <tr>
+      <td><code>fork</code></td>
+      <td><code>id</code>, <code>type</code>, <code>paths</code></td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td><code>interrupt</code></td>
+      <td><code>id</code>, <code>type</code>, <code>triggers</code></td>
+      <td><code>summary</code></td>
+    </tr>
+    <tr>
+      <td><code>split_test</code></td>
+      <td><code>id</code>, <code>type</code>, <code>properties</code>, <code>paths</code></td>
+      <td><code>summary</code></td>
+    </tr>
+    <tr>
+      <td><code>exit</code></td>
+      <td><code>id</code>, <code>type</code></td>
+      <td><code>summary</code></td>
+    </tr>
+  </tbody>
+</table>
+
+An `interrupt` node is a goal: the triggers beneath it are goal triggers rather than entry
+triggers, and they carry `entry_point: false`. A node's `status` is `active` or `draft`.
+
+New fields may be added to any node at any time. Ignore fields you do not recognize.
+
+### Node configuration
+
+`properties` is the node's configuration as stored, and it is present on every `trigger`, `action`,
+`delay`, and `split_test` node. Trigger properties are the same object
+[List all workflow triggers](#list-all-workflow-triggers) returns for the same trigger.
+
+An empty `properties` object does not mean the node is unconfigured; `incomplete` answers that.
+Several action types, such as `activate_person` and `subscribe`, store no fields even when fully
+configured.
+
+`incomplete` is `true` whenever a node is not fully configured, whether because no type has been
+chosen, because the node is blocked, or because it carries any `actions_required`. A decision whose
+criteria have not been set is incomplete in the same way. `actions_required` lists what is missing,
+as an array of `{ "code": ..., "message": ... }` objects, in the same shape
+[List all workflow triggers](#list-all-workflow-triggers) returns.
+
+Some configuration is never published. A `drip/http_post` action responds with an empty
+`properties` object and no `derived.summary`, because its endpoint URL and request headers are
+credentials; only `derived.type_name` survives. Raw segmentation criteria, provider credentials,
+and editor layout data are not published on any node.
+
+### Derived text
+
+Human-readable text lives in a `derived` object, separate from `properties`. Everything in
+`derived` is generated when the response is built and is not part of the workflow's stored
+definition.
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>summary</code></td>
+      <td>What this particular node does. E.g. <code>Send "Welcome!"</code>.</td>
+    </tr>
+    <tr>
+      <td><code>type_name</code></td>
+      <td>The display name of the node's type. Triggers and actions only.</td>
+    </tr>
+    <tr>
+      <td><code>type_description</code></td>
+      <td>What the node's type means in general. Triggers only.</td>
+    </tr>
+    <tr>
+      <td><code>segment_description</code></td>
+      <td>The humanized entry criteria for the trigger. Triggers only.</td>
+    </tr>
+    <tr>
+      <td><code>email_title</code></td>
+      <td>The title of the email the node sends. <code>send_email</code> actions only.</td>
+    </tr>
+  </tbody>
+</table>
+
+Any key is omitted when it has no value, and a node with no text at all carries no `derived`
+object. Because these strings are built from the records the node refers to, a `derived` value can
+change when some other record is renamed, with no edit to the workflow itself. Use `properties` and
+the type fields for anything you parse.
+
+### Joining to email metrics
+
+A node's `id` holds the same value the [Metrics](#metrics) endpoint returns as
+`workflow_placement.node_id`, so joining `details` node `id` to `workflow_placement.node_id` lines
+the structure up with per-email performance. The two endpoints spell the field differently; the
+values are identical.
+
+A node id is stable for the life of the workflow record. Copying a workflow regenerates every node
+id, so ids do not carry across a copy.
+
+### Caching
+
+> If the response has not changed, responds with a `304 Not Modified` and an empty body:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/details" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -H 'If-None-Match: "a1b2c3d4e5f6"' \
+  -u YOUR_API_KEY:
+```
+
+Responses carry an `ETag` covering every field of the response. Send it back as `If-None-Match` to
+get a `304 Not Modified` when none of those fields has changed.
+
+The `ETag` describes this view of the workflow rather than the workflow's stored definition, so it
+is a cache validator only. Two workflows that differ solely in fields this endpoint withholds share
+an `ETag`, and a change confined to a withheld field does not invalidate one.
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/workflows/:workflow_id/details`
+
+### Arguments
+
+None.
+
 ## Activate a workflow
 
 > To activate a workflow:
