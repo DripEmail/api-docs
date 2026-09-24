@@ -23,6 +23,7 @@ includes_rest_api:
   - rest/events
   - rest/forms
   - rest/orders
+  - rest/segments
   - rest/subscribers
   - rest/tags
   - rest/users

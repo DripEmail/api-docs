@@ -894,3 +894,287 @@ Rate limits are applied per user.
     </tr>
   </tbody>
 </table>
+
+## Set the audience
+
+> To send a Single-Email Campaign to a saved segment:
+
+```shell
+curl -X PUT "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience" \
+  -H "Content-Type: application/vnd.api+json" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY: \
+  -d '{
+        "filter": [
+          [{ "type": "segments", "properties": { "operator": "in", "segment_id": "4815162" } }]
+        ]
+      }'
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience")
+
+request = Net::HTTP::Put.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+request["Content-Type"] = "application/vnd.api+json"
+request.body = {
+  filter: [
+    [{ type: "segments", properties: { operator: "in", segment_id: "4815162" } }]
+  ]
+}.to_json
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience",
+  {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/vnd.api+json",
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    },
+    body: JSON.stringify({
+      filter: [
+        [{ type: "segments", properties: { operator: "in", segment_id: "4815162" } }]
+      ]
+    })
+  }
+);
+
+const body = await response.json();
+```
+
+> Responds with a <code>200 OK</code> and the Single-Email Campaign:
+
+```json
+{
+  "links": { ... },
+  "broadcasts": [{ ... }]
+}
+```
+
+> If a condition names a segment the account cannot use, responds with a <code>404 Not Found</code>:
+
+```json
+{
+  "errors": [{
+    "code": "not_found",
+    "message": "No segment with id 4815162.",
+    "pointer": "/filter/0/0/properties/segment_id"
+  }]
+}
+```
+
+> If the filter is malformed, responds with a <code>422 Unprocessable Entity</code>, naming every problem at once:
+
+```json
+{
+  "errors": [{
+    "code": "unknown_operator",
+    "message": "Unknown operator 'within' for condition type 'segments'. Valid operators: in, not_in",
+    "pointer": "/filter/0/0/properties/operator"
+  }]
+}
+```
+
+Replaces who the Single-Email Campaign goes to. Only a `draft` campaign's audience can be
+changed; anything else responds with a `409 Conflict`.
+
+A `filter` is a list of AND-sets, combined with OR. Everything inside one inner list has to be
+true of a person, and a person matching any inner list is included. So
+`[[A, B], [C]]` means "(A and B) or C".
+
+`[[]]` means everyone eligible to receive it, and is how you clear an audience. An empty
+filter, `[]`, is rejected.
+
+Today the only condition type available is `segments`, with the operators `in` and
+`not_in`. The `segment_id` is the `id` from the Segments API. More condition types will follow.
+
+Setting an audience over one that already exists requires `confirm=true`, because what is
+being replaced cannot be recovered through the API. Read the audience first if you need to
+keep it.
+
+Every problem with a filter is reported in a single response, each with a JSON Pointer at the
+condition that caused it, so you can fix a request once rather than once per round trip.
+
+### HTTP Endpoint
+
+`PUT /v2/:account_id/broadcasts/:broadcast_id/audience`
+
+### Arguments
+
+| Argument | Description |
+|----------|-------------|
+| filter | Required. A list of AND-sets of conditions. Send `[[]]` for everyone. |
+| confirm | Optional. Set to `true` to acknowledge that the current audience will be replaced. Required whenever the campaign already has an audience. |
+
+## Fetch the audience
+
+> To read a Single-Email Campaign's audience:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience")
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience",
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> Responds with a <code>200 OK</code>:
+
+```json
+{
+  "audience": {
+    "filter": [
+      [{ "type": "segments", "properties": { "operator": "in", "segment_id": "4815162" } }]
+    ]
+  }
+}
+```
+
+> When the audience uses rules this API cannot yet express:
+
+```json
+{
+  "audience": {
+    "message": "This filter includes unsupported criteria and cannot be returned as a filter.",
+    "summary": "People who are tagged with \"vip\"",
+    "unsupported_types": ["tags"]
+  }
+}
+```
+
+`filter` comes back in the same shape it is set in, so reading an audience and writing it
+straight back changes nothing.
+
+`filter` is present only when writing it again would be accepted. Most audiences built in the
+Drip app use rules that have no form here yet, and those come back described instead:
+`summary` is plain-English display text, and `unsupported_types` names the condition types in
+the way. Expect that until more condition types are available.
+
+A present `filter` is not a promise that its segments still exist. That is not checked on
+read, so an audience naming a segment deleted since it was set reads back intact and responds
+with a `404 Not Found` when written again.
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/broadcasts/:broadcast_id/audience`
+
+### Arguments
+
+None.
+
+## Unschedule a Single-Email Campaign
+
+> To return a scheduled Single-Email Campaign to draft:
+
+```shell
+curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/unschedule" \
+  -H "Content-Type: application/json" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/unschedule")
+
+request = Net::HTTP::Post.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/unschedule",
+  {
+    method: "POST",
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> Responds with a <code>200 OK</code> and the Single-Email Campaign in the <code>draft</code> status:
+
+```json
+{
+  "links": { ... },
+  "broadcasts": [{ ... }]
+}
+```
+
+> If the Single-Email Campaign has already sent, responds with a <code>409 Conflict</code>:
+
+```json
+{
+  "errors": [{
+    "code": "conflict_error",
+    "message": "Cannot unschedule a broadcast with status 'sent'"
+  }]
+}
+```
+
+Takes a scheduled Single-Email Campaign back to `draft` so it will not send. The scheduled
+send time is not preserved, so scheduling it again means setting the time again.
+
+Calling this on a campaign that is already a draft succeeds and changes nothing, so a retried
+call is safe. A campaign that is sending or has sent cannot be unscheduled.
+
+### HTTP Endpoint
+
+`POST /v2/:account_id/broadcasts/:broadcast_id/unschedule`
+
+### Arguments
+
+None.
