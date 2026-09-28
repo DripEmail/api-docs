@@ -24,6 +24,7 @@ includes_rest_api:
   - rest/forms
   - rest/metrics
   - rest/orders
+  - rest/segments
   - rest/subscribers
   - rest/tags
   - rest/users
