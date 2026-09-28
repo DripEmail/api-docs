@@ -1,11 +1,13 @@
 # Single-Email Campaigns <br/>(aka Broadcasts)
 
 Single-Email Campaigns (Broadcasts) are one-time emails sent to a segment of your subscribers.
-The API allows you to list, fetch, create, update, and delete Single-Email Campaigns, as well as
-send test emails.
+The API allows you to list, fetch, create, update, and delete Single-Email Campaigns, send test
+emails, set and read a campaign's audience, and schedule or unschedule it.
 
-A Single-Email Campaign's `status` is read-only via the API and is managed through the Drip UI.
-Possible statuses are:
+A Single-Email Campaign's `status` cannot be set directly. It changes as the campaign moves
+through its lifecycle: [scheduling](#schedule-a-single-email-campaign) moves a draft to
+`scheduled`, and [unscheduling](#unschedule-a-single-email-campaign) moves it back. Possible
+statuses are:
 
 <table>
   <thead>
@@ -42,9 +44,9 @@ Possible statuses are:
   </tbody>
 </table>
 
-Scheduling (`send_at`, `localize_sending_time`) and recipient segmentation
-are managed through the Drip UI only. These fields are returned as read-only values in API
-responses and cannot be set via the API.
+`send_at` and `localize_sending_time` are read-only on this resource. Set them with
+[Schedule a Single-Email Campaign](#schedule-a-single-email-campaign), and set who receives it
+with [Set the audience](#set-the-audience).
 
 > Single-Email Campaigns are represented as follows:
 
@@ -152,6 +154,10 @@ responses and cannot be set via the API.
       <td>The plain text content used in the email's body.</td>
     </tr>
     <tr>
+      <td><code>derived</code></td>
+      <td>Read-only text generated when the campaign is read. <code>derived.audience</code> describes who it goes to in plain English, such as <code>People who are in the "VIP customers" segment</code>, or <code>All people</code>. It is display text: do not parse it, and expect its wording to change.</td>
+    </tr>
+    <tr>
       <td><code>links</code></td>
       <td>An object containing the account's REST API URL.</td>
     </tr>
@@ -201,6 +207,25 @@ to an object with a `type` (the content variant) and a `value` (the content itse
 
 HTML content is validated and sanitized for security: JavaScript is not allowed, and dangerous
 CSS patterns are blocked.
+
+The HTML must also include two Liquid tags, as the CAN-SPAM Act requires:
+
+* an unsubscribe link: `{{ unsubscribe_url }}` or `{{ unsubscribe_link }}`
+* a postal address: `{{ postal_address }}`, `{{ inline_postal_address }}` or `{{ html_postal_address }}`
+
+Both usually go in the footer. The check is on the HTML itself, so setting the `postal_address`
+field does not satisfy it on its own. Without them, creating or updating the campaign responds
+with a `422 Unprocessable Entity`:
+
+```json
+{
+  "errors": [{
+    "code": "can_spam_compliance",
+    "attribute": "content.html",
+    "message": "Content HTML must include {{ postal_address }} or {{ inline_postal_address }} or {{ html_postal_address }}"
+  }]
+}
+```
 
 ## List all Single-Email Campaigns
 
@@ -422,8 +447,9 @@ const body = await response.json();
 }
 ```
 
-Single-Email Campaigns created via the API start in the `draft` status. Scheduling and
-sending are then managed through the Drip UI.
+Single-Email Campaigns created via the API start in the `draft` status, with an audience of
+everyone eligible to receive them. [Set the audience](#set-the-audience) to narrow it, then
+[schedule](#schedule-a-single-email-campaign) it.
 
 ### HTTP Endpoint
 
@@ -628,8 +654,9 @@ const body = await response.json();
 Only Single-Email Campaigns in the `draft` status can be updated via the API; all other
 statuses are read-only. Updates are partial: only the fields you include are changed.
 
-Status, scheduling (`send_at`, `localize_sending_time`), and recipient segmentation cannot
-be updated via the API — they are managed through the Drip UI.
+Status, scheduling, and the audience are not updated here. Each has its own endpoint:
+[Set the audience](#set-the-audience), [Schedule](#schedule-a-single-email-campaign), and
+[Unschedule](#unschedule-a-single-email-campaign).
 
 ### HTTP Endpoint
 
@@ -969,9 +996,9 @@ const body = await response.json();
 ```json
 {
   "errors": [{
-    "code": "not_found",
-    "message": "No segment with id 4815162.",
-    "pointer": "/filter/0/0/properties/segment_id"
+    "code": "not_found_error",
+    "attribute": "/filter/0/0/properties/segment_id",
+    "message": "No active segment with id '4815162' was found on this account"
   }]
 }
 ```
@@ -982,8 +1009,20 @@ const body = await response.json();
 {
   "errors": [{
     "code": "unknown_operator",
-    "message": "Unknown operator 'within' for condition type 'segments'. Valid operators: in, not_in",
-    "pointer": "/filter/0/0/properties/operator"
+    "attribute": "/filter/0/0/properties/operator",
+    "message": "Unknown operator 'within' for condition type 'segments'. Valid operators: in, not_in"
+  }]
+}
+```
+
+> If the campaign already has an audience and `confirm=true` was not sent, responds with a <code>409 Conflict</code>:
+
+```json
+{
+  "errors": [{
+    "code": "confirmation_required",
+    "attribute": "confirm",
+    "message": "This broadcast has a filter audience (People who are in the \"VIP customers\" segment) that will be replaced and cannot be recovered. Retry with confirm=true to proceed."
   }]
 }
 ```
@@ -1001,12 +1040,20 @@ filter, `[]`, is rejected.
 Today the only condition type available is `segments`, with the operators `in` and
 `not_in`. The `segment_id` is the `id` from the Segments API. More condition types will follow.
 
-Setting an audience over one that already exists requires `confirm=true`, because what is
-being replaced cannot be recovered through the API. Read the audience first if you need to
-keep it.
+`segment_id` takes one id, never a list: `["4815162"]` is rejected. For several segments, use
+one condition each. Two conditions in the same inner list mean "in both"; two in separate
+inner lists mean "in either".
 
-Every problem with a filter is reported in a single response, each with a JSON Pointer at the
-condition that caused it, so you can fix a request once rather than once per round trip.
+Replacing an audience requires `confirm=true` whenever the current audience is anything other
+than everyone, because what is being replaced cannot be recovered through the API. Read the
+audience first if you need to keep it.
+
+Every problem with a filter is reported in a single response. Each error's `attribute` is a
+JSON Pointer to the condition that caused it, so you can fix a request once rather than once
+per round trip.
+
+An audience set here appears in the Drip app as the campaign's recipients, the same as one
+chosen there.
 
 ### HTTP Endpoint
 
@@ -1017,7 +1064,7 @@ condition that caused it, so you can fix a request once rather than once per rou
 | Argument | Description |
 |----------|-------------|
 | filter | Required. A list of AND-sets of conditions. Send `[[]]` for everyone. |
-| confirm | Optional. Set to `true` to acknowledge that the current audience will be replaced. Required whenever the campaign already has an audience. |
+| confirm | Optional. Set to `true` to acknowledge that the current audience will be replaced. Required whenever the current audience is anything other than everyone. |
 
 ## Fetch the audience
 
@@ -1102,6 +1149,158 @@ with a `404 Not Found` when written again.
 ### Arguments
 
 None.
+
+## Schedule a Single-Email Campaign
+
+> To send a Single-Email Campaign at 9:00 in each person's own time zone:
+
+```shell
+curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/schedule" \
+  -H "Content-Type: application/vnd.api+json" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY: \
+  -d '{
+        "send_at": "2026-11-01T09:00:00Z",
+        "localize_sending_time": true
+      }'
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/schedule")
+
+request = Net::HTTP::Post.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+request["Content-Type"] = "application/vnd.api+json"
+request.body = {
+  send_at: "2026-11-01T09:00:00Z",
+  localize_sending_time: true
+}.to_json
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/schedule",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/vnd.api+json",
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    },
+    body: JSON.stringify({
+      send_at: "2026-11-01T09:00:00Z",
+      localize_sending_time: true
+    })
+  }
+);
+
+const body = await response.json();
+```
+
+> Responds with a <code>200 OK</code> and the Single-Email Campaign in the <code>scheduled</code> status:
+
+```json
+{
+  "links": { ... },
+  "broadcasts": [{ ... }]
+}
+```
+
+> If the request is malformed, responds with a <code>422 Unprocessable Entity</code>, naming every problem at once:
+
+```json
+{
+  "errors": [{
+    "code": "validation_error",
+    "attribute": "localize_sending_time",
+    "message": "localize_sending_time is required with send_at: false sends at the instant given, true sends at that wall clock in each person's own zone."
+  }]
+}
+```
+
+> If the campaign cannot be scheduled in its current state, responds with a <code>409 Conflict</code>:
+
+```json
+{
+  "errors": [{
+    "code": "conflict_error",
+    "message": "This broadcast is already scheduled. Unschedule it first to change when it sends."
+  }]
+}
+```
+
+Sets a draft Single-Email Campaign to send. There are three ways to say when, and
+`localize_sending_time` is required alongside `send_at` rather than defaulting, because the two
+readings of the same timestamp differ by hours for most people:
+
+<table>
+  <thead>
+    <tr>
+      <th>Request</th>
+      <th>Sends</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>send_at</code>, <code>localize_sending_time: false</code></td>
+      <td>At the instant given, honoring its offset.</td>
+    </tr>
+    <tr>
+      <td><code>send_at</code>, <code>localize_sending_time: true</code></td>
+      <td>At that time of day in each person's own time zone.</td>
+    </tr>
+    <tr>
+      <td><code>send_at</code> with an offset, <code>localize_sending_time: true</code></td>
+      <td>The same: the offset is dropped and only the time of day is used.</td>
+    </tr>
+  </tbody>
+</table>
+
+So `2026-11-01T09:00:00-05:00` with `localize_sending_time: true` reaches everyone at 9:00 their
+own time, not at 14:00 UTC. People with no time zone on record receive a localized send at that
+time of day in UTC.
+
+To send now, pass `send_immediately: true` instead of `send_at`. Send exactly one of the two,
+and do not combine `send_immediately` with `localize_sending_time`.
+
+A `send_at` must be at least five minutes away, or at least 14 hours and five minutes away when
+localized, so that every time zone can still be reached. Localized sending cannot be used with a split test
+whose pool is less than 100%.
+
+Only a `draft` can be scheduled. To change when a scheduled campaign sends, unschedule it first,
+then schedule it again. A campaign that is already scheduled, sending, or sent, or whose account
+cannot send right now, responds with a `409 Conflict` that says which.
+
+The audience is not checked here. A campaign with no audience set goes to everyone eligible to
+receive it, the same as in the Drip app. Read `derived.audience` first if that matters.
+
+With `auto_resend`, a second copy goes to people who did not open the first, `resend_delay`
+whole days later.
+
+### HTTP Endpoint
+
+`POST /v2/:account_id/broadcasts/:broadcast_id/schedule`
+
+### Arguments
+
+| Argument | Description |
+|----------|-------------|
+| send_at | An ISO 8601 timestamp, such as `2026-11-01T09:00:00Z`. Required unless `send_immediately` is `true`. |
+| localize_sending_time | Required with `send_at`. `false` sends at the instant given; `true` sends at that time of day in each person's own time zone. |
+| send_immediately | Optional. Set to `true` to send now instead of at `send_at`. Defaults to `false`. |
+| auto_resend | Optional. Set to `true` to send a second copy to people who did not open the first. Defaults to `false`. |
+| resend_subject | Optional. The subject for the resend. Defaults to the campaign's own subject. |
+| resend_delay | Required when `auto_resend` is `true`. Whole days to wait before the resend, at least `1`. |
 
 ## Unschedule a Single-Email Campaign
 

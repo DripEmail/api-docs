@@ -58,9 +58,8 @@ const body = await response.json();
   "meta": {
     "page": 1,
     "count": 2,
-    "total_count": 2,
-    "per_page": 100,
-    "total_pages": 1
+    "total_pages": 1,
+    "total_count": 2
   },
   "segments": [{
     "id": "4815162",
