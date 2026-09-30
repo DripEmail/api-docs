@@ -22,6 +22,7 @@
   "time_zone": "America/Los_Angeles",
   "utc_offset": -440,
   "visitor_uuid": "sa8f7sdf78sdsdahf788d7asf8sd",
+  "deliverable": true,
   "custom_fields": {
     "shirt_size": "Medium"
   },
@@ -140,6 +141,10 @@
     <tr>
       <td><code>visitor_uuid</code></td>
       <td>A read-only Drip generated unique id used to identify each subscriber's visitor record if available.</td>
+    </tr>
+    <tr>
+      <td><code>deliverable</code></td>
+      <td>Boolean. <code>true</code> if Drip can send email to this subscriber; <code>false</code> if the address has been marked undeliverable (for example, after a hard bounce). Independent of <code>status</code>: an <code>active</code> subscriber may be undeliverable. Read-only; ignored if supplied on create or update.</td>
     </tr>
     <tr>
       <td><code>custom_fields</code></td>
