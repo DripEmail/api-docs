@@ -27,6 +27,7 @@ In addition, you will be notified and your webhook will be temporarily disabled 
 {
   "id": "z1togz2hcjrkpp5treip",
   "status": "active",
+  "deliverable": true,
   "email": "john@acme.com",
   "custom_fields": {
     "shirt_size": "Medium"
