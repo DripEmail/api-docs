@@ -15,6 +15,8 @@ Because of the potential for high volume, we will not send notifications for
 `subscriber.received_email` events by default. To receive a post every time a subscriber
 receives an email, enable these events using the checkbox on the webhook's settings.
 
+Webhooks created through the API only send notifications for the events listed in `events` (see [Create a new webhook](#create-a-new-webhook)).
+
 Please note that some webhook endpoints may implement rate limiting, especially for entry-level or free accounts.
 We will attempt to re-send webhooks for up to 3 days if they are rate limited.
 In addition, you will be notified and your webhook will be temporarily disabled if its endpoint generates any other error for 3 days.
@@ -406,7 +408,7 @@ This event is triggered when a subscriber's time zone is updated.
 
 This event is triggered when a subscriber receives an email.
 
-Note that because of their potentially high volume, notifications for this event are optional. See <a href="#setting-up">Setting up</a> above.
+Note that this event can have extremely high volume. Only use it if necessary and ensure your server can handle the traffic.
 
 ## subscriber.opened_email
 

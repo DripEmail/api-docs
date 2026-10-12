@@ -8,7 +8,6 @@
   "href": "https://api.getdrip.com/v2/9999999/webhooks/77777",
   "post_url": "http://www.mysite.com/my-webhook-endpoint",
   "version": "1",
-  "include_received_email": false,
   "events": [
     "subscriber.created",
     "subscriber.subscribed_to_campaign"
@@ -55,10 +54,6 @@
     <tr>
       <td><code>version</code></td>
       <td>The webhook version. The current stable version is 2.</td>
-    </tr>
-    <tr>
-      <td><code>include_received_email</code></td>
-      <td>Returns true if a notification is sent whenever a subscriber receives an email.</td>
     </tr>
     <tr>
       <td><code>created_at</code></td>
@@ -197,6 +192,7 @@ None.
 
 ```shell
 curl -X POST "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/webhooks" \
+  -H "Content-Type: application/json" \
   -H 'User-Agent: Your App Name (www.yourapp.com)' \
   -u YOUR_API_KEY: \
   -d @- << EOF
@@ -220,14 +216,14 @@ client = Drip::Client.new do |c|
   c.account_id = "YOUR_ACCOUNT_ID"
 end
 
-pot_url = "https://www.mylistener.com/receieve"
-include_received_email = false
+post_url = "https://www.mylistener.com/receieve"
 events = [
   "subscriber.created",
   "subscriber.subscribed_to_campaign"
 ]
 
-response = client.create_webhook(post_url, include_received_email, events)
+# The second argument is a legacy flag; add "subscriber.received_email" to events instead.
+response = client.create_webhook(post_url, false, events)
 
 if response.success?
   puts response.body["webhooks"]
@@ -267,7 +263,6 @@ client.createWebhook(payload)
     "href": "https://api.getdrip.com/v2/9999999/webhooks/77777",
     "post_url": "http://www.example.com/api/v2/form",
     "version": "1",
-    "include_received_email": false,
     "events": [
       "subscriber.created",
       "subscriber.subscribed_to_campaign"
@@ -299,12 +294,8 @@ client.createWebhook(payload)
       <td>The url that the webhook will post to.</td>
     </tr>
     <tr>
-      <td><code>include_received_email</code></td>
-      <td>Optional. A Boolean specifying whether we should send a notification whenever a subscriber receives an email. Defaults to <code>false</code>.</td>
-    </tr>
-    <tr>
       <td><code>events</code></td>
-      <td>Optional. An Array specifiying which events we should send notifications for. Eligible events can be found in the <a href="#webhook-events">webhooks documentation</a>. By default, we will send notifications for all events except <code>subscrber.received_email</code>.</td>
+      <td>An Array specifying which events we should send notifications for. Eligible events can be found in the <a href="#webhook-events">webhooks documentation</a>. The webhook only sends notifications for the events listed here; a webhook created without any events sends none.</td>
     </tr>
   </tbody>
 </table>
