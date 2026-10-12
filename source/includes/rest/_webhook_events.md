@@ -8,12 +8,12 @@ you'll want to use webhooks.
 
 ## Setting Up
 
-Adding a webhook URL is dead simple. Head over the [Webhooks](https://www.getdrip.com/webhooks)
-settings page, enter your URL, and hit "Create Webhook". That's it!
+To add a webhook, head over to the [Webhooks](https://www.getdrip.com/webhooks)
+settings page, click "New webhook", and enter your URL. Choose "All Events" or
+"Select Events", then click "Save".
 
-Because of the potential for high volume, we will not send notifications for
-`subscriber.received_email` events by default. To receive a post every time a subscriber
-receives an email, enable these events using the checkbox on the webhook's settings.
+"All Events" includes `subscriber.received_email`, which can be very high volume.
+To avoid it, choose "Select Events" and leave "Received an email" unticked.
 
 Webhooks created through the API only send notifications for the events listed in `events` (see [Create a new webhook](#create-a-new-webhook)).
 
@@ -37,7 +37,7 @@ In addition, you will be notified and your webhook will be temporarily disabled 
   "tags": ["Customer", "SEO"],
   "time_zone": "America/Los_Angeles",
   "utc_offset": -440,
-  "created_at": "2013-06-21T10:31:58Z"
+  "created_at": "2013-06-21T10:31:58Z",
   "ip_address": "123.123.123.123",
   "user_agent": "Mozilla/5.0",
   "lifetime_value": 2000,
@@ -64,7 +64,7 @@ An example of the fields you can expect when you see `"subscriber": { ... }` is 
   <tbody>
     <tr>
       <td><code>event</code></td>
-      <td>The webhook notification's event name. For example, <code>subscrber.received_email</code>.</td>
+      <td>The webhook notification's event name. For example, <code>subscriber.received_email</code>.</td>
     </tr>
     <tr>
       <td><code>data</code></td>
@@ -408,7 +408,7 @@ This event is triggered when a subscriber's time zone is updated.
 
 This event is triggered when a subscriber receives an email.
 
-Note that this event can have extremely high volume. Only use it if necessary and ensure your server can handle the traffic.
+Note that this event can have extremely high volume. Only use it if necessary and ensure your server can handle the traffic. It is only sent if this event is selected on the webhook; see <a href="#setting-up">Setting up</a>.
 
 ## subscriber.opened_email
 
@@ -598,7 +598,7 @@ only fires when lead scoring is enabled for your account.</strong>
     "account_id": "9999999",
     "subscriber": { ... },
     "properties": {
-      "action": "Signed up for a trial"
+      "action": "Signed up for a trial",
       "plan": "rock-star",
       "amount": 2999
     }

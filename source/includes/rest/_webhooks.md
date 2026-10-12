@@ -7,14 +7,15 @@
   "id": "77777",
   "href": "https://api.getdrip.com/v2/9999999/webhooks/77777",
   "post_url": "http://www.mysite.com/my-webhook-endpoint",
-  "version": "1",
+  "version": 2,
+  "include_received_email": false,
   "events": [
     "subscriber.created",
     "subscriber.subscribed_to_campaign"
   ],
   "created_at": "2013-06-21T10:31:58Z",
   "links": {
-    "account": "9999999",
+    "account": "9999999"
   }
 }
 ```
@@ -62,6 +63,10 @@
      <tr>
       <td><code>events</code></td>
       <td>An array specifying which events are enabled for webhook notifications.</td>
+    </tr>
+     <tr>
+      <td><code>include_received_email</code></td>
+      <td>Read-only. Returns true if <code>events</code> includes <code>subscriber.received_email</code>. Webhooks set to "All Events" in the UI return false even though they receive this event.</td>
     </tr>
      <tr>
       <td><code>links</code></td>
@@ -216,13 +221,13 @@ client = Drip::Client.new do |c|
   c.account_id = "YOUR_ACCOUNT_ID"
 end
 
-post_url = "https://www.mylistener.com/receieve"
+post_url = "https://www.mylistener.com/receive"
 events = [
   "subscriber.created",
   "subscriber.subscribed_to_campaign"
 ]
 
-# The second argument is a legacy flag; add "subscriber.received_email" to events instead.
+# The second argument (include_received_email) is legacy; passing true is the same as adding "subscriber.received_email" to events.
 response = client.create_webhook(post_url, false, events)
 
 if response.success?
@@ -262,14 +267,15 @@ client.createWebhook(payload)
     "id": "77777",
     "href": "https://api.getdrip.com/v2/9999999/webhooks/77777",
     "post_url": "http://www.example.com/api/v2/form",
-    "version": "1",
+    "version": 2,
+    "include_received_email": false,
     "events": [
       "subscriber.created",
       "subscriber.subscribed_to_campaign"
     ],
     "created_at": "2013-06-21T10:31:58Z",
     "links": {
-      "account": "9999999",
+      "account": "9999999"
     }
   }]
 }
@@ -295,7 +301,11 @@ client.createWebhook(payload)
     </tr>
     <tr>
       <td><code>events</code></td>
-      <td>An Array specifying which events we should send notifications for. Eligible events can be found in the <a href="#webhook-events">webhooks documentation</a>. The webhook only sends notifications for the events listed here; a webhook created without any events sends none.</td>
+      <td>Optional. An Array specifying which events we should send notifications for. Eligible events can be found in the <a href="#webhook-events">webhooks documentation</a>. The webhook only sends notifications for the events listed here; a webhook created without any events sends none. Unrecognized event names return a <code>422</code>.</td>
+    </tr>
+    <tr>
+      <td><code>include_received_email</code></td>
+      <td>Deprecated. Optional. A Boolean. Setting it to true is the same as adding <code>subscriber.received_email</code> to <code>events</code>. Defaults to <code>false</code>.</td>
     </tr>
   </tbody>
 </table>
