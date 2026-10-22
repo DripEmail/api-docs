@@ -327,7 +327,7 @@ client.listBroadcasts(options)
     </tr>
     <tr>
       <td><code>include_metrics</code></td>
-      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to each Single-Email Campaign; leave it out to omit them.</td>
+      <td>Optional. Set to <code>true</code> to add a <code>metrics</code> object to each Single-Email Campaign.</td>
     </tr>
   </tbody>
 </table>
@@ -564,7 +564,7 @@ client.fetchBroadcast(broadcastId)
   <tbody>
     <tr>
       <td><code>include_metrics</code></td>
-      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to the Single-Email Campaign; leave it out to omit it.</td>
+      <td>Optional. Set to <code>true</code> to add a <code>metrics</code> object to the Single-Email Campaign.</td>
     </tr>
   </tbody>
 </table>
@@ -715,7 +715,7 @@ Status, scheduling, and the audience are not updated here. Each has its own endp
     </tr>
     <tr>
       <td><code>primary_purpose</code></td>
-      <td>Optional. Either <code>commercial</code> or <code>transactional</code>. A transactional Single-Email Campaign's audience also includes people who have unsubscribed. Use <code>transactional</code> only for messages a person needs whatever their email preferences, such as receipts or account notices. New Single-Email Campaigns are created as <code>commercial</code>.</td>
+      <td>Optional. Either <code>commercial</code> or <code>transactional</code>. New Single-Email Campaigns are <code>commercial</code>, and only an update can change it. A <code>transactional</code> campaign also goes to people who have unsubscribed, so use it only for messages people need regardless of their email preferences, such as receipts or account notices.</td>
     </tr>
   </tbody>
 </table>
