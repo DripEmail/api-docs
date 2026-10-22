@@ -455,9 +455,9 @@ const body = await response.json();
 }
 ```
 
-Single-Email Campaigns created via the API start in the `draft` status, with an audience of
-everyone eligible to receive them. [Set the audience](#set-the-audience) to narrow it, then
-[schedule](#schedule-a-single-email-campaign) it.
+Single-Email Campaigns created via the API start in the `draft` status with no audience chosen.
+Before you [schedule](#schedule-a-single-email-campaign) one, [set its audience](#set-the-audience),
+using the filter `[[]]` to send to everyone eligible to receive it.
 
 ### HTTP Endpoint
 
@@ -1264,6 +1264,17 @@ const body = await response.json();
 }
 ```
 
+> If the campaign's audience was never chosen, responds with a <code>409 Conflict</code>:
+
+```json
+{
+  "errors": [{
+    "code": "conflict_error",
+    "message": "Choose this broadcast's audience before scheduling it: set it with PUT /v2/:account_id/broadcasts/:id/audience (set_broadcast_audience). To send to everyone eligible, set the filter [[]]."
+  }]
+}
+```
+
 Sets a draft Single-Email Campaign to send. There are three ways to say when, and
 `localize_sending_time` is required alongside `send_at` rather than defaulting, because the two
 readings of the same timestamp differ by hours for most people:
@@ -1306,8 +1317,12 @@ Only a `draft` can be scheduled. To change when a scheduled campaign sends, unsc
 then schedule it again. A campaign that is already scheduled, sending, or sent, or whose account
 cannot send right now, responds with a `409 Conflict` that says which.
 
-The audience is not checked here. A campaign with no audience set goes to everyone eligible to
-receive it, the same as in the Drip app. Read `derived.audience` first if that matters.
+The audience has to be chosen first, as it does in the Drip app: scheduling a draft whose
+audience was never chosen responds with a `409 Conflict`. Choose it with
+[Set the audience](#set-the-audience); the filter `[[]]` sends to everyone eligible to receive
+it. A draft whose audience was already chosen, through the API or in the Drip app, schedules as
+it is. [Fetch the audience](#fetch-the-audience) reads `[[]]` both for a draft whose audience
+was never chosen and for one set to everyone, so set it before scheduling if you are unsure.
 
 With `auto_resend`, a second copy goes to people who did not open the first, `resend_delay`
 whole days later.
