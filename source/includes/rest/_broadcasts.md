@@ -158,6 +158,10 @@ with [Set the audience](#set-the-audience).
       <td>Read-only text generated when the campaign is read. <code>derived.audience</code> describes who it goes to in plain English, such as <code>People who are in the "VIP customers" segment</code>, or <code>All people</code>. It is display text: do not parse it, and expect its wording to change.</td>
     </tr>
     <tr>
+      <td><code>metrics</code></td>
+      <td>Present only when the request includes <code>include_metrics=true</code>. An object with the campaign's <code>send_count</code>, <code>open_count</code>, <code>click_count</code> and <code>unsubscribe_count</code>.</td>
+    </tr>
+    <tr>
       <td><code>links</code></td>
       <td>An object containing the account's REST API URL.</td>
     </tr>
@@ -320,6 +324,10 @@ client.listBroadcasts(options)
     <tr>
       <td><code>direction</code></td>
       <td>Optional. Filter sort direction with: <code>asc</code> or <code>desc</code>. Defaults to <code>asc</code>.</td>
+    </tr>
+    <tr>
+      <td><code>include_metrics</code></td>
+      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to each Single-Email Campaign; leave it out to omit them.</td>
     </tr>
   </tbody>
 </table>
@@ -546,7 +554,20 @@ client.fetchBroadcast(broadcastId)
 
 ### Arguments
 
-None.
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>include_metrics</code></td>
+      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to the Single-Email Campaign; leave it out to omit it.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Update a Single-Email Campaign
 
@@ -691,6 +712,10 @@ Status, scheduling, and the audience are not updated here. Each has its own endp
     <tr>
       <td><code>postal_address</code></td>
       <td>Optional. A physical mailing address for CAN-SPAM compliance.</td>
+    </tr>
+    <tr>
+      <td><code>primary_purpose</code></td>
+      <td>Optional. Either <code>commercial</code> or <code>transactional</code>. A transactional Single-Email Campaign's audience also includes people who have unsubscribed. Use <code>transactional</code> only for messages a person needs whatever their email preferences, such as receipts or account notices. New Single-Email Campaigns are created as <code>commercial</code>.</td>
     </tr>
   </tbody>
 </table>
