@@ -407,6 +407,207 @@ client.pauseCampaign(campaignId)
 
 None.
 
+## List all emails in an Email Series Campaign
+
+> To list the emails in an Email Series Campaign:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/emails" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/emails")
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/emails",
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> The response looks like this:
+
+```json
+{
+  "links": {
+    "emails.account": "https://api.getdrip.com/v2/accounts/{emails.account}",
+    "emails.campaign": "https://api.getdrip.com/v2/{emails.account}/campaigns/{emails.campaign}"
+  },
+  "emails": [{
+    "id": "7654321",
+    "href": "https://api.getdrip.com/v2/9999999/campaigns/123456/emails/7654321",
+    "sending_delay": 0,
+    "sending_order": 0,
+    "subject": "Welcome to the course, {{ subscriber.first_name }}",
+    "html_body": "<html><body><h1>Welcome!</h1></body></html>",
+    "text_body": "Welcome!",
+    "created_at": "2026-06-21T10:31:58Z",
+    "open_rate": 0.42,
+    "click_rate": 0.085,
+    "links": {
+      "account": "9999999",
+      "campaign": "123456"
+    }
+  }]
+}
+```
+
+Returns every email in the Email Series Campaign at once. Includes draft emails. The list is not
+paginated.
+
+**Properties**
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td>The email's id. Use it to <a href="#fetch-an-email-in-an-email-series-campaign">fetch the email</a>.</td>
+    </tr>
+    <tr>
+      <td><code>href</code></td>
+      <td>The url for retrieving the email via the REST API.</td>
+    </tr>
+    <tr>
+      <td><code>sending_delay</code></td>
+      <td>How long Drip waits before sending this email, in the unit set for it in the campaign: minutes, hours, or days. The unit is not included.</td>
+    </tr>
+    <tr>
+      <td><code>sending_order</code></td>
+      <td>The email's position in the campaign. The list is returned in this order.</td>
+    </tr>
+    <tr>
+      <td><code>subject</code></td>
+      <td>The email's subject.</td>
+    </tr>
+    <tr>
+      <td><code>html_body</code></td>
+      <td>The HTML content used in the email's body.</td>
+    </tr>
+    <tr>
+      <td><code>text_body</code></td>
+      <td>The plain text content used in the email's body.</td>
+    </tr>
+    <tr>
+      <td><code>created_at</code></td>
+      <td>A timestamp for when the email was created.</td>
+    </tr>
+    <tr>
+      <td><code>open_rate</code></td>
+      <td>The email's open rate, as a decimal: <code>0.42</code> is 42%.</td>
+    </tr>
+    <tr>
+      <td><code>click_rate</code></td>
+      <td>The email's click rate, as a decimal: <code>0.085</code> is 8.5%.</td>
+    </tr>
+    <tr>
+      <td><code>links</code></td>
+      <td>An object containing the ids of the email's account and Email Series Campaign.</td>
+    </tr>
+  </tbody>
+</table>
+
+Liquid in `subject`, `html_body`, and `text_body` is returned as written, not rendered for a
+subscriber.
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/campaigns/:campaign_id/emails`
+
+### Arguments
+
+None.
+
+## Fetch an email in an Email Series Campaign
+
+> To fetch one email in an Email Series Campaign:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/emails/EMAIL_ID" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/emails/EMAIL_ID")
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/campaigns/CAMPAIGN_ID/emails/EMAIL_ID",
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> The response looks like this:
+
+```json
+# The emails property is an array of one email object.
+{
+  "links": { ... },
+  "emails": [{ ... }]
+}
+```
+
+Returns one email, with the same properties as
+[List all emails in an Email Series Campaign](#list-all-emails-in-an-email-series-campaign).
+Responds with a `404 Not Found` if the Email Series Campaign does not exist or the email is not
+part of it.
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/campaigns/:campaign_id/emails/:email_id`
+
+### Arguments
+
+None.
+
 ## List all subscribers subscribed to an Email Series Campaign
 
 > To list subscribers on an Email Series Campaign:
