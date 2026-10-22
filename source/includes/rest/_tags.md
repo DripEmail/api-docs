@@ -169,7 +169,7 @@ client.tagSubscriber(payload)
 
 ## Remove a tag from a subscriber
 
-> To apply a tag to a specific subscriber:
+> To remove a tag from a subscriber:
 
 ```shell
 curl -X DELETE "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/subscribers/ID_OR_EMAIL/tags/TAG" \
@@ -216,7 +216,7 @@ client.removeSubscriberTag(email, tag)
 
 ### HTTP Endpoint
 
-`DELETE /:account_id/subscribers/:email/tags/:tag`
+`DELETE /v2/:account_id/subscribers/:email/tags/:tag`
 
 ### Arguments
 
