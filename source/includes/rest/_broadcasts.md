@@ -1264,6 +1264,17 @@ const body = await response.json();
 }
 ```
 
+> If the campaign's audience was never chosen, responds with a <code>409 Conflict</code>:
+
+```json
+{
+  "errors": [{
+    "code": "conflict_error",
+    "message": "Choose this broadcast's audience before scheduling it: set it with PUT /v2/:account_id/broadcasts/:id/audience (set_broadcast_audience). To send to everyone eligible, set the filter [[]]."
+  }]
+}
+```
+
 Sets a draft Single-Email Campaign to send. There are three ways to say when, and
 `localize_sending_time` is required alongside `send_at` rather than defaulting, because the two
 readings of the same timestamp differ by hours for most people:
@@ -1306,8 +1317,12 @@ Only a `draft` can be scheduled. To change when a scheduled campaign sends, unsc
 then schedule it again. A campaign that is already scheduled, sending, or sent, or whose account
 cannot send right now, responds with a `409 Conflict` that says which.
 
-The audience is not checked here. A campaign with no audience set goes to everyone eligible to
-receive it, the same as in the Drip app. Read `derived.audience` first if that matters.
+The audience has to be chosen first, the same as in the Drip app. Scheduling a draft whose
+audience was never set responds with a `409 Conflict`. Choose it with
+[Set the audience](#set-the-audience); to send to everyone eligible to receive it, set the
+filter `[[]]`. A draft whose recipients were chosen in the Drip app, or that already has a
+filter, schedules as it is. [Fetch the audience](#fetch-the-audience) first to confirm who it
+goes to.
 
 With `auto_resend`, a second copy goes to people who did not open the first, `resend_delay`
 whole days later.
