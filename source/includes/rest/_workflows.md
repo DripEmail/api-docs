@@ -577,7 +577,8 @@ an `ETag`, and a change confined to a withheld field does not invalidate one.
 
 ### Rate limits
 
-> If the account has made more than 2,000 requests in the hour, responds with a <code>429 Too Many Requests</code> and a <code>Retry-After</code> header:
+> If the rate limit is exceeded, responds with a <code>429 Too Many Requests</code> and a
+> <code>Retry-After</code> header indicating when the limit resets:
 
 ```json
 {
@@ -588,9 +589,8 @@ an `ETag`, and a change confined to a withheld field does not invalidate one.
 }
 ```
 
-This endpoint is limited to 2,000 requests per account per hour, on top of the
-[general rate limit](#rate-limiting). Past that it responds with a `429 Too Many Requests`, and
-`Retry-After` gives the number of seconds to wait.
+This endpoint has its own rate limit of 2,000 requests per account per hour, in addition to the
+[general rate limit](#rate-limiting).
 
 ### HTTP Endpoint
 
