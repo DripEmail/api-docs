@@ -158,6 +158,10 @@ with [Set the audience](#set-the-audience).
       <td>Read-only text generated when the campaign is read. <code>derived.audience</code> describes who it goes to in plain English, such as <code>People who are in the "VIP customers" segment</code>, or <code>All people</code>. It is display text: do not parse it, and expect its wording to change.</td>
     </tr>
     <tr>
+      <td><code>metrics</code></td>
+      <td>Present only when the request includes <code>include_metrics=true</code>. An object with the campaign's <code>send_count</code>, <code>open_count</code>, <code>click_count</code> and <code>unsubscribe_count</code>.</td>
+    </tr>
+    <tr>
       <td><code>links</code></td>
       <td>An object containing the account's REST API URL.</td>
     </tr>
@@ -320,6 +324,10 @@ client.listBroadcasts(options)
     <tr>
       <td><code>direction</code></td>
       <td>Optional. Filter sort direction with: <code>asc</code> or <code>desc</code>. Defaults to <code>asc</code>.</td>
+    </tr>
+    <tr>
+      <td><code>include_metrics</code></td>
+      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to each Single-Email Campaign; leave it out to omit them.</td>
     </tr>
   </tbody>
 </table>
@@ -546,7 +554,20 @@ client.fetchBroadcast(broadcastId)
 
 ### Arguments
 
-None.
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>include_metrics</code></td>
+      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to the Single-Email Campaign; leave it out to omit it.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Update a Single-Email Campaign
 
@@ -691,6 +712,10 @@ Status, scheduling, and the audience are not updated here. Each has its own endp
     <tr>
       <td><code>postal_address</code></td>
       <td>Optional. A physical mailing address for CAN-SPAM compliance.</td>
+    </tr>
+    <tr>
+      <td><code>primary_purpose</code></td>
+      <td>Optional. Either <code>commercial</code> or <code>transactional</code>. A transactional Single-Email Campaign's audience also includes people who have unsubscribed. Use <code>transactional</code> only for messages a person needs whatever their email preferences, such as receipts or account notices. New Single-Email Campaigns are created as <code>commercial</code>.</td>
     </tr>
   </tbody>
 </table>
@@ -924,7 +949,7 @@ Rate limits are applied per user.
 
 ## Set the audience
 
-> To send a Single-Email Campaign to a saved segment:
+> To send a Single-Email Campaign to a saved segment, leaving out people with either of two tags:
 
 ```shell
 curl -X PUT "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/audience" \
@@ -933,7 +958,10 @@ curl -X PUT "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID/
   -u YOUR_API_KEY: \
   -d '{
         "filter": [
-          [{ "type": "segments", "properties": { "operator": "in", "segment_id": "4815162" } }]
+          [
+            { "type": "segments", "properties": { "operator": "in", "segment_id": "4815162" } },
+            { "type": "tags", "properties": { "operator": "not_include_any", "value": ["Churned", "Refunded"] } }
+          ]
         ]
       }'
 ```
@@ -950,7 +978,10 @@ request["User-Agent"] = "Your App Name (www.yourapp.com)"
 request["Content-Type"] = "application/vnd.api+json"
 request.body = {
   filter: [
-    [{ type: "segments", properties: { operator: "in", segment_id: "4815162" } }]
+    [
+      { type: "segments", properties: { operator: "in", segment_id: "4815162" } },
+      { type: "tags", properties: { operator: "not_include_any", value: ["Churned", "Refunded"] } }
+    ]
   ]
 }.to_json
 
@@ -973,7 +1004,10 @@ const response = await fetch(
     },
     body: JSON.stringify({
       filter: [
-        [{ type: "segments", properties: { operator: "in", segment_id: "4815162" } }]
+        [
+          { type: "segments", properties: { operator: "in", segment_id: "4815162" } },
+          { type: "tags", properties: { operator: "not_include_any", value: ["Churned", "Refunded"] } }
+        ]
       ]
     })
   }
@@ -1037,12 +1071,71 @@ true of a person, and a person matching any inner list is included. So
 `[[]]` means everyone eligible to receive it, and is how you clear an audience. An empty
 filter, `[]`, is rejected.
 
-Today the only condition type available is `segments`, with the operators `in` and
-`not_in`. The `segment_id` is the `id` from the Segments API. More condition types will follow.
+Two condition types are available: `segments` and `tags`. Each condition is a `type` and a
+`properties` object holding the `operator` and its value. More condition types will follow.
 
-`segment_id` takes one id, never a list: `["4815162"]` is rejected. For several segments, use
-one condition each. Two conditions in the same inner list mean "in both"; two in separate
-inner lists mean "in either".
+A `segments` condition takes the operator `in` or `not_in` and a `segment_id`, which is the `id`
+from the Segments API. `segment_id` takes one id, never a list: `["4815162"]` is rejected. For
+several segments, use one condition each. Two conditions in the same inner list mean "in both";
+two in separate inner lists mean "in either".
+
+A `tags` condition takes an `operator` and a `value`. A tag is named as the Tags API returns it,
+and matching ignores case and repeated spaces. A tag does not have to exist on the account yet;
+a condition naming a tag no one has matches no one, or everyone when negated.
+
+<table>
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th><code>value</code></th>
+      <th>Matches people who</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>include</code></td>
+      <td>One tag, as a string</td>
+      <td>have the tag</td>
+    </tr>
+    <tr>
+      <td><code>not_include</code></td>
+      <td>One tag, as a string</td>
+      <td>do not have the tag</td>
+    </tr>
+    <tr>
+      <td><code>contains</code></td>
+      <td>Text, as a string</td>
+      <td>have a tag whose name contains the text</td>
+    </tr>
+    <tr>
+      <td><code>include_any</code></td>
+      <td>A list of tags</td>
+      <td>have at least one of the tags</td>
+    </tr>
+    <tr>
+      <td><code>include_all</code></td>
+      <td>A list of tags</td>
+      <td>have every one of the tags</td>
+    </tr>
+    <tr>
+      <td><code>not_include_any</code></td>
+      <td>A list of tags</td>
+      <td>have none of the tags</td>
+    </tr>
+    <tr>
+      <td><code>not_include_all</code></td>
+      <td>A list of tags</td>
+      <td>are missing at least one of the tags</td>
+    </tr>
+    <tr>
+      <td><code>no_tags</code></td>
+      <td>Omitted, or <code>""</code></td>
+      <td>have no tags at all</td>
+    </tr>
+  </tbody>
+</table>
+
+A blank tag, an empty list, or a blank entry in a list is rejected.
 
 Replacing an audience requires `confirm=true` whenever the current audience is anything other
 than everyone, because what is being replaced cannot be recovered through the API. Read the
@@ -1112,7 +1205,10 @@ const body = await response.json();
 {
   "audience": {
     "filter": [
-      [{ "type": "segments", "properties": { "operator": "in", "segment_id": "4815162" } }]
+      [
+        { "type": "segments", "properties": { "operator": "in", "segment_id": "4815162" } },
+        { "type": "tags", "properties": { "operator": "not_include_any", "value": ["Churned", "Refunded"] } }
+      ]
     ]
   }
 }
@@ -1124,8 +1220,8 @@ const body = await response.json();
 {
   "audience": {
     "message": "This filter includes unsupported criteria and cannot be returned as a filter.",
-    "summary": "People who are tagged with \"vip\"",
-    "unsupported_types": ["tags"]
+    "summary": "People who have performed \"Purchased VIP\"",
+    "unsupported_types": ["actions"]
   }
 }
 ```
@@ -1133,10 +1229,12 @@ const body = await response.json();
 `filter` comes back in the same shape it is set in, so reading an audience and writing it
 straight back changes nothing.
 
-`filter` is present only when writing it again would be accepted. Most audiences built in the
+`filter` is present only when writing it again would be accepted. Many audiences built in the
 Drip app use rules that have no form here yet, and those come back described instead:
 `summary` is plain-English display text, and `unsupported_types` names the condition types in
-the way. Expect that until more condition types are available.
+the way. Expect that until more condition types are available. `unsupported_types` is omitted
+when every condition type is available but the filter is refused for another reason, such as
+its size.
 
 A present `filter` is not a promise that its segments still exist. That is not checked on
 read, so an audience naming a segment deleted since it was set reads back intact and responds
@@ -1239,6 +1337,17 @@ const body = await response.json();
 }
 ```
 
+> If the campaign's audience was never chosen, responds with a <code>409 Conflict</code>:
+
+```json
+{
+  "errors": [{
+    "code": "conflict_error",
+    "message": "Choose this broadcast's audience before scheduling it: set it with PUT /v2/:account_id/broadcasts/:id/audience (set_broadcast_audience). To send to everyone eligible, set the filter [[]]."
+  }]
+}
+```
+
 Sets a draft Single-Email Campaign to send. There are three ways to say when, and
 `localize_sending_time` is required alongside `send_at` rather than defaulting, because the two
 readings of the same timestamp differ by hours for most people:
@@ -1281,8 +1390,12 @@ Only a `draft` can be scheduled. To change when a scheduled campaign sends, unsc
 then schedule it again. A campaign that is already scheduled, sending, or sent, or whose account
 cannot send right now, responds with a `409 Conflict` that says which.
 
-The audience is not checked here. A campaign with no audience set goes to everyone eligible to
-receive it, the same as in the Drip app. Read `derived.audience` first if that matters.
+The audience has to be chosen first, the same as in the Drip app. Scheduling a draft whose
+audience was never set responds with a `409 Conflict`. Choose it with
+[Set the audience](#set-the-audience); to send to everyone eligible to receive it, set the
+filter `[[]]`. A draft whose recipients were chosen in the Drip app, or that already has a
+filter, schedules as it is. [Fetch the audience](#fetch-the-audience) first to confirm who it
+goes to.
 
 With `auto_resend`, a second copy goes to people who did not open the first, `resend_delay`
 whole days later.

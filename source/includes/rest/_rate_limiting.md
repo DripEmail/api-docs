@@ -23,4 +23,6 @@ Content-Type: application/json
 
 You can make up to 50 requests per hour for batch endpoints and 3,600 individual requests per hour for other API endpoints. Each batch request accommodates up to 1,000 records in the payload for a total of 50,000 updates per hour.
 
+[Fetch a workflow's details](#fetch-a-workflow-39-s-details) also has its own limit of 2,000 requests per account per hour. Past that, it responds with a `429 Too Many Requests` and a `Retry-After` header giving the number of seconds to wait.
+
 To minimize your API requests, use the [Batch API](#batch-api).
