@@ -327,7 +327,7 @@ client.listBroadcasts(options)
     </tr>
     <tr>
       <td><code>include_metrics</code></td>
-      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to each Single-Email Campaign; leave it out to omit them.</td>
+      <td>Optional. Set to <code>true</code> to add a <code>metrics</code> object to each Single-Email Campaign.</td>
     </tr>
   </tbody>
 </table>
@@ -455,9 +455,9 @@ const body = await response.json();
 }
 ```
 
-Single-Email Campaigns created via the API start in the `draft` status, with an audience of
-everyone eligible to receive them. [Set the audience](#set-the-audience) to narrow it, then
-[schedule](#schedule-a-single-email-campaign) it.
+Single-Email Campaigns created via the API start in the `draft` status with no audience chosen.
+Before you [schedule](#schedule-a-single-email-campaign) one, [set its audience](#set-the-audience),
+using the filter `[[]]` to send to everyone eligible to receive it.
 
 ### HTTP Endpoint
 
@@ -564,7 +564,7 @@ client.fetchBroadcast(broadcastId)
   <tbody>
     <tr>
       <td><code>include_metrics</code></td>
-      <td>Optional. Include <code>include_metrics=true</code> to add a <code>metrics</code> object to the Single-Email Campaign; leave it out to omit it.</td>
+      <td>Optional. Set to <code>true</code> to add a <code>metrics</code> object to the Single-Email Campaign.</td>
     </tr>
   </tbody>
 </table>
@@ -715,7 +715,7 @@ Status, scheduling, and the audience are not updated here. Each has its own endp
     </tr>
     <tr>
       <td><code>primary_purpose</code></td>
-      <td>Optional. Either <code>commercial</code> or <code>transactional</code>. A transactional Single-Email Campaign's audience also includes people who have unsubscribed. Use <code>transactional</code> only for messages a person needs whatever their email preferences, such as receipts or account notices. New Single-Email Campaigns are created as <code>commercial</code>.</td>
+      <td>Optional. Either <code>commercial</code> or <code>transactional</code>. New Single-Email Campaigns are <code>commercial</code>, and only an update can change it. A <code>transactional</code> campaign also goes to people who have unsubscribed, so use it only for messages people need regardless of their email preferences, such as receipts or account notices.</td>
     </tr>
   </tbody>
 </table>
@@ -1069,7 +1069,7 @@ true of a person, and a person matching any inner list is included. So
 `[[A, B], [C]]` means "(A and B) or C".
 
 `[[]]` means everyone eligible to receive it, and is how you clear an audience. An empty
-filter, `[]`, is rejected.
+filter, `[]`, is rejected. A filter takes at most 10 AND-sets, each with at most 10 conditions.
 
 Two condition types are available: `segments` and `tags`. Each condition is a `type` and a
 `properties` object holding the `operator` and its value. More condition types will follow.
@@ -1079,9 +1079,9 @@ from the Segments API. `segment_id` takes one id, never a list: `["4815162"]` is
 several segments, use one condition each. Two conditions in the same inner list mean "in both";
 two in separate inner lists mean "in either".
 
-A `tags` condition takes an `operator` and a `value`. A tag is named as the Tags API returns it,
-and matching ignores case and repeated spaces. A tag does not have to exist on the account yet;
-a condition naming a tag no one has matches no one, or everyone when negated.
+A `tags` condition takes one of the operators below and a `value`. Name a tag as the Tags API
+returns it; matching ignores case and repeated spaces. A tag does not have to exist on the
+account yet: a condition naming a tag no one has matches no one, or everyone when negated.
 
 <table>
   <thead>
@@ -1232,9 +1232,9 @@ straight back changes nothing.
 `filter` is present only when writing it again would be accepted. Many audiences built in the
 Drip app use rules that have no form here yet, and those come back described instead:
 `summary` is plain-English display text, and `unsupported_types` names the condition types in
-the way. Expect that until more condition types are available. `unsupported_types` is omitted
-when every condition type is available but the filter is refused for another reason, such as
-its size.
+the way. Expect that until more condition types are available. If every condition type is
+available but the filter still cannot be returned, for example because of its size,
+`unsupported_types` is left out.
 
 A present `filter` is not a promise that its segments still exist. That is not checked on
 read, so an audience naming a segment deleted since it was set reads back intact and responds
@@ -1390,12 +1390,12 @@ Only a `draft` can be scheduled. To change when a scheduled campaign sends, unsc
 then schedule it again. A campaign that is already scheduled, sending, or sent, or whose account
 cannot send right now, responds with a `409 Conflict` that says which.
 
-The audience has to be chosen first, the same as in the Drip app. Scheduling a draft whose
-audience was never set responds with a `409 Conflict`. Choose it with
-[Set the audience](#set-the-audience); to send to everyone eligible to receive it, set the
-filter `[[]]`. A draft whose recipients were chosen in the Drip app, or that already has a
-filter, schedules as it is. [Fetch the audience](#fetch-the-audience) first to confirm who it
-goes to.
+The audience has to be chosen first, as it does in the Drip app: scheduling a draft whose
+audience was never chosen responds with a `409 Conflict`. Choose it with
+[Set the audience](#set-the-audience); the filter `[[]]` sends to everyone eligible to receive
+it. A draft whose audience was already chosen, through the API or in the Drip app, schedules as
+it is. [Fetch the audience](#fetch-the-audience) reads `[[]]` both for a draft whose audience
+was never chosen and for one set to everyone, so set it before scheduling if you are unsure.
 
 With `auto_resend`, a second copy goes to people who did not open the first, `resend_delay`
 whole days later.

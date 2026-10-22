@@ -450,6 +450,7 @@ const body = await response.json();
 > The response looks like this:
 
 ```json
+# The emails property is an array of email objects.
 {
   "links": {
     "emails.account": "https://api.getdrip.com/v2/accounts/{emails.account}",
@@ -464,8 +465,8 @@ const body = await response.json();
     "html_body": "<html><body><h1>Welcome!</h1></body></html>",
     "text_body": "Welcome!",
     "created_at": "2026-06-21T10:31:58Z",
-    "open_rate": 0.42,
-    "click_rate": 0.085,
+    "open_rate": 0.0,
+    "click_rate": 0.0,
     "links": {
       "account": "9999999",
       "campaign": "123456"
@@ -474,68 +475,15 @@ const body = await response.json();
 }
 ```
 
-Returns every email in the Email Series Campaign at once. Includes draft emails. The list is not
-paginated.
+Returns every email in the Email Series Campaign in sending order, including drafts, which are
+not sent and are not marked as drafts in the response. The list is not paginated.
 
-**Properties**
-
-<table>
-  <thead>
-    <tr>
-      <th>Property</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>id</code></td>
-      <td>The email's id. Use it to <a href="#fetch-an-email-in-an-email-series-campaign">fetch the email</a>.</td>
-    </tr>
-    <tr>
-      <td><code>href</code></td>
-      <td>The url for retrieving the email via the REST API.</td>
-    </tr>
-    <tr>
-      <td><code>sending_delay</code></td>
-      <td>How long Drip waits before sending this email, in the unit set for it in the campaign: minutes, hours, or days. The unit is not included.</td>
-    </tr>
-    <tr>
-      <td><code>sending_order</code></td>
-      <td>The email's position in the campaign. The list is returned in this order.</td>
-    </tr>
-    <tr>
-      <td><code>subject</code></td>
-      <td>The email's subject.</td>
-    </tr>
-    <tr>
-      <td><code>html_body</code></td>
-      <td>The HTML content used in the email's body.</td>
-    </tr>
-    <tr>
-      <td><code>text_body</code></td>
-      <td>The plain text content used in the email's body.</td>
-    </tr>
-    <tr>
-      <td><code>created_at</code></td>
-      <td>A timestamp for when the email was created.</td>
-    </tr>
-    <tr>
-      <td><code>open_rate</code></td>
-      <td>The email's open rate, as a decimal: <code>0.42</code> is 42%.</td>
-    </tr>
-    <tr>
-      <td><code>click_rate</code></td>
-      <td>The email's click rate, as a decimal: <code>0.085</code> is 8.5%.</td>
-    </tr>
-    <tr>
-      <td><code>links</code></td>
-      <td>An object containing the ids of the email's account and Email Series Campaign.</td>
-    </tr>
-  </tbody>
-</table>
-
-Liquid in `subject`, `html_body`, and `text_body` is returned as written, not rendered for a
-subscriber.
+`sending_delay` is how long Drip waits before sending the email, counted from the previous email
+or, for the first email, from when the person subscribed unless the campaign has
+`start_immediately`. Its unit (minutes, hours, or days) is set in the Email Series Campaign and
+is not part of the response. For an email's performance, use
+[Fetch email metrics](#fetch-email-metrics). Liquid in `subject`, `html_body`, and `text_body` is
+returned as written, not rendered for a subscriber.
 
 ### HTTP Endpoint
 
