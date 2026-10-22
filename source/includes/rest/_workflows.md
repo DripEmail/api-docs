@@ -305,6 +305,7 @@ const body = await response.json();
             "properties": { "automation_email_id": "957660884" },
             "incomplete": false,
             "actions_required": [],
+            "email": { "id": "957660884", "subject": "Welcome, {{ subscriber.first_name }}!" },
             "derived": {
               "type_name": "Send an email to a person",
               "summary": "Send \"Welcome!\"",
@@ -435,7 +436,7 @@ branch still has an id.
     </tr>
     <tr>
       <td><code>action</code></td>
-      <td><code>id</code>, <code>type</code>, <code>action_type</code>, <code>provider_id</code>, <code>status</code>, <code>properties</code>, <code>incomplete</code>, <code>actions_required</code></td>
+      <td><code>id</code>, <code>type</code>, <code>action_type</code>, <code>provider_id</code>, <code>status</code>, <code>properties</code>, <code>incomplete</code>, <code>actions_required</code>, <code>email</code> (<code>send_email</code> only)</td>
       <td><code>type_name</code>, <code>summary</code>, <code>email_title</code></td>
     </tr>
     <tr>
@@ -496,6 +497,13 @@ Some configuration is never published. A `drip/http_post` action responds with a
 `properties` object and no `derived.summary`, because its endpoint URL and request headers are
 credentials; only `derived.type_name` survives. Raw segmentation criteria, provider credentials,
 and editor layout data are not published on any node.
+
+A `send_email` action whose email exists also carries an `email` object with the email's `id` and
+`subject`. `email.id` is the email's public id: pass it to
+[Fetch a workflow email](#fetch-a-workflow-email) for the preheader and full HTML and text bodies.
+Use `email.id` rather than `properties.automation_email_id`, which is published as stored and may
+hold a legacy id that endpoint does not accept. The subject is as stored, with any Liquid tags
+verbatim, and is null or empty on a draft whose subject has not been written.
 
 ### Derived text
 
@@ -570,6 +578,199 @@ an `ETag`, and a change confined to a withheld field does not invalidate one.
 ### HTTP Endpoint
 
 `GET /v2/:account_id/workflows/:workflow_id/details`
+
+### Arguments
+
+None.
+
+## Fetch a workflow email
+
+Returns one email a workflow sends: its subject, preheader, and full HTML and text bodies, along
+with its name, builder type, and sender. It is read-only.
+
+The email is identified by its public id, the `email.id` a `send_email` action carries in
+[Fetch a workflow's details](#fetch-a-workflow-39-s-details). An email is returned only through a
+workflow with a `send_email` step that names it.
+
+> To fetch a workflow email:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/emails/WORKFLOW_EMAIL_ID" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/emails/WORKFLOW_EMAIL_ID")
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/workflows/WORKFLOW_ID/emails/WORKFLOW_EMAIL_ID",
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> The response looks like this:
+
+```json
+# The emails property is an array of one email object.
+{
+  "links": {
+    "emails.account": "https://api.getdrip.com/v2/accounts/{emails.account}",
+    "emails.workflow": "https://api.getdrip.com/v2/{emails.account}/workflows/{emails.workflow}"
+  },
+  "emails": [
+    {
+      "id": "957660884",
+      "href": "https://api.getdrip.com/v2/9999999/workflows/12345/emails/957660884",
+      "node_id": "4e5f6a7b",
+      "email_id": 4455661,
+      "name": "Welcome!",
+      "builder_type": "text",
+      "from_name": "John Doe",
+      "from_email": "john@acme.com",
+      "reply_to": "support@acme.com",
+      "subject": "Welcome, {{ subscriber.first_name }}!",
+      "preheader": "Here's how to get started",
+      "html_body": "<p>Hi {{ subscriber.first_name }},</p>{% if subscriber.tags contains 'vip' %}<p>Thanks for being a VIP.</p>{% endif %}",
+      "text_body": "Hi {{ subscriber.first_name }},",
+      "created_at": "2026-01-04T17:22:03Z",
+      "updated_at": "2026-07-28T14:02:11Z",
+      "links": {
+        "account": "9999999",
+        "workflow": "12345"
+      }
+    }
+  ]
+}
+```
+
+**Properties**
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td>The email's public id. The same value as <code>email.id</code> on the <code>send_email</code> action that sends it.</td>
+    </tr>
+    <tr>
+      <td><code>href</code></td>
+      <td>The url designated for retrieving the email via the REST API.</td>
+    </tr>
+    <tr>
+      <td><code>node_id</code></td>
+      <td>The <code>id</code> of the <code>send_email</code> node in <a href="#fetch-a-workflow-39-s-details">Fetch a workflow's details</a> that sends the email.</td>
+    </tr>
+    <tr>
+      <td><code>email_id</code></td>
+      <td>The value the <a href="#metrics">Metrics</a> endpoint returns as <code>email_id</code> for this email, so it joins the email to its performance. Not the id this endpoint takes; use <code>id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td>The name assigned to the email.</td>
+    </tr>
+    <tr>
+      <td><code>builder_type</code></td>
+      <td>The editor the email was built with, whether <code>text</code> or <code>visual</code> (the Visual Email Builder).</td>
+    </tr>
+    <tr>
+      <td><code>from_name</code></td>
+      <td>The From name set on the email. May be null.</td>
+    </tr>
+    <tr>
+      <td><code>from_email</code></td>
+      <td>The From email address set on the email. May be null.</td>
+    </tr>
+    <tr>
+      <td><code>reply_to</code></td>
+      <td>The Reply-To address set on the email. May be null.</td>
+    </tr>
+    <tr>
+      <td><code>subject</code></td>
+      <td>The subject line.</td>
+    </tr>
+    <tr>
+      <td><code>preheader</code></td>
+      <td>The preheader text.</td>
+    </tr>
+    <tr>
+      <td><code>html_body</code></td>
+      <td>The HTML body. For a Visual Email Builder email, this is the full generated HTML; for other emails, it is the body only, without the account's email template or footer.</td>
+    </tr>
+    <tr>
+      <td><code>text_body</code></td>
+      <td>The plain text body.</td>
+    </tr>
+    <tr>
+      <td><code>created_at</code></td>
+      <td>A timestamp representing when the email record was first created.</td>
+    </tr>
+    <tr>
+      <td><code>updated_at</code></td>
+      <td>A timestamp representing when the email record was last updated.</td>
+    </tr>
+    <tr>
+      <td><code>links</code></td>
+      <td>An object containing the ids of the account and the workflow.</td>
+    </tr>
+  </tbody>
+</table>
+
+Content is returned as stored, as it is for Single-Email Campaigns: Liquid tags such as
+`{{ subscriber.first_name }}` and `{% if %}` blocks appear verbatim and are not rendered for any
+subscriber. `subject`, `preheader`, and the bodies may be null or empty when not yet written, as on
+a draft email.
+
+New fields may be added at any time. Ignore fields you do not recognize.
+
+### Not found
+
+> If no `send_email` step in the workflow names the email, responds with a `404 Not Found`:
+
+```json
+{
+  "errors": [{
+    "code": "not_found_error",
+    "message": "This workflow has no send-email step for that email id. Use the `email.id` of a send_email action from get_workflow_details: the email's public id."
+  }]
+}
+```
+
+The same 404 is returned for the id of a Single-Email Campaign, of an Email Series Campaign email,
+or of an email sent by a rule or a form, or an old id from `properties.automation_email_id`: only
+the public id in `email.id` is accepted. A workflow that does not exist or is archived responds with
+the standard `404 Not Found` described in [Errors](#errors).
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/workflows/:workflow_id/emails/:workflow_email_id`
 
 ### Arguments
 
