@@ -575,6 +575,23 @@ The `ETag` describes this view of the workflow rather than the workflow's stored
 is a cache validator only. Two workflows that differ solely in fields this endpoint withholds share
 an `ETag`, and a change confined to a withheld field does not invalidate one.
 
+### Rate limits
+
+> If the rate limit is exceeded, responds with a <code>429 Too Many Requests</code> and a
+> <code>Retry-After</code> header indicating when the limit resets:
+
+```json
+{
+  "errors": [{
+    "code": "rate_limit_exceeded",
+    "message": "Rate limit exceeded: at most 2000 requests per account per hour."
+  }]
+}
+```
+
+This endpoint has its own rate limit of 2,000 requests per account per hour, in addition to the
+[general rate limit](#rate-limiting).
+
 ### HTTP Endpoint
 
 `GET /v2/:account_id/workflows/:workflow_id/details`
