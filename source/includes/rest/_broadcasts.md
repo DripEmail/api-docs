@@ -1270,7 +1270,7 @@ const body = await response.json();
 {
   "errors": [{
     "code": "conflict_error",
-    "message": "Choose this broadcast's audience before scheduling it: set it with PUT /v2/:account_id/broadcasts/:id/audience (set_broadcast_audience). To send to everyone eligible, set the filter [[]]."
+    "message": "Choose this broadcast's audience before scheduling it: set it with PUT /v2/:account_id/broadcasts/:id/audience. To send to everyone eligible, set the filter [[]]."
   }]
 }
 ```
