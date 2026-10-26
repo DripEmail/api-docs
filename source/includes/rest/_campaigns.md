@@ -9,6 +9,7 @@
   "name": "SEO Email Course",
   "from_name": "John Doe",
   "from_email": "john@example.com",
+  "reply_to": "support@example.com",
   "postal_address": "123 Anywhere St\nFresno, CA 99999",
   "minutes_from_midnight": 440,
   "localize_sending_time": true,
@@ -74,6 +75,10 @@
     <tr>
       <td><code>from_email</code></td>
       <td>A "from email" that appears in your sent emails. This setting overrides the account's default from email.</td>
+    </tr>
+    <tr>
+      <td><code>reply_to</code></td>
+      <td>The Reply-To address set on the Email Series Campaign, or <code>null</code> if none is set. When it is <code>null</code>, replies go to the From address.</td>
     </tr>
     <tr>
       <td><code>postal_address</code></td>
