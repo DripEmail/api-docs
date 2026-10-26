@@ -317,7 +317,7 @@ const body = await response.json();
   "errors": [{
     "code": "validation_error",
     "attribute": "from_email_address_id",
-    "message": "hello@example.com is not verified, so Drip cannot send from it. Authenticate its domain in Drip first, or use the id of an address in get_account's sending_addresses that has verified: true."
+    "message": "hello@example.com is not verified, so Drip cannot send from it. Authenticate its domain in Drip first, or use the id of an address in the account's sending_addresses that has verified: true."
   }]
 }
 ```
