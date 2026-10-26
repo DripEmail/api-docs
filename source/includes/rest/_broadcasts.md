@@ -118,7 +118,7 @@ with [Set the audience](#set-the-audience).
     </tr>
     <tr>
       <td><code>from_email_address_id</code></td>
-      <td>The id of the address in <code>from_email</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>, or <code>null</code> if the account has no default From address. See <a href="#sender">Sender</a>.</td>
+      <td>The id of the address in <code>from_email</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>. Returns <code>null</code> if the account has no default From address, or if the address has been deleted; <code>from_email</code> still shows it. See <a href="#sender">Sender</a>.</td>
     </tr>
     <tr>
       <td><code>reply_to</code></td>
@@ -126,7 +126,7 @@ with [Set the audience](#set-the-audience).
     </tr>
     <tr>
       <td><code>reply_to_email_address_id</code></td>
-      <td>The id of the address in <code>reply_to</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>, or <code>null</code>. See <a href="#sender">Sender</a>.</td>
+      <td>The id of the address in <code>reply_to</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>, or <code>null</code>. It is also <code>null</code> if the Reply-To address has been deleted; <code>reply_to</code> still shows it. See <a href="#sender">Sender</a>.</td>
     </tr>
     <tr>
       <td><code>postal_address</code></td>
