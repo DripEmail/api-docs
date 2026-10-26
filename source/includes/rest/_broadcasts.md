@@ -56,7 +56,10 @@ with [Set the audience](#set-the-audience).
   "status": "sent",
   "name": "4 Marketing Automation Trends for 2015",
   "from_name": "John Doe",
-  "from_email": "john@example.com",
+  "from_email": "john@acme.com",
+  "from_email_address_id": "1234567",
+  "reply_to": "support@acme.com",
+  "reply_to_email_address_id": "1234569",
   "postal_address": "123 Anywhere St\nFresno, CA 99999",
   "localize_sending_time": true,
   "send_at": "2015-07-01T10:00:00Z",
@@ -111,7 +114,19 @@ with [Set the audience](#set-the-audience).
     </tr>
     <tr>
       <td><code>from_email</code></td>
-      <td>A "from email" that appears in your sent emails and can be changed on a per email basis. This setting overrides the account's default from email.</td>
+      <td>The address the Single-Email Campaign is sent from: its own From address, or the account's default From address if it has none. Read-only; set it with <code>from_email_address_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>from_email_address_id</code></td>
+      <td>The id of the address in <code>from_email</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>, or <code>null</code> if the account has no default From address. See <a href="#sender">Sender</a>.</td>
+    </tr>
+    <tr>
+      <td><code>reply_to</code></td>
+      <td>The Reply-To address, or <code>null</code> when replies go to the From address. Read-only; set it with <code>reply_to_email_address_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>reply_to_email_address_id</code></td>
+      <td>The id of the address in <code>reply_to</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>, or <code>null</code>. See <a href="#sender">Sender</a>.</td>
     </tr>
     <tr>
       <td><code>postal_address</code></td>
@@ -127,7 +142,7 @@ with [Set the audience](#set-the-audience).
     </tr>
     <tr>
       <td><code>bcc</code></td>
-      <td>A list of emails designated to receive a blind copy of the Single-Email Campaign.</td>
+      <td>A list of emails designated to receive a blind copy of the Single-Email Campaign. Read-only; it cannot be set via the API.</td>
     </tr>
     <tr>
       <td><code>created_at</code></td>
@@ -226,6 +241,113 @@ with a `422 Unprocessable Entity`:
   }]
 }
 ```
+
+## Sender
+
+> To change who a draft Single-Email Campaign is from and where replies go:
+
+```shell
+curl -X PATCH "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID" \
+  -H "Content-Type: application/json" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY: \
+  -d @- << EOF
+  {
+    "broadcasts": [{
+      "from_name": "Acme Support",
+      "from_email_address_id": "1234568",
+      "reply_to_email_address_id": "1234569"
+    }]
+  }
+EOF
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID")
+
+request = Net::HTTP::Patch.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+request["Content-Type"] = "application/json"
+request.body = {
+  broadcasts: [{
+    from_name: "Acme Support",
+    from_email_address_id: "1234568",
+    reply_to_email_address_id: "1234569"
+  }]
+}.to_json
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const response = await fetch(
+  "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/broadcasts/BROADCAST_ID",
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    },
+    body: JSON.stringify({
+      broadcasts: [{
+        from_name: "Acme Support",
+        from_email_address_id: "1234568",
+        reply_to_email_address_id: "1234569"
+      }]
+    })
+  }
+);
+
+const body = await response.json();
+```
+
+> If an address cannot be used, responds with a <code>422 Unprocessable Entity</code> and changes nothing:
+
+```json
+{
+  "errors": [{
+    "code": "validation_error",
+    "attribute": "from_email_address_id",
+    "message": "hello@example.com is not verified, so Drip cannot send from it. Authenticate its domain in Drip first, or use the id of an address in get_account's sending_addresses that has verified: true."
+  }]
+}
+```
+
+A Single-Email Campaign's From name, From address and Reply-To address can be set when you
+[create](#create-a-single-email-campaign) it, and changed while it is a `draft` with
+[Update a Single-Email Campaign](#update-a-single-email-campaign).
+
+* `from_name` is free text, up to 255 characters. It cannot be blank, and supports Liquid
+  templating.
+* The From and Reply-To addresses are chosen by id, never typed in. Use an `id` from the
+  account's [sending addresses](#sending-addresses), returned by
+  [Fetch an account](#fetch-an-account).
+* `from_email_address_id` must be an address with `verified: true`.
+* `reply_to_email_address_id` must be an address with `verified: true` and
+  `auto_generated: false`.
+* On update, send `null` or `""` to clear either one. A cleared From address sends from the
+  account's default From address, and a cleared Reply-To sends replies to the From address.
+
+Any other id, such as an unverified or deleted address, or one that belongs to another account,
+responds with a `422 Unprocessable Entity` and changes nothing. Every problem with the sender is
+reported in a single response.
+
+`from_email`, `reply_to` and `bcc` are returned in responses but cannot be set directly. If a
+request includes one with a value other than the one the campaign will have (a new campaign
+sends from the account's default From address, with no Reply-To or BCC), it responds with a
+`422 Unprocessable Entity` naming the field to use instead. A matching value is accepted, so you
+can send back the fields you fetched. BCC cannot be set via the API.
+
+A sender set here appears in the Drip app, the same as one chosen there.
 
 ## List all Single-Email Campaigns
 
@@ -485,6 +607,18 @@ everyone eligible to receive them. [Set the audience](#set-the-audience) to narr
       <td><code>postal_address</code></td>
       <td>Optional. A physical mailing address for CAN-SPAM compliance. Defaults to the account's postal address.</td>
     </tr>
+    <tr>
+      <td><code>from_name</code></td>
+      <td>Optional. The name the email is sent from (255 characters maximum). Supports Liquid templating. Defaults to the account's default from name.</td>
+    </tr>
+    <tr>
+      <td><code>from_email_address_id</code></td>
+      <td>Optional. The id of a verified address in the account's <a href="#sending-addresses">sending addresses</a> to send from. Defaults to the account's default From address. See <a href="#sender">Sender</a>.</td>
+    </tr>
+    <tr>
+      <td><code>reply_to_email_address_id</code></td>
+      <td>Optional. The id of a verified, non-auto-generated address in the account's <a href="#sending-addresses">sending addresses</a> to receive replies. If omitted, replies go to the From address. See <a href="#sender">Sender</a>.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -646,13 +780,14 @@ const body = await response.json();
 {
   "errors": [{
     "code": "conflict_error",
-    "message": "Cannot update a broadcast with status 'sent'"
+    "message": "Cannot update a broadcast with status 'sent': only a draft can be edited"
   }]
 }
 ```
 
 Only Single-Email Campaigns in the `draft` status can be updated via the API; all other
-statuses are read-only. Updates are partial: only the fields you include are changed.
+statuses are read-only. Updates are partial: only the fields you include are changed. To change
+the From name, From address or Reply-To address, see [Sender](#sender).
 
 Status, scheduling, and the audience are not updated here. Each has its own endpoint:
 [Set the audience](#set-the-audience), [Schedule](#schedule-a-single-email-campaign), and
@@ -691,6 +826,18 @@ Status, scheduling, and the audience are not updated here. Each has its own endp
     <tr>
       <td><code>postal_address</code></td>
       <td>Optional. A physical mailing address for CAN-SPAM compliance.</td>
+    </tr>
+    <tr>
+      <td><code>from_name</code></td>
+      <td>Optional. The name the email is sent from (255 characters maximum). Supports Liquid templating.</td>
+    </tr>
+    <tr>
+      <td><code>from_email_address_id</code></td>
+      <td>Optional. The id of a verified address in the account's <a href="#sending-addresses">sending addresses</a> to send from. Send <code>null</code> or <code>""</code> to use the account's default From address. See <a href="#sender">Sender</a>.</td>
+    </tr>
+    <tr>
+      <td><code>reply_to_email_address_id</code></td>
+      <td>Optional. The id of a verified, non-auto-generated address in the account's <a href="#sending-addresses">sending addresses</a> to receive replies. Send <code>null</code> or <code>""</code> to have replies go to the From address. See <a href="#sender">Sender</a>.</td>
     </tr>
   </tbody>
 </table>
