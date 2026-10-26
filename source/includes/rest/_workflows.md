@@ -775,7 +775,7 @@ New fields may be added at any time. Ignore fields you do not recognize.
 {
   "errors": [{
     "code": "not_found_error",
-    "message": "This workflow has no send-email step for that email id. Use the `email.id` of a send_email action from get_workflow_details: the email's public id."
+    "message": "This workflow has no send-email step for that email id. Use the email's public id: the `email.id` of a send_email action in GET /v2/:account_id/workflows/:workflow_id/details."
   }]
 }
 ```
