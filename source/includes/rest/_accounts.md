@@ -85,16 +85,16 @@
       <td>The url designated for retrieving the account record via the REST API.</td>
     </tr>
     <tr>
-      <td><code>links</code></td>
-      <td>An object containing URLs for campaign and conversion resources. Note, conversions are represented as "Goals".</td>
-    </tr>
-    <tr>
       <td><code>default_email_address_id</code></td>
       <td>A read-only id of the account's default From address in <code>sending_addresses</code>. Returns <code>null</code> if the account has no default From address or its default address has been deleted. Only returned when <a href="#fetch-an-account">fetching an account</a>.</td>
     </tr>
     <tr>
       <td><code>sending_addresses</code></td>
       <td>A read-only list of the account's email addresses, including unverified ones. Only returned when <a href="#fetch-an-account">fetching an account</a>. Refer to <a href="#sending-addresses">Sending addresses</a> for an overview of the properties returned here.</td>
+    </tr>
+    <tr>
+      <td><code>links</code></td>
+      <td>An object containing URLs for campaign and conversion resources. Note, conversions are represented as "Goals".</td>
     </tr>
   </tbody>
 </table>
@@ -237,8 +237,9 @@ client.fetchAccount(accountId)
 
 ### Sending addresses
 
-Fetching a single account also returns the account's email addresses, newest first. Only those with `verified: true` can be used as a From address.
-Deleted addresses are not included. Listing accounts does not return them.
+Fetching a single account also returns the account's email addresses, newest first. Only those
+with `verified: true` can be used as a From address. Deleted addresses are not included. Listing
+accounts does not return them.
 
 <table>
   <thead>
