@@ -142,7 +142,7 @@ with [Set the audience](#set-the-audience).
     </tr>
     <tr>
       <td><code>bcc</code></td>
-      <td>A list of emails designated to receive a blind copy of the Single-Email Campaign. Read-only; it cannot be set via the API.</td>
+      <td>A list of emails designated to receive a blind copy of the Single-Email Campaign. Read-only.</td>
     </tr>
     <tr>
       <td><code>created_at</code></td>
@@ -317,7 +317,7 @@ const body = await response.json();
   "errors": [{
     "code": "validation_error",
     "attribute": "from_email_address_id",
-    "message": "hello@example.com is not verified, so Drip cannot send from it. Authenticate its domain in Drip first, or use the id of an address in the account's sending_addresses that has verified: true."
+    "message": "hello@example.com is not verified: use the id of an address in the account's sending_addresses that has verified: true."
   }]
 }
 ```
@@ -338,14 +338,10 @@ A Single-Email Campaign's From name, From address and Reply-To address can be se
   account's default From address, and a cleared Reply-To sends replies to the From address.
 
 Any other id, such as an unverified or deleted address, or one that belongs to another account,
-responds with a `422 Unprocessable Entity` and changes nothing. Every problem with the sender is
-reported in a single response.
+responds with a `422 Unprocessable Entity` and changes nothing.
 
-`from_email`, `reply_to` and `bcc` are returned in responses but cannot be set directly. If a
-request includes one with a value other than the one the campaign will have (a new campaign
-sends from the account's default From address, with no Reply-To or BCC), it responds with a
-`422 Unprocessable Entity` naming the field to use instead. A matching value is accepted, so you
-can send back the fields you fetched. BCC cannot be set via the API.
+`from_email`, `reply_to` and `bcc` are read-only: they are returned in responses and ignored if
+sent.
 
 A sender set here appears in the Drip app, the same as one chosen there.
 
@@ -780,7 +776,7 @@ const body = await response.json();
 {
   "errors": [{
     "code": "conflict_error",
-    "message": "Cannot update a broadcast with status 'sent': only a draft can be edited"
+    "message": "Cannot update a broadcast with status 'sent'"
   }]
 }
 ```
