@@ -609,7 +609,7 @@ everyone eligible to receive them. [Set the audience](#set-the-audience) to narr
     </tr>
     <tr>
       <td><code>from_name</code></td>
-      <td>Optional. The name the email is sent from (255 characters maximum). Supports Liquid templating. Defaults to the account's default from name.</td>
+      <td>Optional. The name the email is sent from (255 characters maximum). Supports Liquid templating. Defaults to the account's default From name.</td>
     </tr>
     <tr>
       <td><code>from_email_address_id</code></td>
