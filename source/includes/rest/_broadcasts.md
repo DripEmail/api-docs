@@ -340,8 +340,8 @@ A Single-Email Campaign's From name, From address and Reply-To address can be se
 Any other id, such as an unverified or deleted address, or one that belongs to another account,
 responds with a `422 Unprocessable Entity` and changes nothing.
 
-`from_email`, `reply_to` and `bcc` are read-only: they are returned in responses and ignored if
-sent.
+`from_email`, `reply_to` and `bcc` are read-only: they are returned in responses. Set the sender
+with the address ids above.
 
 A sender set here appears in the Drip app, the same as one chosen there.
 
