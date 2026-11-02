@@ -502,8 +502,8 @@ A `send_email` action whose email exists also carries an `email` object with the
 `subject`. `email.id` is the email's public id: pass it to
 [Fetch a workflow email](#fetch-a-workflow-email) for the preheader and full HTML and text bodies.
 Use `email.id` rather than `properties.automation_email_id`, which is published as stored and may
-hold a legacy id that endpoint does not accept. The subject is as stored, with any Liquid tags
-verbatim, and is null or empty on a draft whose subject has not been written.
+hold a legacy id that Fetch a workflow email does not accept. The subject is as stored, with any
+Liquid tags verbatim, and is null or empty on a draft whose subject has not been written.
 
 ### Derived text
 
@@ -577,8 +577,8 @@ an `ETag`, and a change confined to a withheld field does not invalidate one.
 
 ### Rate limits
 
-> If the rate limit is exceeded, responds with a <code>429 Too Many Requests</code> and a
-> <code>Retry-After</code> header indicating when the limit resets:
+> If the rate limit is exceeded, responds with a `429 Too Many Requests` and a `Retry-After`
+> header of `3600`:
 
 ```json
 {
@@ -589,8 +589,10 @@ an `ETag`, and a change confined to a withheld field does not invalidate one.
 }
 ```
 
-This endpoint has its own rate limit of 2,000 requests per account per hour, in addition to the
-[general rate limit](#rate-limiting).
+Fetching a workflow's details has its own rate limit of 2,000 requests per account per hour, in
+addition to the [general rate limit](#rate-limiting). The limit counts requests in fixed one-hour
+windows, and `Retry-After` is always the full hour (3600 seconds), not the time left in the
+current window. [Fetch a workflow email](#fetch-a-workflow-email) has only the general rate limit.
 
 ### HTTP Endpoint
 
@@ -723,11 +725,11 @@ const body = await response.json();
     </tr>
     <tr>
       <td><code>from_email</code></td>
-      <td>The From email address set on the email. May be null.</td>
+      <td>The address the email is sent from: its own From address, or the account's default From address if it has none. May be null.</td>
     </tr>
     <tr>
       <td><code>reply_to</code></td>
-      <td>The Reply-To address set on the email. May be null.</td>
+      <td>The Reply-To address set on the email. May be null, in which case replies go to the From address.</td>
     </tr>
     <tr>
       <td><code>subject</code></td>
