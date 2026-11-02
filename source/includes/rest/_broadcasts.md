@@ -118,7 +118,7 @@ with [Set the audience](#set-the-audience).
     </tr>
     <tr>
       <td><code>from_email_address_id</code></td>
-      <td>The id of the address in <code>from_email</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>. Returns <code>null</code> if the account has no default From address, or if the address has been deleted; <code>from_email</code> still shows it. See <a href="#sender">Sender</a>.</td>
+      <td>The id of the address in <code>from_email</code>, matching an <code>id</code> in the account's <a href="#sending-addresses">sending addresses</a>. Returns <code>null</code> if neither the campaign nor the account has a From address, or if the address has been deleted; <code>from_email</code> still shows it. See <a href="#sender">Sender</a>.</td>
     </tr>
     <tr>
       <td><code>reply_to</code></td>
@@ -310,14 +310,14 @@ const response = await fetch(
 const body = await response.json();
 ```
 
-> If an address cannot be used, responds with a <code>422 Unprocessable Entity</code> and changes nothing:
+> If an address id cannot be used, responds with a <code>422 Unprocessable Entity</code> and changes nothing:
 
 ```json
 {
   "errors": [{
     "code": "validation_error",
     "attribute": "from_email_address_id",
-    "message": "hello@example.com is not verified: use the id of an address in the account's sending_addresses that has verified: true."
+    "message": "sales@acme.com is not verified: use the id of an address in the account's sending_addresses that has verified: true."
   }]
 }
 ```

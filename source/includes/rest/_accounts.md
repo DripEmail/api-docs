@@ -86,7 +86,7 @@
     </tr>
     <tr>
       <td><code>default_email_address_id</code></td>
-      <td>A read-only id of the account's default From address in <code>sending_addresses</code>. Returns <code>null</code> if the account has no default From address or its default address has been deleted. Only returned when <a href="#fetch-an-account">fetching an account</a>.</td>
+      <td>A read-only id of the account's default From address in <code>sending_addresses</code>. Returns <code>null</code> if the account has no default From address or its default address has been deleted; <code>default_from_email</code> still shows the address emails are sent from when they have no From address of their own. Only returned when <a href="#fetch-an-account">fetching an account</a>.</td>
     </tr>
     <tr>
       <td><code>sending_addresses</code></td>
@@ -271,11 +271,6 @@ accounts does not return them.
     </tr>
   </tbody>
 </table>
-
-`default_email_address_id` is `null` when the account has no default From address, or when
-its default address has been deleted. A `null` value does not mean emails have no From
-address: `default_from_email` still shows the address emails without their own From address
-are sent from.
 
 ### HTTP Endpoint
 
