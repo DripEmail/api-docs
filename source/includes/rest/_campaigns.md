@@ -480,10 +480,13 @@ not sent and are not marked as drafts in the response. The list is not paginated
 
 `sending_delay` is how long Drip waits before sending the email, counted from the previous email
 or, for the first email, from when the person subscribed unless the campaign has
-`start_immediately`. Its unit (minutes, hours, or days) is set in the Email Series Campaign and
-is not part of the response. For an email's performance, use
+`start_immediately`. Each email has its own unit (minutes, hours, or days), set in the Drip app.
+The unit is not part of the response. For an email's performance, use
 [Fetch email metrics](#fetch-email-metrics). Liquid in `subject`, `html_body`, and `text_body` is
 returned as written, not rendered for a subscriber.
+
+The drip-ruby and drip-nodejs clients do not have methods for these endpoints yet, so the Ruby
+and JavaScript examples call the API directly.
 
 ### HTTP Endpoint
 
