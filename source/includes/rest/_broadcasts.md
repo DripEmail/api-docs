@@ -1068,8 +1068,10 @@ A `filter` is a list of AND-sets, combined with OR. Everything inside one inner 
 true of a person, and a person matching any inner list is included. So
 `[[A, B], [C]]` means "(A and B) or C".
 
-`[[]]` means everyone eligible to receive it, and is how you clear an audience. An empty
-filter, `[]`, is rejected. A filter takes at most 10 AND-sets, each with at most 10 conditions.
+`[[]]` means everyone eligible to receive it. Use it to send to everyone, or to undo a narrower
+audience; it counts as choosing the audience, so the campaign can then be scheduled. An empty
+filter, `[]`, is rejected. A filter takes at most 10 inner lists, each with at most 10
+conditions.
 
 Two condition types are available: `segments` and `tags`. Each condition is a `type` and a
 `properties` object holding the `operator` and its value. More condition types will follow.
@@ -1232,9 +1234,9 @@ straight back changes nothing.
 `filter` is present only when writing it again would be accepted. Many audiences built in the
 Drip app use rules that have no form here yet, and those come back described instead:
 `summary` is plain-English display text, and `unsupported_types` names the condition types in
-the way. Expect that until more condition types are available. If every condition type is
-available but the filter still cannot be returned, for example because of its size,
-`unsupported_types` is left out.
+the way. Expect that until more condition types are available. If the audience uses only
+supported condition types but still cannot be returned, for example because it is too large,
+`unsupported_types` is omitted.
 
 A present `filter` is not a promise that its segments still exist. That is not checked on
 read, so an audience naming a segment deleted since it was set reads back intact and responds
