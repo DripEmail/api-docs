@@ -456,8 +456,8 @@ const body = await response.json();
 ```
 
 Single-Email Campaigns created via the API start in the `draft` status with no audience chosen.
-Before you [schedule](#schedule-a-single-email-campaign) one, [set its audience](#set-the-audience),
-using the filter `[[]]` to send to everyone eligible to receive it.
+Before you [schedule](#schedule-a-single-email-campaign) one, [set its audience](#set-the-audience).
+To send to everyone eligible to receive it, set the filter `[[]]`.
 
 ### HTTP Endpoint
 
@@ -1396,7 +1396,7 @@ The audience has to be chosen first, as it does in the Drip app: scheduling a dr
 audience was never chosen responds with a `409 Conflict`. Choose it with
 [Set the audience](#set-the-audience); the filter `[[]]` sends to everyone eligible to receive
 it. A draft whose audience was already chosen, through the API or in the Drip app, schedules as
-it is. [Fetch the audience](#fetch-the-audience) reads `[[]]` both for a draft whose audience
+it is. [Fetch the audience](#fetch-the-audience) returns `[[]]` both for a draft whose audience
 was never chosen and for one set to everyone, so set it before scheduling if you are unsure.
 
 With `auto_resend`, a second copy goes to people who did not open the first, `resend_delay`
