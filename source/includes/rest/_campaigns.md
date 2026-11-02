@@ -465,8 +465,6 @@ const body = await response.json();
     "html_body": "<html><body><h1>Welcome!</h1></body></html>",
     "text_body": "Welcome!",
     "created_at": "2026-06-21T10:31:58Z",
-    "open_rate": 0.0,
-    "click_rate": 0.0,
     "links": {
       "account": "9999999",
       "campaign": "123456"
