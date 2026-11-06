@@ -94,30 +94,6 @@ Run `code --add-mcp` to add Drip to your user profile, or add the configuration 
 first time it connects. See
 [VS Code's MCP configuration reference](https://code.visualstudio.com/docs/copilot/reference/mcp-configuration).
 
-## Gemini CLI
-
-> Add Drip for your user:
-
-```bash
-gemini mcp add --transport http --scope user drip https://api.getdrip.com/mcp
-```
-
-> Or add it to `~/.gemini/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "drip": {
-      "httpUrl": "https://api.getdrip.com/mcp"
-    }
-  }
-}
-```
-
-Gemini CLI detects that Drip requires OAuth and opens a browser to sign in, so it needs a local
-browser. Run `/mcp auth drip` to sign in again. See
-[Gemini CLI's MCP docs](https://geminicli.com/docs/tools/mcp-server/).
-
 ## Using the Tools
 
 Call `list_accounts` first. It returns the Drip accounts the connection can access, and every

@@ -6,7 +6,7 @@ To connect an AI assistant or agent to Drip, use the MCP server: it signs in wit
 
 ## Docs
 
-- [MCP Server](https://developer.drip.com/#mcp-server): server URL, OAuth sign-in, and setup for Claude Code, Claude, Cursor, VS Code and Gemini CLI
+- [MCP Server](https://developer.drip.com/#mcp-server): server URL, OAuth sign-in, and setup for Claude Code, Claude, Cursor and VS Code
 - [Introduction](https://developer.drip.com/#introduction): base URL and request format
 - [Authentication](https://developer.drip.com/#authentication): API tokens and OAuth for the REST API
 - [Rate Limiting](https://developer.drip.com/#rate-limiting): request limits
