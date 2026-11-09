@@ -235,6 +235,8 @@ const body = await response.json();
 # The emails property is an array of email metrics objects.
 {
   "summary": { ... },
+  "emails_total": 3,
+  "emails_truncated": false,
   "emails": [ ... ]
 }
 ```
@@ -248,6 +250,8 @@ const body = await response.json();
     "deliveries": 0,
     ...
   },
+  "emails_total": 0,
+  "emails_truncated": false,
   "emails": []
 }
 ```
@@ -286,8 +290,12 @@ const body = await response.json();
 }
 ```
 
-The `summary` totals the report across every email in the range, and `emails` lists each email
-individually. This endpoint is not paginated.
+The `summary` totals the report across every email in the range, and `emails` lists up to
+`limit` of those emails individually (100 by default). Emails are listed by `sends`, highest
+first, with ties broken by `email_id` in ascending order. `emails_total` is the number of emails
+that matched, and `emails_truncated` is `true` when that is more than `emails` lists. To list the
+rest, call again with `limit` set to `emails_total`, up to 1,000; beyond that the full list isn't
+available. This endpoint is not paginated.
 
 Rule- and form-automation emails appear only in unfiltered results. `broadcast_ids` reaches only
 Single-Email Campaign emails and `workflow_ids` reaches only Workflow emails, so neither filter
@@ -314,6 +322,10 @@ can target them.
     <tr>
       <td>1,000 emails</td>
       <td>The emails that <code>broadcast_ids</code> and <code>workflow_ids</code> resolve to</td>
+    </tr>
+    <tr>
+      <td>1,000 emails</td>
+      <td><code>limit</code></td>
     </tr>
   </tbody>
 </table>
@@ -369,6 +381,10 @@ applied per account.
     <tr>
       <td><code>workflow_ids</code></td>
       <td>Optional. An Array of workflow ids. Limits results to the emails sent by those workflows. May be combined with <code>broadcast_ids</code>, in which case the results are the union of both filters.</td>
+    </tr>
+    <tr>
+      <td><code>limit</code></td>
+      <td>Optional. The maximum number of emails to list in <code>emails</code>, a whole number from 1 to 1,000. Defaults to 100. Does not change <code>summary</code> or <code>emails_total</code>.</td>
     </tr>
   </tbody>
 </table>
