@@ -1,9 +1,9 @@
 # Metrics
 
 The Metrics API returns aggregate email performance for an account: sends, deliveries, opens,
-clicks, bot clicks, unsubscribes, hard bounces, complaints, orders, and revenue.
+clicks, bot clicks, unsubscribes, hard and soft bounces, complaints, orders, and revenue.
 
-Results cover Single-Email Campaigns, and automation emails sent by Workflows.
+Results cover Single-Email Campaigns, Email Series Campaigns, and automation emails sent by Workflows.
 Confirmation emails (double opt-in) are excluded. Order and revenue values are
 reported in cents.
 
@@ -18,6 +18,15 @@ Dates are interpreted in the account owner's time zone.
   "workflow_placement": {
     "workflow_id": "789012",
     "node_id": "SENDEMAILNODE1"
+  },
+  "campaign_placement": {
+    "campaign_id": "345678",
+    "position": 2,
+    "status": "published",
+    "delay": {
+      "value": 3,
+      "units": "days"
+    }
   },
   "title": "December Newsletter",
   "email_metric": { ... }
@@ -45,6 +54,10 @@ Dates are interpreted in the account owner's time zone.
     <tr>
       <td><code>workflow_placement</code></td>
       <td>An object containing the <code>workflow_id</code> of the workflow that sends the email and the <code>node_id</code> of the send-email step within it. Only present when the request includes a <code>workflow_ids</code> filter and the email is sent by one of those workflows. <code>node_id</code> holds the same value <a href="#fetch-a-workflow-39-s-details">Fetch a workflow's details</a> returns as a node's <code>id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>campaign_placement</code></td>
+      <td>An object describing where the email sits in an Email Series Campaign. Only present when the request includes a <code>campaign_ids</code> filter and the email belongs to one of those campaigns. <code>campaign_id</code> is the campaign's id; <code>position</code> is the email's 1-based order in the series, counting drafts, as shown in the series editor; <code>status</code> is <code>published</code> or <code>draft</code> (only published emails are sent to new subscribers); <code>delay</code> holds the wait after the previous email as a <code>value</code> and <code>units</code> (<code>minutes</code>, <code>hours</code>, or <code>days</code>). The email's metrics are totals for the email, not for its position.</td>
     </tr>
     <tr>
       <td><code>title</code></td>
@@ -75,6 +88,8 @@ Dates are interpreted in the account owner's time zone.
   "unsubscribe_rate": 0.007,
   "hard_bounces": 18,
   "hard_bounce_rate": 0.018,
+  "soft_bounces": 9,
+  "soft_bounce_rate": 0.009,
   "complaints": 2,
   "complaint_rate": 0.002,
   "orders": 24,
@@ -145,6 +160,14 @@ used for the report `summary` and for each email's `email_metric`.
       <td><code>hard_bounces</code> divided by <code>sends</code>.</td>
     </tr>
     <tr>
+      <td><code>soft_bounces</code></td>
+      <td>The number of soft bounces.</td>
+    </tr>
+    <tr>
+      <td><code>soft_bounce_rate</code></td>
+      <td><code>soft_bounces</code> divided by <code>sends</code>.</td>
+    </tr>
+    <tr>
       <td><code>complaints</code></td>
       <td>The number of spam complaints.</td>
     </tr>
@@ -180,7 +203,7 @@ used for the report `summary` and for each email's `email_metric`.
 > To fetch email metrics:
 
 ```shell
-curl -g "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email?start_date=2026-01-01&end_date=2026-01-31&broadcast_ids[]=BROADCAST_ID&workflow_ids[]=WORKFLOW_ID" \
+curl -g "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email?start_date=2026-01-01&end_date=2026-01-31&broadcast_ids[]=BROADCAST_ID&workflow_ids[]=WORKFLOW_ID&campaign_ids[]=CAMPAIGN_ID" \
   -H 'User-Agent: Your App Name (www.yourapp.com)' \
   -u YOUR_API_KEY:
 ```
@@ -194,7 +217,8 @@ uri.query = URI.encode_www_form(
   "start_date" => "2026-01-01",
   "end_date" => "2026-01-31",
   "broadcast_ids[]" => "BROADCAST_ID",
-  "workflow_ids[]" => "WORKFLOW_ID"
+  "workflow_ids[]" => "WORKFLOW_ID",
+  "campaign_ids[]" => "CAMPAIGN_ID"
 )
 
 request = Net::HTTP::Get.new(uri)
@@ -215,6 +239,7 @@ const params = new URLSearchParams({
 });
 params.append("broadcast_ids[]", "BROADCAST_ID");
 params.append("workflow_ids[]", "WORKFLOW_ID");
+params.append("campaign_ids[]", "CAMPAIGN_ID");
 
 const response = await fetch(
   `https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email?${params}`,
@@ -298,8 +323,8 @@ rest, call again with `limit` set to `emails_total`, up to 1,000; beyond that th
 available. This endpoint is not paginated.
 
 Rule- and form-automation emails appear only in unfiltered results. `broadcast_ids` reaches only
-Single-Email Campaign emails and `workflow_ids` reaches only Workflow emails, so neither filter
-can target them.
+Single-Email Campaign emails, `workflow_ids` only Workflow emails, and `campaign_ids` only Email
+Series Campaign emails, so no filter can target them.
 
 ### Limits
 
@@ -320,8 +345,12 @@ can target them.
       <td><code>workflow_ids</code> per request</td>
     </tr>
     <tr>
+      <td>25 ids</td>
+      <td><code>campaign_ids</code> per request</td>
+    </tr>
+    <tr>
       <td>1,000 emails</td>
-      <td>The emails that <code>broadcast_ids</code> and <code>workflow_ids</code> resolve to</td>
+      <td>The emails that <code>broadcast_ids</code>, <code>workflow_ids</code>, and <code>campaign_ids</code> resolve to</td>
     </tr>
     <tr>
       <td>1,000 emails</td>
@@ -380,7 +409,11 @@ applied per account.
     </tr>
     <tr>
       <td><code>workflow_ids</code></td>
-      <td>Optional. An Array of workflow ids. Limits results to the emails sent by those workflows. May be combined with <code>broadcast_ids</code>, in which case the results are the union of both filters.</td>
+      <td>Optional. An Array of workflow ids. Limits results to the emails sent by those workflows. May be combined with <code>broadcast_ids</code> and <code>campaign_ids</code>, in which case the results are the union of the filters.</td>
+    </tr>
+    <tr>
+      <td><code>campaign_ids</code></td>
+      <td>Optional. An Array of Email Series Campaign ids. Limits results to the emails in those campaigns, drafts included. May be combined with <code>broadcast_ids</code> and <code>workflow_ids</code>, in which case the results are the union of the filters.</td>
     </tr>
     <tr>
       <td><code>limit</code></td>
