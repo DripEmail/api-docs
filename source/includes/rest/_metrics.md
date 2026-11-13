@@ -2,6 +2,8 @@
 
 The Metrics API returns aggregate email performance for an account: sends, deliveries, opens,
 clicks, bot clicks, unsubscribes, hard and soft bounces, complaints, orders, and revenue.
+[Link metrics](#link-metrics) break one email's clicks down by link, and list the subscribers who
+clicked each one.
 
 Results cover Single-Email Campaigns, Email Series Campaigns, and automation emails sent by Workflows.
 Confirmation emails (double opt-in) are excluded. Order and revenue values are
@@ -418,6 +420,482 @@ applied per account.
     <tr>
       <td><code>limit</code></td>
       <td>Optional. The maximum number of emails to list in <code>emails</code>, a whole number from 1 to 1,000. Defaults to 100. Does not change <code>summary</code> or <code>emails_total</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Link Metrics
+
+> A link metrics response looks like this:
+
+```json
+{
+  "broadcast_id": "123456",
+  "email_ids": [4455661, 4455662],
+  "start_date": "2026-10-01",
+  "end_date": "2026-10-31",
+  "basis": "activity",
+  "sends": 1000,
+  "links_total": 3,
+  "links_truncated": false,
+  "links": [
+    {
+      "key": "url:https://example.com/sale",
+      "type": "url",
+      "url": "https://example.com/sale",
+      "unique_clicks": 60,
+      "total_clicks": 90,
+      "share_of_clicks": 0.6,
+      "click_rate": 0.06
+    },
+    {
+      "key": "trigger:rule:789012",
+      "type": "trigger",
+      "url": "https://example.com/offer",
+      "trigger": {
+        "type": "rule",
+        "name": "Tag buyers"
+      },
+      "unique_clicks": 30,
+      "total_clicks": 30,
+      "share_of_clicks": 0.3,
+      "click_rate": 0.03
+    },
+    {
+      "key": "system:unsubscribe",
+      "type": "system",
+      "label": "Unsubscribe Link",
+      "unique_clicks": 10,
+      "total_clicks": 10,
+      "share_of_clicks": 0.1,
+      "click_rate": 0.01
+    }
+  ]
+}
+```
+
+Link metrics break one email's clicks down by link: the same counts the email dashboard's link
+list shows. Bot clicks are excluded.
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>broadcast_id</code></td>
+      <td>The requested Single-Email Campaign id. Only present when the request includes <code>broadcast_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>email_id</code></td>
+      <td>The requested email id. Only present when the request includes <code>email_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>email_ids</code></td>
+      <td>The ids of the emails the counts cover. A Single-Email Campaign covers its email and each of its variations.</td>
+    </tr>
+    <tr>
+      <td><code>start_date</code></td>
+      <td>The first day of the range, after defaults are applied.</td>
+    </tr>
+    <tr>
+      <td><code>end_date</code></td>
+      <td>The last day of the range, after defaults are applied.</td>
+    </tr>
+    <tr>
+      <td><code>basis</code></td>
+      <td><code>activity</code> or <code>sent</code>. See <a href="#fetch-link-metrics">Fetch link metrics</a>.</td>
+    </tr>
+    <tr>
+      <td><code>sends</code></td>
+      <td>The number of the email's sends in the range, delivered or not. Matches <code>sends</code> in <a href="#email-metrics">email metrics</a>, not <code>deliveries</code>.</td>
+    </tr>
+    <tr>
+      <td><code>links_total</code></td>
+      <td>The number of links clicked in the range.</td>
+    </tr>
+    <tr>
+      <td><code>links_truncated</code></td>
+      <td><code>true</code> when more links were clicked than <code>links</code> lists.</td>
+    </tr>
+    <tr>
+      <td><code>links</code></td>
+      <td>Up to 1,000 clicked links, most unique clicks first.</td>
+    </tr>
+  </tbody>
+</table>
+
+Each entry in `links` has:
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>key</code></td>
+      <td>An opaque identifier for the link. Pass it to <a href="#list-the-subscribers-who-clicked-a-link">List the subscribers who clicked a link</a>. Do not parse it.</td>
+    </tr>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>url</code> for a plain link, <code>trigger</code> for a trigger link, or <code>system</code> for a link Drip adds: Unsubscribe, View In Browser, and View Subscriptions.</td>
+    </tr>
+    <tr>
+      <td><code>url</code></td>
+      <td>The link's destination. Present for <code>url</code> and <code>trigger</code> links.</td>
+    </tr>
+    <tr>
+      <td><code>label</code></td>
+      <td>The name of a <code>system</code> link, such as <code>Unsubscribe Link</code>. Present for <code>system</code> links only.</td>
+    </tr>
+    <tr>
+      <td><code>trigger</code></td>
+      <td>An object with the <code>type</code> (<code>rule</code> or <code>workflow</code>) and <code>name</code> of the rule or workflow the link triggers. Present for <code>trigger</code> links only.</td>
+    </tr>
+    <tr>
+      <td><code>unique_clicks</code></td>
+      <td>The number of sends with at least one click on the link. One recipient can click several links, so unique clicks do not add up to the email's click count.</td>
+    </tr>
+    <tr>
+      <td><code>total_clicks</code></td>
+      <td>The number of clicks on the link, counting repeat clicks by the same recipient.</td>
+    </tr>
+    <tr>
+      <td><code>share_of_clicks</code></td>
+      <td><code>unique_clicks</code> divided by the sum of <code>unique_clicks</code> across the listed links, as the email dashboard shows it.</td>
+    </tr>
+    <tr>
+      <td><code>click_rate</code></td>
+      <td><code>unique_clicks</code> divided by <code>sends</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+Rates are rounded to four decimal places.
+
+## Fetch link metrics
+
+> To fetch link metrics for a Single-Email Campaign:
+
+```shell
+curl "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email/links?broadcast_id=BROADCAST_ID" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email/links")
+uri.query = URI.encode_www_form("broadcast_id" => "BROADCAST_ID")
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const params = new URLSearchParams({ broadcast_id: "BROADCAST_ID" });
+
+const response = await fetch(
+  `https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email/links?${params}`,
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> The response is a <a href="#link-metrics">link metrics</a> object.
+
+> If the email, Single-Email Campaign, or account is not found, responds with a <code>404 Not Found</code>:
+
+```json
+{
+  "errors": [{
+    "code": "not_found_error",
+    "message": "The resource you requested was not found"
+  }]
+}
+```
+
+> If the rate limit is exceeded, responds with a <code>429 Too Many Requests</code> and a
+> <code>Retry-After</code> header:
+
+```json
+{
+  "errors": [{
+    "code": "rate_limit_exceeded",
+    "message": "Rate limit exceeded: at most 60 link metrics requests per account per hour."
+  }]
+}
+```
+
+Returns clicks per link for one email. Pass exactly one of `broadcast_id` or `email_id`.
+`broadcast_id` covers a Single-Email Campaign and its variations. `email_id` takes the
+`email_id` that [Fetch email metrics](#fetch-email-metrics) returns, so it also reaches Email
+Series Campaign and Workflow emails.
+
+Dates are whole days in the account owner's time zone. `basis` chooses which clicks count:
+
+* `activity` (the default, as in the Drip app): clicks that occurred in the range, and sends
+  created in the range.
+* `sent`: sends with a send time in the range, and every click they received, whenever it
+  occurred. Use `sent` to compare with or combine [email metrics](#fetch-email-metrics). Counts
+  can still differ slightly, because the two reports detect bots differently.
+
+Results are cached per email and range, for about 15 minutes when the range ends today and longer
+for older ranges. A repeated request returns the cached result. If the report cannot be produced
+in time, the endpoint responds with a `503 Service Unavailable`; retry later.
+
+### Limits
+
+<table>
+  <thead>
+    <tr>
+      <th>Limit</th>
+      <th>Applies to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>366 days</td>
+      <td>The date range, after defaults are applied</td>
+    </tr>
+    <tr>
+      <td>1,000 links</td>
+      <td><code>links</code> in the response; <code>links_total</code> and <code>links_truncated</code> report the rest</td>
+    </tr>
+  </tbody>
+</table>
+
+Requests with an invalid argument, or a date range over the limit, are rejected with a
+`400 Bad Request`.
+
+### Rate limits
+
+The two link endpoints share their own rate limit, separate from the standard API rate limit and
+from the [email metrics](#fetch-email-metrics) limit. Limits are applied per account. Only
+requests that compute a new result count; cached results do not.
+
+<table>
+  <thead>
+    <tr>
+      <th>Limit</th>
+      <th>Window</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>60 requests</td>
+      <td>Per hour</td>
+    </tr>
+  </tbody>
+</table>
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/metrics/email/links`
+
+### Arguments
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>broadcast_id</code></td>
+      <td>The id of a Single-Email Campaign. Required unless <code>email_id</code> is passed; pass one or the other, not both.</td>
+    </tr>
+    <tr>
+      <td><code>email_id</code></td>
+      <td>An <code>email_id</code> returned by <a href="#fetch-email-metrics">Fetch email metrics</a>. Required unless <code>broadcast_id</code> is passed.</td>
+    </tr>
+    <tr>
+      <td><code>start_date</code></td>
+      <td>Optional. The first day of the range in <code>YYYY-MM-DD</code> format, inclusive. Defaults to the Single-Email Campaign's send date for <code>broadcast_id</code> (at most 366 days before <code>end_date</code>), otherwise to 30 days ago.</td>
+    </tr>
+    <tr>
+      <td><code>end_date</code></td>
+      <td>Optional. The last day of the range in <code>YYYY-MM-DD</code> format, inclusive. Defaults to today.</td>
+    </tr>
+    <tr>
+      <td><code>basis</code></td>
+      <td>Optional. <code>activity</code> or <code>sent</code>. Defaults to <code>activity</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+## List the subscribers who clicked a link
+
+> To list the subscribers who clicked a link:
+
+```shell
+curl -G "https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email/links/subscribers" \
+  --data-urlencode "broadcast_id=BROADCAST_ID" \
+  --data-urlencode "key=url:https://example.com/sale" \
+  -H 'User-Agent: Your App Name (www.yourapp.com)' \
+  -u YOUR_API_KEY:
+```
+
+```ruby
+require "net/http"
+require "json"
+
+uri = URI("https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email/links/subscribers")
+uri.query = URI.encode_www_form(
+  "broadcast_id" => "BROADCAST_ID",
+  "key" => "url:https://example.com/sale"
+)
+
+request = Net::HTTP::Get.new(uri)
+request.basic_auth("YOUR_API_KEY", "")
+request["User-Agent"] = "Your App Name (www.yourapp.com)"
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+
+puts response.body
+```
+
+```javascript
+const params = new URLSearchParams({
+  broadcast_id: "BROADCAST_ID",
+  key: "url:https://example.com/sale"
+});
+
+const response = await fetch(
+  `https://api.getdrip.com/v2/YOUR_ACCOUNT_ID/metrics/email/links/subscribers?${params}`,
+  {
+    headers: {
+      "User-Agent": "Your App Name (www.yourapp.com)",
+      "Authorization": "Basic " + Buffer.from("YOUR_API_KEY:").toString("base64")
+    }
+  }
+);
+
+const body = await response.json();
+```
+
+> The response looks like this:
+
+```json
+{
+  "key": "url:https://example.com/sale",
+  "broadcast_id": "123456",
+  "email_ids": [4455661, 4455662],
+  "start_date": "2026-10-01",
+  "end_date": "2026-10-31",
+  "basis": "activity",
+  "total_count": 58,
+  "active_count": 55,
+  "subscribers": [
+    {
+      "id": "z1togz2hcjrkpp5treip",
+      "email": "john@acme.com",
+      "status": "active"
+    }
+  ],
+  "next_cursor": "MTIzNDU2Nzg"
+}
+```
+
+> If the link key is not one of the email's clicked links, responds with a <code>404 Not Found</code>:
+
+```json
+{
+  "errors": [{
+    "code": "not_found_error",
+    "message": "The resource you requested was not found"
+  }]
+}
+```
+
+Returns the subscribers with at least one non-bot click on one link. Pass the same
+`broadcast_id` or `email_id`, dates, and `basis` as the [Fetch link metrics](#fetch-link-metrics)
+request that returned the link, and the link's `key`. URL-encode the key: it can contain a URL.
+
+`total_count` is the number of subscribers who clicked the link, and `active_count` is how many of
+them are still active. `subscribers` lists one page of them, in a stable order.
+A page holds at most `limit` subscribers and can hold fewer. While more remain,
+`next_cursor` is set; pass it as `cursor` to fetch the next page, until `next_cursor` is `null`.
+
+`unique_clicks` counts sends and `total_count` counts people, so they differ when one subscriber
+received the email more than once. The response repeats the window properties of
+[link metrics](#link-metrics).
+
+Every page and every link of the same email and range is served from one cached result, so paging
+through a list, or listing several links, counts once against the
+link rate limit in [Fetch link metrics](#fetch-link-metrics). If the list cannot be produced in time, the endpoint responds
+with a `503 Service Unavailable`; retry later.
+
+### HTTP Endpoint
+
+`GET /v2/:account_id/metrics/email/links/subscribers`
+
+### Arguments
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>key</code></td>
+      <td>Required. A link <code>key</code> returned by <a href="#fetch-link-metrics">Fetch link metrics</a>.</td>
+    </tr>
+    <tr>
+      <td><code>broadcast_id</code></td>
+      <td>The id of a Single-Email Campaign. Required unless <code>email_id</code> is passed; pass one or the other, not both.</td>
+    </tr>
+    <tr>
+      <td><code>email_id</code></td>
+      <td>An <code>email_id</code> returned by <a href="#fetch-email-metrics">Fetch email metrics</a>. Required unless <code>broadcast_id</code> is passed.</td>
+    </tr>
+    <tr>
+      <td><code>start_date</code></td>
+      <td>Optional. As in <a href="#fetch-link-metrics">Fetch link metrics</a>.</td>
+    </tr>
+    <tr>
+      <td><code>end_date</code></td>
+      <td>Optional. As in <a href="#fetch-link-metrics">Fetch link metrics</a>.</td>
+    </tr>
+    <tr>
+      <td><code>basis</code></td>
+      <td>Optional. As in <a href="#fetch-link-metrics">Fetch link metrics</a>.</td>
+    </tr>
+    <tr>
+      <td><code>limit</code></td>
+      <td>Optional. The maximum number of subscribers per page, a whole number from 1 to 1,000. Defaults to 100.</td>
+    </tr>
+    <tr>
+      <td><code>cursor</code></td>
+      <td>Optional. The <code>next_cursor</code> from a previous response, to fetch the next page.</td>
     </tr>
   </tbody>
 </table>
