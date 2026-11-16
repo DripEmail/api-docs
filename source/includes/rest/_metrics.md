@@ -103,7 +103,7 @@ Dates are interpreted in the account owner's time zone.
 ```
 
 Every rate is calculated against `sends` and rounded to four decimal places. The same object is
-used for the report `summary` and for each email's `email_metric`.
+used for the report `summary`, for each email's `email_metric`, and for each `series` entry.
 
 <table>
   <thead>
@@ -268,6 +268,34 @@ const body = await response.json();
 }
 ```
 
+> With <code>interval=week</code>, the response adds <code>series</code>, one entry per week:
+
+```json
+{
+  "summary": { ... },
+  "series": [
+    {
+      "start_date": "2026-01-01",
+      "end_date": "2026-01-04",
+      "sends": 1000,
+      "deliveries": 970,
+      ...
+    },
+    {
+      "start_date": "2026-01-05",
+      "end_date": "2026-01-11",
+      "sends": 0,
+      "deliveries": 0,
+      ...
+    },
+    ...
+  ],
+  "emails_total": 3,
+  "emails_truncated": false,
+  "emails": [ ... ]
+}
+```
+
 > If the filters match no emails, the summary is zeroed and no emails are returned:
 
 ```json
@@ -306,7 +334,8 @@ const body = await response.json();
 }
 ```
 
-> If the report cannot be produced in time, responds with a <code>503 Service Unavailable</code>:
+> If the report cannot be produced in time, responds with a <code>503 Service Unavailable</code>
+> and a <code>Retry-After</code> header indicating when to try again:
 
 ```json
 {
@@ -323,6 +352,20 @@ first, with ties broken by `email_id` in ascending order. `emails_total` is the 
 that matched, and `emails_truncated` is `true` when that is more than `emails` lists. To list the
 rest, call again with `limit` set to `emails_total`, up to 1,000; beyond that the full list isn't
 available. This endpoint is not paginated.
+
+Metrics count the emails sent in the date range, with every open, click, bounce, unsubscribe,
+complaint, and order they have received since.
+
+With `interval` (`day`, `week`, or `month`), the response adds `series`: one entry per period in
+the date range, oldest first, including periods with nothing sent (all zeros). Each entry has a
+`start_date`, an `end_date`, and every `summary` key, with rates calculated from that period's own
+counts; the entries add up to `summary`. Periods are by send date: an entry counts the emails sent
+in that period and everything they have received since, so a recent period keeps growing as late
+opens and clicks arrive. Weeks start on Monday and months are calendar months. The first and last
+periods are cut to the date range, so they can be partial. A Single-Email Campaign whose sending
+crosses the edge of the date range (sent by time zone or in batches) counts in full, in the first
+or last period. To compare periods, such as this month against last month, make one call covering
+both with the matching `interval`. `emails` always holds totals per email.
 
 Rule- and form-automation emails appear only in unfiltered results. `broadcast_ids` reaches only
 Single-Email Campaign emails, `workflow_ids` only Workflow emails, and `campaign_ids` only Email
@@ -368,6 +411,11 @@ Requests that exceed any of these limits are rejected with a `400 Bad Request`.
 This endpoint has its own rate limit, separate from the standard API rate limit. Limits are
 applied per account.
 
+Responses are cached per request: about 15 minutes for date ranges ending today or yesterday, 2
+hours for ranges ending in the last week, and 24 hours for older ranges. Repeating an identical
+request returns the cached response and does not count toward the rate limit, and neither do
+requests that are rejected or whose filters match no emails.
+
 <table>
   <thead>
     <tr>
@@ -377,7 +425,7 @@ applied per account.
   </thead>
   <tbody>
     <tr>
-      <td>20 requests</td>
+      <td>20 uncached requests</td>
       <td>Per hour</td>
     </tr>
   </tbody>
@@ -420,6 +468,10 @@ applied per account.
     <tr>
       <td><code>limit</code></td>
       <td>Optional. The maximum number of emails to list in <code>emails</code>, a whole number from 1 to 1,000. Defaults to 100. Does not change <code>summary</code> or <code>emails_total</code>.</td>
+    </tr>
+    <tr>
+      <td><code>interval</code></td>
+      <td>Optional. <code>day</code>, <code>week</code>, or <code>month</code>. Adds <code>series</code>, the metrics for each period by send date. Omit for totals only.</td>
     </tr>
   </tbody>
 </table>
