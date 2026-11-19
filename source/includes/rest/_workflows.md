@@ -272,6 +272,7 @@ const body = await response.json();
       "status": "active",
       "created_at": "2026-01-04T17:22:03Z",
       "updated_at": "2026-07-28T14:02:11Z",
+      "tree_version": 14,
       "node_count": 9,
       "details": {
         "id": "root_1",
@@ -396,6 +397,10 @@ In addition to the properties every workflow record carries, the details payload
     <tr>
       <td><code>description</code></td>
       <td>The description assigned to the workflow. May be empty.</td>
+    </tr>
+    <tr>
+      <td><code>tree_version</code></td>
+      <td>An integer that increases whenever the workflow's stored steps change, whoever changes them. It never decreases, and a value is never reused for different steps. Renaming the workflow or changing its status does not change it.</td>
     </tr>
     <tr>
       <td><code>node_count</code></td>
@@ -572,8 +577,8 @@ Responses carry an `ETag` covering every field of the response. Send it back as 
 get a `304 Not Modified` when none of those fields has changed.
 
 The `ETag` describes this view of the workflow rather than the workflow's stored definition, so it
-is a cache validator only. Two workflows that differ solely in fields this endpoint withholds share
-an `ETag`, and a change confined to a withheld field does not invalidate one.
+is a cache validator only. A change confined to a field this endpoint withholds still changes
+`tree_version`, and so the `ETag`; no withheld value is returned.
 
 ### Rate limits
 
