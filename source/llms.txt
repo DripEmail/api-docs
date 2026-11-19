@@ -1,0 +1,18 @@
+# Drip API Documentation
+
+> Reference for Drip's REST API, JavaScript API, Custom Dynamic Content, Shopper Activity API and MCP server. The REST API is served from https://api.getdrip.com/ and the MCP server from https://api.getdrip.com/mcp. The whole reference is one page at https://developer.drip.com/.
+
+To connect an AI assistant or agent to Drip, use the MCP server: it signs in with OAuth in the browser, and no API key is needed. Call `list_accounts` first; its account ids are the `account_id` argument for the other tools.
+
+## Docs
+
+- [MCP Server](https://developer.drip.com/#mcp-server): server URL, OAuth sign-in, and setup for Claude Code, Claude, Cursor and VS Code
+- [Introduction](https://developer.drip.com/#introduction): base URL and request format
+- [Authentication](https://developer.drip.com/#authentication): API tokens and OAuth for the REST API
+- [Rate Limiting](https://developer.drip.com/#rate-limiting): request limits
+- [Errors](https://developer.drip.com/#errors): error responses
+- [Subscribers](https://developer.drip.com/#subscribers): create, update and look up subscribers
+- [Events](https://developer.drip.com/#events): record custom events
+- [Workflows](https://developer.drip.com/#workflows): workflows, triggers and subscribers
+- [JS API](https://developer.drip.com/#js-section): the JavaScript API for your website
+- [Shopper Activity](https://developer.drip.com/#shopper-activity-section): cart, order and product activity
